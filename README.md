@@ -5,13 +5,13 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
 
-## Prerequisites
+## ℹ Prerequisites
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [A Wefblow Account](https://webflow.com/signup)
 
-## Quick start
+## ▶️ Quick start
 
 1. **Get your Webflow API token**
 
@@ -45,10 +45,10 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
    **For Claude Desktop:**
 
-   5. Open Settings → Developer
-   6. Click `Edit Config`
-   7. Paste configuration
-   8. Save and restart Claude
+   1. Open Settings → Developer
+   2. Click `Edit Config`
+   3. Paste configuration
+   4. Save and **restart** Claude
 
 ## 🛠️ Available tools
 
@@ -79,16 +79,11 @@ collections - items - create - item - live; // Create items
 collections - items - update - items - live; // Update items
 ```
 
-# Prompts & Resources
+# 🗣️ Prompts & Resources
 
 This implementation **does not** include prompts and resources. However, this may change in the future.
 
-## Developer resources
-
-- [Webflow API Documentation](https://developers.webflow.com/data/reference)
-- [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api)
-
-# Development mode
+# 🚧 Development mode
 
 If you want to run the server in development mode, you can install dependencies and run the server using the following command:
 
@@ -111,3 +106,8 @@ If you want to run the server in development mode, you can install dependencies 
    ```shell
    npm run dev
    ```
+
+## 📄 Webflow Developer resources
+
+- [Webflow API Documentation](https://developers.webflow.com/data/reference)
+- [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api)
