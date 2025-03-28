@@ -23,15 +23,7 @@ Node.js server implementing Model Context Protocol (MCP) for Webflow using the [
 
 _Additional documentation can be found here: https://help.webflow.com/hc/en-us/articles/33961356296723-Intro-to-Webflow-s-APIs_
 
-### 2. Build the server
-
-```shell
-cd /PATH/TO/PROJECT
-npm install
-npm run build
-```
-
-### 3. Set up your MCP client
+### 2. Set up your MCP client
 
 Add the following to the configuration file for your MCP client e.g. **Cursor, Windsurf, or Claude Desktop**:
 
@@ -39,9 +31,9 @@ Add the following to the configuration file for your MCP client e.g. **Cursor, W
 {
   "mcpServers": {
     "webflow": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/PATH/TO/PROJECT/dist/index.js"
+        "webflow-mcp-server"
       ],
       "env": {
         "WEBFLOW_TOKEN": "..."
