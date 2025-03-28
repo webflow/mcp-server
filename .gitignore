@@ -1,0 +1,6 @@
+.DS_Store
+.env
+.prettierrc
+/.vscode
+/dist
+/node_modules

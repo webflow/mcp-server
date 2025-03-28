@@ -1,7 +1,8 @@
 {
   "name": "webflow-mcp-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "concurrently --names \"tsc,node\" \"tsc --watch\" \"node --env-file=.env --watch-path=dist dist/index.js\"",
     "build": "tsc"
