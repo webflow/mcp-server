@@ -36,6 +36,7 @@ Add the following to the configuration file for your MCP client e.g. **Cursor, W
     "webflow": {
       "command": "npx",
       "args": [
+        "-y",
         "webflow-mcp-server"
       ],
       "env": {
