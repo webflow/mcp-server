@@ -351,6 +351,130 @@ server.tool(
   }
 );
 
+// GET https://api.webflow.com/v2/collections/:collection_id/items
+server.tool(
+  "collections-items-list-items",
+  {
+    collection_id: z.string(),
+    cmsLocaleId: z.string().optional(),
+    offset: z.number().optional(),
+    limit: z.number().optional(),
+    name: z.string().optional(),
+    slug: z.string().optional(),
+    sortBy: z.enum(["lastPublished", "name", "slug"]).optional(),
+    sortOrder: z.enum(["asc", "desc"]).optional(),
+  },
+  async ({ collection_id, cmsLocaleId, offset, limit, name, slug, sortBy, sortOrder }) => {
+    const response = await client.collections.items.listItems(collection_id, {
+      cmsLocaleId,
+      offset,
+      limit,
+      name,
+      slug,
+      sortBy,
+      sortOrder,
+    });
+    return {
+      content: [{ type: "text", text: JSON.stringify(response) }],
+    };
+  }
+);
+
+// CollectionItemPostSingle
+export const CollectionItemPostSingleSchema = z.object({
+  id: z.string().optional(),
+  cmsLocaleId: z.string().optional(),
+  lastPublished: z.string().optional(),
+  lastUpdated: z.string().optional(),
+  createdOn: z.string().optional(),
+  isArchived: z.boolean().optional(),
+  isDraft: z.boolean().optional(),
+  fieldData: z.record(z.any()).and(
+    z.object({
+      name: z.string(),
+      slug: z.string()
+    })
+  )
+})
+
+// request: Webflow.collections.ItemsCreateItemRequest
+const WebflowCollectionsItemsCreateItemRequestSchema = z.union([
+  CollectionItemPostSingleSchema,
+  z.object({
+    items: z.array(CollectionItemPostSingleSchema).optional()
+  })
+])
+
+// POST https://api.webflow.com/v2/collections/:collection_id/items
+server.tool(
+  "collections-items-create-item",
+  {
+    collection_id: z.string(),
+    request: WebflowCollectionsItemsCreateItemRequestSchema,
+  },
+  async ({ collection_id, request }) => {
+    const response = await client.collections.items.createItem(collection_id, request)
+    return {
+      content: [{ type: "text", text: JSON.stringify(response) }],
+    };
+  }
+);
+
+// CollectionItemWithIdInput
+export const CollectionItemWithIdInputSchema = z.object({
+  id: z.string(),
+  cmsLocaleId: z.string().optional(),
+  lastPublished: z.string().optional(),
+  lastUpdated: z.string().optional(),
+  createdOn: z.string().optional(),
+  isArchived: z.boolean().optional(),
+  isDraft: z.boolean().optional(),
+  fieldData: z.record(z.any()).and(
+    z.object({
+      name: z.string(),
+      slug: z.string(),
+    })
+  )
+})
+
+
+// request: Webflow.collections.ItemsUpdateItemsRequest
+const WebflowCollectionsItemsUpdateItemsRequestSchema = z.object({
+  items: z.array(CollectionItemWithIdInputSchema).optional()
+})
+
+// PATCH https://api.webflow.com/v2/collections/:collection_id/items
+server.tool(
+  "collections-items-update-items",
+  {
+    collection_id: z.string(),
+    request: WebflowCollectionsItemsUpdateItemsRequestSchema,
+  },
+  async ({ collection_id, request }) => {
+    const response = await client.collections.items.updateItems(collection_id, request)
+    return {
+      content: [{ type: "text", text: JSON.stringify(response) }],
+    };
+  }
+);
+
+// POST https://api.webflow.com/v2/collections/:collection_id/items/publish
+server.tool(
+  "collections-items-publish-items",
+  {
+    collection_id: z.string(),
+    itemIds: z.array(z.string()),
+  },
+  async ({ collection_id, itemIds }) => {
+    const response = await client.collections.items.publishItem(collection_id, {
+      itemIds: itemIds
+    });
+    return {
+      content: [{ type: "text", text: JSON.stringify(response) }],
+    };
+  }
+)
+
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport();
 await server.connect(transport);
