@@ -75,8 +75,12 @@ pages - update - static - content; // Update page content
 ```ts
 collections - list; // List collections
 collections - get; // Get collection details
-collections - items - create - item - live; // Create items
-collections - items - update - items - live; // Update items
+collections - items - list - items; // List collection items
+collections - items - create - item; // Create items (draft)
+collections - items - create - item - live; // Create items (published)
+collections - items - update - items; // Update items (draft)
+collections - items - update - items - live; // Update items (published)
+collections - items - publish - items; // Publish existing items
 ```
 
 # 🗣️ Prompts & Resources
