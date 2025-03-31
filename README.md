@@ -1,6 +1,6 @@
 # Webflow MCP
 
-A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI Clients to interact with the [Webflow APIs](https://developers.webflow.com/data/reference) through the Model Context Protocol (MCP). Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
+A Node.js server implementing Model Context Protocol (MCP) and the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api), enabling AI agents to interact with Webflow. Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
@@ -27,7 +27,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
      "mcpServers": {
        "webflow": {
          "command": "npx",
-         "args": ["-y", "webflow-mcp-server"],
+         "args": ["-y", "webflow-mcp-server@latest"],
          "env": {
            "WEBFLOW_TOKEN": "YOUR_API_TOKEN"
          }
@@ -85,7 +85,7 @@ collections - items - publish - items; // Publish existing items
 
 # 🗣️ Prompts & Resources
 
-This implementation **does not** include prompts and resources. However, this may change in the future.
+This implementation **does not** include MCP prompts or resources. However, this may change in the future.
 
 # 🚧 Development mode
 
