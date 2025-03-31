@@ -250,46 +250,30 @@ server.tool(
 );
 
 // request: Webflow.collections.ItemsCreateItemLiveRequest
-const WebflowCollectionsItemsCreateItemLiveRequestSchema = z.union([
-  z.object({
-    id: z.string().optional(),
-    cmsLocaleId: z.string().optional(),
-    lastPublished: z.string().optional(),
-    lastUpdated: z.string().optional(),
-    createdOn: z.string().optional(),
-    isArchived: z.boolean().optional(),
-    isDraft: z.boolean().optional(),
-    fieldData: z.record(z.any()).and(
+const WebflowCollectionsItemsCreateItemLiveRequestSchema = z.object({
+  items: z
+    .array(
       z.object({
-        name: z.string(),
-        slug: z.string(),
+        id: z.string().optional(),
+        cmsLocaleId: z.string().optional(),
+        lastPublished: z.string().optional(),
+        lastUpdated: z.string().optional(),
+        createdOn: z.string().optional(),
+        isArchived: z.boolean().optional(),
+        isDraft: z.boolean().optional(),
+        fieldData: z.record(z.any()).and(
+          z.object({
+            name: z.string(),
+            slug: z.string(),
+          })
+        ),
       })
-    ),
-  }),
-  z.object({
-    items: z
-      .array(
-        z.object({
-          id: z.string().optional(),
-          cmsLocaleId: z.string().optional(),
-          lastPublished: z.string().optional(),
-          lastUpdated: z.string().optional(),
-          createdOn: z.string().optional(),
-          isArchived: z.boolean().optional(),
-          isDraft: z.boolean().optional(),
-          fieldData: z.record(z.any()).and(
-            z.object({
-              name: z.string(),
-              slug: z.string(),
-            })
-          ),
-        })
-      )
-      .optional(),
-  }),
-]);
+    )
+    .optional(),
+});
 
 // POST https://api.webflow.com/v2/collections/:collection_id/items/live
+// NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
 server.tool(
   "collections-items-create-item-live",
   {
@@ -364,7 +348,16 @@ server.tool(
     sortBy: z.enum(["lastPublished", "name", "slug"]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
   },
-  async ({ collection_id, cmsLocaleId, offset, limit, name, slug, sortBy, sortOrder }) => {
+  async ({
+    collection_id,
+    cmsLocaleId,
+    offset,
+    limit,
+    name,
+    slug,
+    sortBy,
+    sortOrder,
+  }) => {
     const response = await client.collections.items.listItems(collection_id, {
       cmsLocaleId,
       offset,
@@ -392,18 +385,16 @@ export const CollectionItemPostSingleSchema = z.object({
   fieldData: z.record(z.any()).and(
     z.object({
       name: z.string(),
-      slug: z.string()
+      slug: z.string(),
     })
-  )
-})
+  ),
+});
 
 // request: Webflow.collections.ItemsCreateItemRequest
-const WebflowCollectionsItemsCreateItemRequestSchema = z.union([
-  CollectionItemPostSingleSchema,
-  z.object({
-    items: z.array(CollectionItemPostSingleSchema).optional()
-  })
-])
+// NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
+const WebflowCollectionsItemsCreateItemRequestSchema = z.object({
+  items: z.array(CollectionItemPostSingleSchema).optional(),
+});
 
 // POST https://api.webflow.com/v2/collections/:collection_id/items
 server.tool(
@@ -413,7 +404,10 @@ server.tool(
     request: WebflowCollectionsItemsCreateItemRequestSchema,
   },
   async ({ collection_id, request }) => {
-    const response = await client.collections.items.createItem(collection_id, request)
+    const response = await client.collections.items.createItem(
+      collection_id,
+      request
+    );
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -434,14 +428,13 @@ export const CollectionItemWithIdInputSchema = z.object({
       name: z.string(),
       slug: z.string(),
     })
-  )
-})
-
+  ),
+});
 
 // request: Webflow.collections.ItemsUpdateItemsRequest
 const WebflowCollectionsItemsUpdateItemsRequestSchema = z.object({
-  items: z.array(CollectionItemWithIdInputSchema).optional()
-})
+  items: z.array(CollectionItemWithIdInputSchema).optional(),
+});
 
 // PATCH https://api.webflow.com/v2/collections/:collection_id/items
 server.tool(
@@ -451,7 +444,10 @@ server.tool(
     request: WebflowCollectionsItemsUpdateItemsRequestSchema,
   },
   async ({ collection_id, request }) => {
-    const response = await client.collections.items.updateItems(collection_id, request)
+    const response = await client.collections.items.updateItems(
+      collection_id,
+      request
+    );
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -467,13 +463,13 @@ server.tool(
   },
   async ({ collection_id, itemIds }) => {
     const response = await client.collections.items.publishItem(collection_id, {
-      itemIds: itemIds
+      itemIds: itemIds,
     });
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
   }
-)
+);
 
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport();
