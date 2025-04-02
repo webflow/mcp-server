@@ -52,23 +52,49 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 ## 🛠️ Available tools
 
+**For Cursor:**
+
+1.  Go to Settings → Cursor Settings → MCP
+2.  Click `+ Add New Global MCP Server`
+3.  Paste configuration
+4.  Save and verify server status
+
+**For Claude Desktop:**
+
+1.  Open Settings → Developer
+2.  Click `Edit Config`
+3.  Paste configuration
+4.  Save and **restart** Claude
+
+## 🛠️ Available tools
+
 ### Sites
 
+````ts
+sites - list; // List all sites
+sites - get; // Get site details
+sites - publish; // Publish site changes
 ```ts
 sites - list; // List all sites
 sites - get; // Get site details
 sites - publish; // Publish site changes
-```
+````
 
 ### Pages
 
+````ts
+pages - list; // List all pages
+pages - get - metadata; // Get page metadata
+pages - update - page - settings; // Update page settings
+pages - get - content; // Get page content
+pages - update - static - content; // Update page content
 ```ts
 pages - list; // List all pages
 pages - get - metadata; // Get page metadata
 pages - update - page - settings; // Update page settings
 pages - get - content; // Get page content
 pages - update - static - content; // Update page content
-```
+````
 
 ### CMS
 
