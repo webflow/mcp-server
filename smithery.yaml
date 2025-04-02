@@ -1,0 +1,19 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - webflowToken
+    properties:
+      webflowToken:
+        type: string
+        description: Token to authenticate with Webflow API
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'node', args: ['dist/index.js'], env: { WEBFLOW_TOKEN: config.webflowToken } })
+  exampleConfig:
+    webflowToken: YOUR_WEBFLOW_API_TOKEN
