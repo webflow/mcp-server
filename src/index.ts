@@ -26,7 +26,7 @@ const server = new McpServer({
 //
 
 // GET https://api.webflow.com/v2/sites
-server.tool("sites-list", async () => {
+server.tool("sites_list", async () => {
   const response = await client.sites.list();
   return {
     content: [{ type: "text", text: JSON.stringify(response) }],
@@ -35,7 +35,7 @@ server.tool("sites-list", async () => {
 
 // GET https://api.webflow.com/v2/sites/:site_id
 server.tool(
-  "sites-get",
+  "sites_get",
   {
     site_id: z.string(),
   },
@@ -49,7 +49,7 @@ server.tool(
 
 // POST https://api.webflow.com/v2/sites/:site_id/publish
 server.tool(
-  "sites-publish",
+  "sites_publish",
   {
     site_id: z.string(),
     customDomains: z.string().array().optional(),
@@ -72,7 +72,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/sites/:site_id/pages
 server.tool(
-  "pages-list",
+  "pages_list",
   {
     site_id: z.string(),
     localeId: z.string().optional(),
@@ -93,7 +93,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/pages/:page_id
 server.tool(
-  "pages-get-metadata",
+  "pages_get_metadata",
   {
     page_id: z.string(),
     localeId: z.string().optional(),
@@ -141,7 +141,7 @@ const WebflowPageSchema = z.object({
 
 // PUT https://api.webflow.com/v2/pages/:page_id
 server.tool(
-  "pages-update-page-settings",
+  "pages_update_page_settings",
   {
     page_id: z.string(),
     localeId: z.string().optional(),
@@ -160,7 +160,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/pages/:page_id/dom
 server.tool(
-  "pages-get-content",
+  "pages_get_content",
   {
     page_id: z.string(),
     localeId: z.string().optional(),
@@ -200,7 +200,7 @@ const WebflowPageDomWriteNodesItemSchema = z
 
 // POST https://api.webflow.com/v2/pages/:page_id/dom
 server.tool(
-  "pages-update-static-content",
+  "pages_update_static_content",
   {
     page_id: z.string(),
     localeId: z.string(),
@@ -223,7 +223,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/sites/:site_id/collections
 server.tool(
-  "collections-list",
+  "collections_list",
   {
     site_id: z.string(),
   },
@@ -237,7 +237,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/collections/:collection_id
 server.tool(
-  "collections-get",
+  "collections_get",
   {
     collection_id: z.string(),
   },
@@ -275,7 +275,7 @@ const WebflowCollectionsItemsCreateItemLiveRequestSchema = z.object({
 // POST https://api.webflow.com/v2/collections/:collection_id/items/live
 // NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
 server.tool(
-  "collections-items-create-item-live",
+  "collections_items_create_item_live",
   {
     collection_id: z.string(),
     request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
@@ -319,7 +319,7 @@ const WebflowCollectionsItemsUpdateItemsLiveRequestSchema = z.object({
 
 // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
 server.tool(
-  "collections-items-update-items-live",
+  "collections_items_update_items_live",
   {
     collection_id: z.string(),
     request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
@@ -337,7 +337,7 @@ server.tool(
 
 // GET https://api.webflow.com/v2/collections/:collection_id/items
 server.tool(
-  "collections-items-list-items",
+  "collections_items_list_items",
   {
     collection_id: z.string(),
     cmsLocaleId: z.string().optional(),
@@ -398,7 +398,7 @@ const WebflowCollectionsItemsCreateItemRequestSchema = z.object({
 
 // POST https://api.webflow.com/v2/collections/:collection_id/items
 server.tool(
-  "collections-items-create-item",
+  "collections_items_create_item",
   {
     collection_id: z.string(),
     request: WebflowCollectionsItemsCreateItemRequestSchema,
@@ -438,7 +438,7 @@ const WebflowCollectionsItemsUpdateItemsRequestSchema = z.object({
 
 // PATCH https://api.webflow.com/v2/collections/:collection_id/items
 server.tool(
-  "collections-items-update-items",
+  "collections_items_update_items",
   {
     collection_id: z.string(),
     request: WebflowCollectionsItemsUpdateItemsRequestSchema,
@@ -456,7 +456,7 @@ server.tool(
 
 // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
 server.tool(
-  "collections-items-publish-items",
+  "collections_items_publish_items",
   {
     collection_id: z.string(),
     itemIds: z.array(z.string()),

@@ -1,6 +1,6 @@
 {
   "name": "webflow-mcp-server",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -10,8 +10,12 @@
     "dist"
   ],
   "scripts": {
-    "dev": "concurrently --names \"tsc,node\" \"tsc --watch\" \"node --env-file=.env --watch-path=dist dist/index.js\"",
-    "build": "tsc"
+    "dev": "concurrently --names \"tsc:watch,inspector:watch\" \"npm run tsc:watch\" \"npm run inspector:watch\"",
+    "build": "npm run tsc",
+    "tsc": "tsc",
+    "tsc:watch": "tsc --watch",
+    "inspector": "npx @modelcontextprotocol/inspector -- nodemon --env-file=.env -q dist/index.js",
+    "inspector:watch": "npx @modelcontextprotocol/inspector -- nodemon --env-file=.env -q --watch dist dist/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@types/node": "^22.13.13",
     "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
     "typescript": "^5.8.2"
   }
 }
