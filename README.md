@@ -3,6 +3,7 @@
 A Node.js server implementing Model Context Protocol (MCP) and the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api), enabling AI agents to interact with Webflow. Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
+[![smithery badge](https://smithery.ai/badge/@webflow/mcp-server)](https://smithery.ai/server/@webflow/mcp-server)
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
 
 ## ℹ Prerequisites
