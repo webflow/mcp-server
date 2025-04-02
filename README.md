@@ -116,8 +116,8 @@ If you want to run the server in development mode, you can install dependencies 
 1. Clone and install:
 
    ```shell
-   git clone [repo-url]
-   cd [repo-name]
+   git clone git@github.com:webflow/mcp-server.git
+   cd mcp-server
    npm install
    ```
 
