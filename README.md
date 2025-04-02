@@ -1,6 +1,6 @@
 # Webflow MCP
 
-A Node.js server implementing Model Context Protocol (MCP) and the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api), enabling AI agents to interact with Webflow. Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
+A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI Clients to interact with the [Webflow APIs](https://developers.webflow.com/data/reference) through the Model Context Protocol (MCP). Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
@@ -9,7 +9,7 @@ A Node.js server implementing Model Context Protocol (MCP) and the [Webflow Java
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-- [A Wefblow Account](https://webflow.com/signup)
+- [A Webflow Account](https://webflow.com/signup)
 
 ## ▶️ Quick start
 
@@ -27,7 +27,7 @@ A Node.js server implementing Model Context Protocol (MCP) and the [Webflow Java
      "mcpServers": {
        "webflow": {
          "command": "npx",
-         "args": ["-y", "webflow-mcp-server@latest"],
+         "args": ["-y", "webflow-mcp-server"],
          "env": {
            "WEBFLOW_TOKEN": "YOUR_API_TOKEN"
          }
@@ -52,40 +52,62 @@ A Node.js server implementing Model Context Protocol (MCP) and the [Webflow Java
 
 ## 🛠️ Available tools
 
+**For Cursor:**
+
+1.  Go to Settings → Cursor Settings → MCP
+2.  Click `+ Add New Global MCP Server`
+3.  Paste configuration
+4.  Save and verify server status
+
+**For Claude Desktop:**
+
+1.  Open Settings → Developer
+2.  Click `Edit Config`
+3.  Paste configuration
+4.  Save and **restart** Claude
+
+## 🛠️ Available tools
+
 ### Sites
 
+````ts
+sites - list; // List all sites
+sites - get; // Get site details
+sites - publish; // Publish site changes
 ```ts
 sites - list; // List all sites
 sites - get; // Get site details
 sites - publish; // Publish site changes
-```
+````
 
 ### Pages
 
+````ts
+pages - list; // List all pages
+pages - get - metadata; // Get page metadata
+pages - update - page - settings; // Update page settings
+pages - get - content; // Get page content
+pages - update - static - content; // Update page content
 ```ts
 pages - list; // List all pages
 pages - get - metadata; // Get page metadata
 pages - update - page - settings; // Update page settings
 pages - get - content; // Get page content
 pages - update - static - content; // Update page content
-```
+````
 
 ### CMS
 
 ```ts
 collections - list; // List collections
 collections - get; // Get collection details
-collections - items - list - items; // List collection items
-collections - items - create - item; // Create items (draft)
-collections - items - create - item - live; // Create items (published)
-collections - items - update - items; // Update items (draft)
-collections - items - update - items - live; // Update items (published)
-collections - items - publish - items; // Publish existing items
+collections - items - create - item - live; // Create items
+collections - items - update - items - live; // Update items
 ```
 
 # 🗣️ Prompts & Resources
 
-This implementation **does not** include MCP prompts or resources. However, this may change in the future.
+This implementation **does not** include prompts and resources. However, this may change in the future.
 
 # 🚧 Development mode
 
