@@ -9,7 +9,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-- [A Wefblow Account](https://webflow.com/signup)
+- [A Webflow Account](https://webflow.com/signup)
 
 ## ▶️ Quick start
 
