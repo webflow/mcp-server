@@ -70,7 +70,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 ### Sites
 
-```ts
+```
 sites - list; // List all sites
 sites - get; // Get site details
 sites - publish; // Publish site changes
@@ -78,7 +78,7 @@ sites - publish; // Publish site changes
 
 ### Pages
 
-```ts
+```
 pages - list; // List all pages
 pages - get - metadata; // Get page metadata
 pages - update - page - settings; // Update page settings
@@ -88,7 +88,7 @@ pages - update - static - content; // Update page content
 
 ### CMS
 
-```ts
+```
 collections - list; // List collections
 collections - get; // Get collection details
 collections - create; // Create a collection
