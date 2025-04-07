@@ -249,6 +249,139 @@ server.tool(
   }
 );
 
+export const StaticFieldSchema = z.object({
+  id: z.string().optional(),
+  isEditable: z.boolean().optional(),
+  isRequired: z.boolean().optional(),
+  type: z.union([
+    z.literal("Color"),
+    z.literal("DateTime"),
+    z.literal("Email"),
+    z.literal("File"),
+    z.literal("Image"),
+    z.literal("Link"),
+    z.literal("MultiImage"),
+    z.literal("Number"),
+    z.literal("Phone"),
+    z.literal("PlainText"),
+    z.literal("RichText"),
+    z.literal("Switch"),
+    z.literal("Video")
+  ]),
+  displayName: z.string(),
+  helpText: z.string().optional()
+})
+
+export const OptionFieldSchema = z.object({
+  id: z.string().optional(),
+  isEditable: z.boolean().optional(),
+  isRequired: z.boolean().optional(),
+  type: z.literal("Option"),
+  displayName: z.string(),
+  helpText: z.string().optional(),
+  metadata: z.object({
+    options: z.array(
+      z.object({
+        name: z.string(),
+        id: z.string().optional()
+      })
+    )
+  })
+})
+
+export const ReferenceFieldSchema = z.object({
+  id: z.string().optional(),
+  isEditable: z.boolean().optional(),
+  isRequired: z.boolean().optional(),
+  type: z.union([z.literal("MultiReference"), z.literal("Reference")]),
+  displayName: z.string(),
+  helpText: z.string().optional(),
+  metadata: z.object({
+    collectionId: z.string()
+  })
+})
+
+// request: Webflow.CollectionsCreateRequest
+// NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
+export const WebflowCollectionsCreateRequestSchema = z.object({
+  displayName: z.string(),
+  singularName: z.string(),
+  slug: z.string().optional(),
+})
+
+// POST https://api.webflow.com/v2/sites/:site_id/collections
+server.tool(
+  "collections_create",
+  {
+    site_id: z.string(),
+    request: WebflowCollectionsCreateRequestSchema  
+  },
+  async ({ site_id, request }) => {
+    const response = await client.collections.create(site_id, request);
+    return { content: [{ type: "text", text: JSON.stringify(response) }] };
+  }
+);
+
+// POST https://api.webflow.com/v2/collections/:collection_id/fields
+server.tool(
+  "collection_fields_create_static",
+  {
+    collection_id: z.string(),
+    request: StaticFieldSchema
+  },
+  async ({ collection_id, request }) => {
+    const response = await client.collections.fields.create(collection_id, request);
+    return { content: [{ type: "text", text: JSON.stringify(response) }] };
+  }
+)
+
+// POST https://api.webflow.com/v2/collections/:collection_id/fields
+server.tool(
+  "collection_fields_create_option",
+  {
+    collection_id: z.string(),
+    request: OptionFieldSchema
+  },
+  async ({ collection_id, request }) => {
+    const response = await client.collections.fields.create(collection_id, request);
+    return { content: [{ type: "text", text: JSON.stringify(response) }] };
+  }
+)
+
+// POST https://api.webflow.com/v2/collections/:collection_id/fields
+server.tool(
+  "collection_fields_create_reference",
+  {
+    collection_id: z.string(),
+    request: ReferenceFieldSchema
+  },
+  async ({ collection_id, request }) => {
+    const response = await client.collections.fields.create(collection_id, request);
+    return { content: [{ type: "text", text: JSON.stringify(response) }] };
+  }
+)
+
+// request: Webflow.collections.FieldUpdate
+export const WebflowCollectionsFieldUpdateSchema = z.object({
+  isRequired: z.boolean().optional(),
+  displayName: z.string().optional(),
+  helpText: z.string().optional()
+})
+
+// PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
+server.tool(
+  "collection_fields_update",
+  {
+    collection_id: z.string(),
+    field_id: z.string(),
+    request: WebflowCollectionsFieldUpdateSchema
+  },
+  async ({ collection_id, field_id, request }) => {
+    const response = await client.collections.fields.update(collection_id, field_id, request);
+    return { content: [{ type: "text", text: JSON.stringify(response) }] };
+  }
+)
+
 // request: Webflow.collections.ItemsCreateItemLiveRequest
 const WebflowCollectionsItemsCreateItemLiveRequestSchema = z.object({
   items: z
