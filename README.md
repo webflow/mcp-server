@@ -158,7 +158,7 @@ If you want to run the server in development mode, you can install dependencies 
 
 3. Start development server:
    ```shell
-   npm run dev
+   npm start
    ```
 
 ## 📄 Webflow Developer resources
