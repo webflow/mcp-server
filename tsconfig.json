@@ -5,11 +5,11 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node10",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
+  "include": ["worker-configuration.d.ts", "src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
