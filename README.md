@@ -41,30 +41,52 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
    1. Go to Settings → Cursor Settings → MCP
    2. Click `+ Add New Global MCP Server`
    3. Paste configuration
-   4. Save and verify server status
+   4. Replace `YOUR_API_TOKEN` with the token you copied earlier
+   5. Save and **restart** Cursor
 
    **For Claude Desktop:**
 
    1. Open Settings → Developer
    2. Click `Edit Config`
-   3. Paste configuration
-   4. Save and **restart** Claude
+   3. Open `claude_desktop_config.json` in a code editor and paste configuration
+   4. Replace `YOUR_API_TOKEN` with the token you copied earlier
+   5. Save and **restart** Claude
 
-## 🛠️ Available tools
+## ❓ Troubleshooting
 
-**For Cursor:**
+If you are having issues starting the server in your MCP client e.g. Cursor or Claude Desktop, please try the following.
 
-1.  Go to Settings → Cursor Settings → MCP
-2.  Click `+ Add New Global MCP Server`
-3.  Paste configuration
-4.  Save and verify server status
+### Ensure you have a valid Webflow API token
 
-**For Claude Desktop:**
+1. Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by), log in and generate a token, then copy the token from the Request Generator
+2. Replace `YOUR_API_TOKEN` in your MCP client configuration with the token you copied
+3. Save and **restart** your MCP client
 
-1.  Open Settings → Developer
-2.  Click `Edit Config`
-3.  Paste configuration
-4.  Save and **restart** Claude
+### Ensure you have the Node and NPM installed
+
+- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+Run the following commands to confirm you have Node and NPM installed:
+
+```shell
+node -v
+npm -v
+```
+
+### Clear your NPM cache
+
+Sometimes clearing your [NPM cache](https://docs.npmjs.com/cli/v8/commands/npm-cache) can resolve issues with `npx`.
+
+```shell
+npm cache clean --force
+```
+
+### Fix NPM global package permissions
+
+If `npm -v` doesn't work for you but `sudo npm -v` does, you may need to fix NPM global package permissions. See the official [NPM docs](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally) for more information.
+
+Note: if you are making changes to your shell configuration, you may need to restart your shell for changes to take effect.
 
 ## 🛠️ Available tools
 
