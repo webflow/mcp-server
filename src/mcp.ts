@@ -12,20 +12,13 @@ export function createMcpServer() {
   });
 }
 
-// Create a Webflow client
-export function createWebflowClient() {
-  // Verify WEBFLOW_TOKEN
-  if (!process.env.WEBFLOW_TOKEN) {
-    throw new Error("WEBFLOW_TOKEN is missing");
-  }
-
-  return new WebflowClient({
-    accessToken: process.env.WEBFLOW_TOKEN,
-  });
-}
-
 // Register tools
-export function registerTools(server: McpServer, client: WebflowClient) {
+export function registerTools(server: McpServer, accessToken: string) {
+  // Create a Webflow client
+  const client = new WebflowClient({
+    accessToken: accessToken,
+  });
+
   // -- SITES --
 
   // GET https://api.webflow.com/v2/sites

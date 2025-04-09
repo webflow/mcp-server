@@ -8,6 +8,20 @@
   "main": "src/index.worker.ts",
   "compatibility_date": "2025-04-09",
   "compatibility_flags": ["nodejs_compat"],
+  "migrations": [
+    {
+      "new_sqlite_classes": ["WebflowMcpAgent"],
+      "tag": "v1"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "class_name": "WebflowMcpAgent",
+        "name": "MCP_OBJECT"
+      }
+    ]
+  },
   "observability": {
     "enabled": true
   }

@@ -27,11 +27,22 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
      "mcpServers": {
        "webflow": {
          "command": "npx",
-         "args": ["-y", "webflow-mcp-server@0.3.0"],
+         "args": ["-y", "webflow-mcp-server@0.4.0"],
          "env": {
-           "WEBFLOW_TOKEN": "YOUR_API_TOKEN"
+           "WEBFLOW_TOKEN": "<YOUR_API_TOKEN>"
          }
        }
+     }
+   }
+   ```
+
+   Or if you'd like to connect to Webflow's official remote MCP server:
+
+   ```json
+   {
+     "mcpServers": {
+       "command": "npx",
+       "args": ["mcp-remote", "<URL>/sse?accessToken=<YOUR_API_TOKEN>"]
      }
    }
    ```
@@ -142,7 +153,7 @@ If you want to run the server in development mode, you can install dependencies 
 
    ```shell
    # .env
-   WEBFLOW_TOKEN=your_token_here
+   WEBFLOW_TOKEN=<YOUR_API_TOKEN>
    ```
 
 3. Start development server:
