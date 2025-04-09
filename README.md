@@ -27,7 +27,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
      "mcpServers": {
        "webflow": {
          "command": "npx",
-         "args": ["-y", "webflow-mcp-server"],
+         "args": ["-y", "webflow-mcp-server@0.3.0"],
          "env": {
            "WEBFLOW_TOKEN": "YOUR_API_TOKEN"
          }
