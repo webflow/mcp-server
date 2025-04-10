@@ -13,17 +13,15 @@ export function createMcpServer() {
 }
 
 // Register tools
-export function registerTools(server: McpServer, accessToken: string) {
-  // Create a Webflow client
-  const client = new WebflowClient({
-    accessToken: accessToken,
-  });
-
+export function registerTools(
+  server: McpServer,
+  getClient: () => WebflowClient
+) {
   // -- SITES --
 
   // GET https://api.webflow.com/v2/sites
   server.tool("sites_list", async () => {
-    const response = await client.sites.list();
+    const response = await getClient().sites.list();
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -36,7 +34,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       site_id: z.string(),
     },
     async ({ site_id }) => {
-      const response = await client.sites.get(site_id);
+      const response = await getClient().sites.get(site_id);
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -52,7 +50,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       publishToWebflowSubdomain: z.boolean().optional().default(false),
     },
     async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
-      const response = await client.sites.publish(site_id, {
+      const response = await getClient().sites.publish(site_id, {
         customDomains,
         publishToWebflowSubdomain,
       });
@@ -74,7 +72,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       offset: z.number().optional(),
     },
     async ({ site_id, localeId, limit, offset }) => {
-      const response = await client.pages.list(site_id, {
+      const response = await getClient().pages.list(site_id, {
         localeId,
         limit,
         offset,
@@ -93,7 +91,9 @@ export function registerTools(server: McpServer, accessToken: string) {
       localeId: z.string().optional(),
     },
     async ({ page_id, localeId }) => {
-      const response = await client.pages.getMetadata(page_id, { localeId });
+      const response = await getClient().pages.getMetadata(page_id, {
+        localeId,
+      });
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -142,7 +142,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       body: WebflowPageSchema,
     },
     async ({ page_id, localeId, body }) => {
-      const response = await client.pages.updatePageSettings(page_id, {
+      const response = await getClient().pages.updatePageSettings(page_id, {
         localeId,
         body,
       });
@@ -162,7 +162,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       offset: z.number().optional(),
     },
     async ({ page_id, localeId, limit, offset }) => {
-      const response = await client.pages.getContent(page_id, {
+      const response = await getClient().pages.getContent(page_id, {
         localeId,
         limit,
         offset,
@@ -201,7 +201,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       nodes: WebflowPageDomWriteNodesItemSchema,
     },
     async ({ page_id, localeId, nodes }) => {
-      const response = await client.pages.updateStaticContent(page_id, {
+      const response = await getClient().pages.updateStaticContent(page_id, {
         localeId,
         nodes,
       });
@@ -220,7 +220,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       site_id: z.string(),
     },
     async ({ site_id }) => {
-      const response = await client.collections.list(site_id);
+      const response = await getClient().collections.list(site_id);
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -234,7 +234,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       collection_id: z.string(),
     },
     async ({ collection_id }) => {
-      const response = await client.collections.get(collection_id);
+      const response = await getClient().collections.get(collection_id);
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -309,7 +309,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsCreateRequestSchema,
     },
     async ({ site_id, request }) => {
-      const response = await client.collections.create(site_id, request);
+      const response = await getClient().collections.create(site_id, request);
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
   );
@@ -322,7 +322,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: StaticFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.fields.create(
+      const response = await getClient().collections.fields.create(
         collection_id,
         request
       );
@@ -338,7 +338,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: OptionFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.fields.create(
+      const response = await getClient().collections.fields.create(
         collection_id,
         request
       );
@@ -354,7 +354,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: ReferenceFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.fields.create(
+      const response = await getClient().collections.fields.create(
         collection_id,
         request
       );
@@ -378,7 +378,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsFieldUpdateSchema,
     },
     async ({ collection_id, field_id, request }) => {
-      const response = await client.collections.fields.update(
+      const response = await getClient().collections.fields.update(
         collection_id,
         field_id,
         request
@@ -419,7 +419,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.items.createItemLive(
+      const response = await getClient().collections.items.createItemLive(
         collection_id,
         request
       );
@@ -463,7 +463,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.items.updateItemsLive(
+      const response = await getClient().collections.items.updateItemsLive(
         collection_id,
         request
       );
@@ -496,15 +496,18 @@ export function registerTools(server: McpServer, accessToken: string) {
       sortBy,
       sortOrder,
     }) => {
-      const response = await client.collections.items.listItems(collection_id, {
-        cmsLocaleId,
-        offset,
-        limit,
-        name,
-        slug,
-        sortBy,
-        sortOrder,
-      });
+      const response = await getClient().collections.items.listItems(
+        collection_id,
+        {
+          cmsLocaleId,
+          offset,
+          limit,
+          name,
+          slug,
+          sortBy,
+          sortOrder,
+        }
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -542,7 +545,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsItemsCreateItemRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.items.createItem(
+      const response = await getClient().collections.items.createItem(
         collection_id,
         request
       );
@@ -582,7 +585,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       request: WebflowCollectionsItemsUpdateItemsRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await client.collections.items.updateItems(
+      const response = await getClient().collections.items.updateItems(
         collection_id,
         request
       );
@@ -600,7 +603,7 @@ export function registerTools(server: McpServer, accessToken: string) {
       itemIds: z.array(z.string()),
     },
     async ({ collection_id, itemIds }) => {
-      const response = await client.collections.items.publishItem(
+      const response = await getClient().collections.items.publishItem(
         collection_id,
         {
           itemIds: itemIds,

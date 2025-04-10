@@ -6,7 +6,16 @@ import { WebflowClient } from "webflow-api";
 export class WebflowMcpAgent extends McpAgent {
   server = createMcpServer();
 
-  async init() {}
+  accessToken?: string;
+  getClient = () => {
+    return new WebflowClient({
+      accessToken: this.accessToken ?? "",
+    });
+  };
+
+  async init() {
+    registerTools(this.server, this.getClient);
+  }
 
   async fetch(request: Request): Promise<Response> {
     try {
@@ -15,7 +24,7 @@ export class WebflowMcpAgent extends McpAgent {
       if (!params.accessToken) {
         throw new Error("accessToken is required");
       }
-      registerTools(this.server, params.accessToken);
+      this.accessToken = params.accessToken;
     } catch (error) {
       console.error(error);
     }

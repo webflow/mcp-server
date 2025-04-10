@@ -15,53 +15,54 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 1. **Get your Webflow API token**
 
-   - Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by)
-   - Log in and generate a token
-   - Copy the token from the Request Generator
-     ![Get API Token](https://prod.ferndocs.com/_next/image?url=https%3A%2F%2Ffiles.buildwithfern.com%2Fwebflow-preview-6a549203-c0da-4038-8adf-1dbed286cb83.docs.buildwithfern.com%2F2025-03-28T17%3A56%3A04.435Z%2Fassets%2Fimages%2Fapi-key-playground.png&w=3840&q=75)
+- Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by)
+- Log in and generate a token
+- Copy the token from the Request Generator
+  ![Get API Token](https://prod.ferndocs.com/_next/image?url=https%3A%2F%2Ffiles.buildwithfern.com%2Fwebflow-preview-6a549203-c0da-4038-8adf-1dbed286cb83.docs.buildwithfern.com%2F2025-03-28T17%3A56%3A04.435Z%2Fassets%2Fimages%2Fapi-key-playground.png&w=3840&q=75)
 
 2. **Add to your AI editor**
 
-   ```json
-   {
-     "mcpServers": {
-       "webflow": {
-         "command": "npx",
-         "args": ["-y", "webflow-mcp-server@0.4.0"],
-         "env": {
-           "WEBFLOW_TOKEN": "<YOUR_API_TOKEN>"
-         }
-       }
-     }
-   }
-   ```
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["-y", "webflow-mcp-server@0.4.0"],
+      "env": {
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+      }
+    }
+  }
+}
+```
 
-   Or if you'd like to connect to Webflow's official remote MCP server:
+Or if you'd like to connect to Webflow's official remote MCP server:
 
-   ```json
-   {
-     "mcpServers": {
-       "command": "npx",
-       "args": ["mcp-remote", "<URL>/sse?accessToken=<YOUR_API_TOKEN>"]
-     }
-   }
-   ```
+```json
+{
+  "mcpServers": {
+    "webflow-remote": {
+      "command": "npx",
+      "args": ["mcp-remote", "<URL>/sse?accessToken=<YOUR_WEBFLOW_TOKEN>"]
+    }
+  }
+}
+```
 
-   **For Cursor:**
+**For Cursor:**
 
-   1. Go to Settings → Cursor Settings → MCP
-   2. Click `+ Add New Global MCP Server`
-   3. Paste configuration
-   4. Replace `YOUR_API_TOKEN` with the token you copied earlier
-   5. Save and **restart** Cursor
+1. Go to Settings → Cursor Settings → MCP
+2. Click `+ Add New Global MCP Server`
+3. Paste configuration
+4. Replace `YOUR_WEBFLOW_TOKEN` with the token you copied earlier
+5. Save and **restart** Cursor
 
-   **For Claude Desktop:**
+**For Claude Desktop:**
 
-   1. Open Settings → Developer
-   2. Click `Edit Config`
-   3. Open `claude_desktop_config.json` in a code editor and paste configuration
-   4. Replace `YOUR_API_TOKEN` with the token you copied earlier
-   5. Save and **restart** Claude
+1. Open Settings → Developer
+2. Click `Edit Config`
+3. Open `claude_desktop_config.json` in a code editor and paste configuration
+4. Replace `YOUR_WEBFLOW_TOKEN` with the token you copied earlier 5. Save and **restart** Claude
 
 ## ❓ Troubleshooting
 
@@ -70,7 +71,7 @@ If you are having issues starting the server in your MCP client e.g. Cursor or C
 ### Ensure you have a valid Webflow API token
 
 1. Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by), log in and generate a token, then copy the token from the Request Generator
-2. Replace `YOUR_API_TOKEN` in your MCP client configuration with the token you copied
+2. Replace `YOUR_WEBFLOW_TOKEN` in your MCP client configuration with the token you copied
 3. Save and **restart** your MCP client
 
 ### Ensure you have the Node and NPM installed
@@ -143,23 +144,24 @@ If you want to run the server in development mode, you can install dependencies 
 
 1. Clone and install:
 
-   ```shell
-   git clone git@github.com:webflow/mcp-server.git
-   cd mcp-server
-   npm install
-   ```
+```shell
+git clone git@github.com:webflow/mcp-server.git
+cd mcp-server
+npm install
+```
 
 2. Add your token:
 
-   ```shell
-   # .env
-   WEBFLOW_TOKEN=<YOUR_API_TOKEN>
-   ```
+```shell
+# .env
+WEBFLOW_TOKEN=<YOUR_WEBFLOW_TOKEN>
+```
 
 3. Start development server:
-   ```shell
-   npm start
-   ```
+
+```shell
+npm start
+```
 
 ## 📄 Webflow Developer resources
 

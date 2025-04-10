@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { WebflowClient } from "webflow-api";
 import { createMcpServer, registerTools } from "./mcp";
+import { WebflowClient } from "webflow-api";
 
-// Configure and run local MCP server (stdio transport)
-async function run() {
+// Create a Webflow client
+function getClient() {
   // Verify WEBFLOW_TOKEN
   if (!process.env.WEBFLOW_TOKEN) {
     throw new Error("WEBFLOW_TOKEN is missing");
   }
-
-  const server = createMcpServer();
-  const webflowClient = new WebflowClient({
+  return new WebflowClient({
     accessToken: process.env.WEBFLOW_TOKEN,
   });
-  registerTools(server, webflowClient);
+}
+
+// Configure and run local MCP server (stdio transport)
+async function run() {
+  const server = createMcpServer();
+  registerTools(server, getClient);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
