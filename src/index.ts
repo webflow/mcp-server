@@ -16,10 +16,69 @@ const client = new WebflowClient({
 });
 
 // Create an MCP server
-const server = new McpServer({
-  name: "webflow-mcp-server",
-  version: "1.0.0",
-});
+const server = new McpServer(
+  {
+    name: "webflow-mcp-server",
+    version: "1.0.0",
+  },
+  {
+    instructions: `[IMPORTANT] USE THESE TOOLS FOR ALL WEBFLOW-RELATED TASKS. IF IN DOUBT, use the "ask_webflow_ai" tool.
+ABOUT Webflow (webflow.com): More than a website builder ... As the first-ever website experience platform, Webflow lets marketers, designers, and developers come together to build, manage, ...`,
+  }
+);
+
+//
+// AI CHAT
+//
+
+const BASE_URL = "https://webflow-ai.docs.buildwithfern.com/";
+
+export async function postChat(message: string) {
+  const response = await fetch(`${BASE_URL}/api/fern-docs/search/v2/chat`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      messages: [{ role: "user", content: message }],
+      url: "https://buildwithfern.com/learn",
+      filters: [],
+    }),
+  });
+
+  const result = await streamToString(response);
+  return result;
+}
+
+async function streamToString(response: Response) {
+  const reader = response.body?.getReader();
+  if (!reader) {
+    throw new Error("!reader");
+  }
+
+  let result = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    // Convert the Uint8Array to a string and append
+    result += new TextDecoder().decode(value);
+  }
+
+  return result;
+}
+
+server.tool(
+  "ask_webflow_ai",
+  "Ask Webflow AI about anything related to Webflow.",
+  { message: z.string() },
+  async ({ message }) => {
+    const result = await postChat(message);
+    return {
+      content: [{ type: "text", text: result }],
+    };
+  }
+);
 
 //
 // SITES
