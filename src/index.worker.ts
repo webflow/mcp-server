@@ -6,17 +6,23 @@ import { WebflowClient } from "webflow-api";
 export class WebflowMcpAgent extends McpAgent {
   server = createMcpServer();
 
+  // Track latest access token
   accessToken?: string;
+
+  // Return a Webflow client
   getClient = () => {
+    // HACK: Always create a new Webflow client with latest access token
     return new WebflowClient({
       accessToken: this.accessToken ?? "",
     });
   };
 
+  // Register tools
   async init() {
     registerTools(this.server, this.getClient);
   }
 
+  // Handle incoming requests and extract access token
   async fetch(request: Request): Promise<Response> {
     try {
       const url = new URL(request.url);
@@ -24,6 +30,7 @@ export class WebflowMcpAgent extends McpAgent {
       if (!params.accessToken) {
         throw new Error("accessToken is required");
       }
+      // Set the latest access token
       this.accessToken = params.accessToken;
     } catch (error) {
       console.error(error);
