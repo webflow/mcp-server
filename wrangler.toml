@@ -1,0 +1,11 @@
+name = "webflow-mcp-server"
+main = "src/oauth-server.ts"
+compatibility_date = "2023-10-30"
+compatibility_flags = ["nodejs_compat"]
+node_compat = true
+
+[vars]
+# Replace these with your real Webflow OAuth application values
+WEBFLOW_CLIENT_ID = ""
+WEBFLOW_CLIENT_SECRET = ""
+WEBFLOW_REDIRECT_URI = "https://your-worker-domain.workers.dev/callback"
