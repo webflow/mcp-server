@@ -5,10 +5,19 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
 
+const packageJson = require("../package.json") as any;
+
 // Verify WEBFLOW_TOKEN
 if (!process.env.WEBFLOW_TOKEN) {
   throw new Error("WEBFLOW_TOKEN is missing");
 }
+
+// Common request options with User-Agent header
+const requestOptions = {
+  headers: {
+    "User-Agent": `Webflow MCP Server/${packageJson.version}`
+  }
+};
 
 // Create a Webflow client
 const client = new WebflowClient({
@@ -27,7 +36,7 @@ const server = new McpServer({
 
 // GET https://api.webflow.com/v2/sites
 server.tool("sites_list", async () => {
-  const response = await client.sites.list();
+  const response = await client.sites.list(requestOptions);
   return {
     content: [{ type: "text", text: JSON.stringify(response) }],
   };
@@ -40,7 +49,7 @@ server.tool(
     site_id: z.string(),
   },
   async ({ site_id }) => {
-    const response = await client.sites.get(site_id);
+    const response = await client.sites.get(site_id, requestOptions);
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -57,6 +66,7 @@ server.tool(
   },
   async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
     const response = await client.sites.publish(site_id, {
+      ...requestOptions,
       customDomains,
       publishToWebflowSubdomain,
     });
@@ -81,6 +91,7 @@ server.tool(
   },
   async ({ site_id, localeId, limit, offset }) => {
     const response = await client.pages.list(site_id, {
+      ...requestOptions,
       localeId,
       limit,
       offset,
@@ -99,7 +110,10 @@ server.tool(
     localeId: z.string().optional(),
   },
   async ({ page_id, localeId }) => {
-    const response = await client.pages.getMetadata(page_id, { localeId });
+    const response = await client.pages.getMetadata(page_id, { 
+      ...requestOptions,
+      localeId 
+    });
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -149,6 +163,7 @@ server.tool(
   },
   async ({ page_id, localeId, body }) => {
     const response = await client.pages.updatePageSettings(page_id, {
+      ...requestOptions,
       localeId,
       body,
     });
@@ -169,6 +184,7 @@ server.tool(
   },
   async ({ page_id, localeId, limit, offset }) => {
     const response = await client.pages.getContent(page_id, {
+      ...requestOptions,
       localeId,
       limit,
       offset,
