@@ -4,8 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
-
-const packageJson = require("../package.json") as any;
+import packageJson from "../package.json";
 
 // Verify WEBFLOW_TOKEN
 if (!process.env.WEBFLOW_TOKEN) {
