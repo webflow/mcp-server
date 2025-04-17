@@ -36,25 +36,6 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 }
 ```
 
-Or if you'd like to connect to Webflow's official remote MCP server:
-
-```json
-{
-  "mcpServers": {
-    "webflow-remote": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "<URL>/sse",
-        "--header",
-        "Authorization: Bearer <YOUR_WEBFLOW_TOKEN>"
-      ]
-    }
-  }
-}
-```
-
 **For Cursor:**
 
 1. Go to Settings → Cursor Settings → MCP
