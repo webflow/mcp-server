@@ -4,11 +4,13 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
 
+const packageJson = require("../package.json") as any;
+
 // Create an MCP server
 export function createMcpServer() {
   return new McpServer({
-    name: "webflow-mcp-server",
-    version: "1.0.0",
+    name: packageJson.name,
+    version: packageJson.version,
   });
 }
 

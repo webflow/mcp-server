@@ -13,8 +13,8 @@
     "inspector:cf": "npx @modelcontextprotocol/inspector",
     "deploy:cf": "npm run build && wrangler deploy",
     "types:cf": "wrangler types",
-    "build": "tsup src/index.ts src/index.worker.ts --dts --clean",
-    "build:watch": "tsup src/index.ts src/index.worker.ts --dts --watch"
+    "build": "tsup src/index.ts src/index.worker.ts --external=cloudflare:workers --dts --clean",
+    "build:watch": "tsup src/index.ts src/index.worker.ts --external=cloudflare:workers --dts --watch"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",

@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
 
-// Verify WEBFLOW_TOKEN
+// Verify WEBFLOW_TOKEN exists
 if (!process.env.WEBFLOW_TOKEN) {
   throw new Error("WEBFLOW_TOKEN is missing");
 }
