@@ -4,7 +4,11 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
-import packageJson from "../package.json";
+
+// @ts-expect-error: import assertion is supported at runtime
+const { version } = await import("../package.json", {
+  assert: { type: "json" }
+});
 
 // Verify WEBFLOW_TOKEN
 if (!process.env.WEBFLOW_TOKEN) {
@@ -14,7 +18,7 @@ if (!process.env.WEBFLOW_TOKEN) {
 // Common request options with User-Agent header
 const requestOptions = {
   headers: {
-    "User-Agent": `Webflow MCP Server/${packageJson.version}`
+    "User-Agent": `Webflow MCP Server/${version}`
   }
 };
 
