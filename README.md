@@ -138,6 +138,10 @@ collection - fields - create - reference; // Create a reference field
 collection - fields - update; // Update a custom field
 collections - items - create - item - live; // Create items
 collections - items - update - items - live; // Update items
+collections - items - list - items; // List collection items
+collections - items - create - item; // Create collection items (staged)
+collections - items - update - items; // Update collection items (staged)
+collections - items - publish - items; // Publish collection items
 ```
 
 # 🗣️ Prompts & Resources

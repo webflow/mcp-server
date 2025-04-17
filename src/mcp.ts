@@ -14,6 +14,13 @@ export function createMcpServer() {
   });
 }
 
+// Common request options, including User-Agent header
+const requestOptions = {
+  headers: {
+    "User-Agent": `Webflow MCP Server/${packageJson.version}`,
+  },
+};
+
 // Register tools
 export function registerTools(
   server: McpServer,
@@ -23,7 +30,7 @@ export function registerTools(
 
   // GET https://api.webflow.com/v2/sites
   server.tool("sites_list", async () => {
-    const response = await getClient().sites.list();
+    const response = await getClient().sites.list(requestOptions);
     return {
       content: [{ type: "text", text: JSON.stringify(response) }],
     };
@@ -36,7 +43,7 @@ export function registerTools(
       site_id: z.string(),
     },
     async ({ site_id }) => {
-      const response = await getClient().sites.get(site_id);
+      const response = await getClient().sites.get(site_id, requestOptions);
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -52,10 +59,14 @@ export function registerTools(
       publishToWebflowSubdomain: z.boolean().optional().default(false),
     },
     async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
-      const response = await getClient().sites.publish(site_id, {
-        customDomains,
-        publishToWebflowSubdomain,
-      });
+      const response = await getClient().sites.publish(
+        site_id,
+        {
+          customDomains,
+          publishToWebflowSubdomain,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -74,11 +85,15 @@ export function registerTools(
       offset: z.number().optional(),
     },
     async ({ site_id, localeId, limit, offset }) => {
-      const response = await getClient().pages.list(site_id, {
-        localeId,
-        limit,
-        offset,
-      });
+      const response = await getClient().pages.list(
+        site_id,
+        {
+          localeId,
+          limit,
+          offset,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -93,9 +108,13 @@ export function registerTools(
       localeId: z.string().optional(),
     },
     async ({ page_id, localeId }) => {
-      const response = await getClient().pages.getMetadata(page_id, {
-        localeId,
-      });
+      const response = await getClient().pages.getMetadata(
+        page_id,
+        {
+          localeId,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -144,10 +163,14 @@ export function registerTools(
       body: WebflowPageSchema,
     },
     async ({ page_id, localeId, body }) => {
-      const response = await getClient().pages.updatePageSettings(page_id, {
-        localeId,
-        body,
-      });
+      const response = await getClient().pages.updatePageSettings(
+        page_id,
+        {
+          localeId,
+          body,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -164,11 +187,15 @@ export function registerTools(
       offset: z.number().optional(),
     },
     async ({ page_id, localeId, limit, offset }) => {
-      const response = await getClient().pages.getContent(page_id, {
-        localeId,
-        limit,
-        offset,
-      });
+      const response = await getClient().pages.getContent(
+        page_id,
+        {
+          localeId,
+          limit,
+          offset,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -203,10 +230,14 @@ export function registerTools(
       nodes: WebflowPageDomWriteNodesItemSchema,
     },
     async ({ page_id, localeId, nodes }) => {
-      const response = await getClient().pages.updateStaticContent(page_id, {
-        localeId,
-        nodes,
-      });
+      const response = await getClient().pages.updateStaticContent(
+        page_id,
+        {
+          localeId,
+          nodes,
+        },
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -222,7 +253,10 @@ export function registerTools(
       site_id: z.string(),
     },
     async ({ site_id }) => {
-      const response = await getClient().collections.list(site_id);
+      const response = await getClient().collections.list(
+        site_id,
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -236,7 +270,10 @@ export function registerTools(
       collection_id: z.string(),
     },
     async ({ collection_id }) => {
-      const response = await getClient().collections.get(collection_id);
+      const response = await getClient().collections.get(
+        collection_id,
+        requestOptions
+      );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
       };
@@ -311,7 +348,11 @@ export function registerTools(
       request: WebflowCollectionsCreateRequestSchema,
     },
     async ({ site_id, request }) => {
-      const response = await getClient().collections.create(site_id, request);
+      const response = await getClient().collections.create(
+        site_id,
+        request,
+        requestOptions
+      );
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
   );
@@ -326,7 +367,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.fields.create(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
@@ -342,7 +384,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.fields.create(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
@@ -358,7 +401,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.fields.create(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
@@ -383,7 +427,8 @@ export function registerTools(
       const response = await getClient().collections.fields.update(
         collection_id,
         field_id,
-        request
+        request,
+        requestOptions
       );
       return { content: [{ type: "text", text: JSON.stringify(response) }] };
     }
@@ -423,7 +468,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.items.createItemLive(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
@@ -467,7 +513,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.items.updateItemsLive(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
@@ -508,7 +555,8 @@ export function registerTools(
           slug,
           sortBy,
           sortOrder,
-        }
+        },
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
@@ -549,7 +597,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.items.createItem(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
@@ -589,7 +638,8 @@ export function registerTools(
     async ({ collection_id, request }) => {
       const response = await getClient().collections.items.updateItems(
         collection_id,
-        request
+        request,
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
@@ -609,7 +659,8 @@ export function registerTools(
         collection_id,
         {
           itemIds: itemIds,
-        }
+        },
+        requestOptions
       );
       return {
         content: [{ type: "text", text: JSON.stringify(response) }],
