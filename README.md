@@ -27,29 +27,10 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
   "mcpServers": {
     "webflow": {
       "command": "npx",
-      "args": ["-y", "webflow-mcp-server@0.4.0"],
+      "args": ["-y", "webflow-mcp-server@0.4.1"],
       "env": {
         "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
       }
-    }
-  }
-}
-```
-
-Or if you'd like to connect to Webflow's official remote MCP server:
-
-```json
-{
-  "mcpServers": {
-    "webflow-remote": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "<URL>/sse",
-        "--header",
-        "Authorization: Bearer <YOUR_WEBFLOW_TOKEN>"
-      ]
     }
   }
 }
