@@ -2,6 +2,9 @@ import { McpAgent } from "agents/mcp";
 import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
 import { BearerAuthProvider } from "./bearerAuthProvider";
+import { getFeatureFlags } from "./featureFlags";
+
+const featureFlags = getFeatureFlags(process.env);
 
 type Props = Record<string, unknown> & {
   accessToken?: string;
@@ -9,7 +12,7 @@ type Props = Record<string, unknown> & {
 
 // Configure remote MCP server (SSE transport) for use in a Cloudflare Worker
 export class WebflowMcp extends McpAgent<Env, unknown, Props> {
-  server = createMcpServer();
+  server = createMcpServer(featureFlags);
 
   async init() {
     // Verify this.props.accessToken exists
@@ -27,7 +30,7 @@ export class WebflowMcp extends McpAgent<Env, unknown, Props> {
       return webflowClient;
     }
 
-    registerTools(this.server, getClient);
+    registerTools(this.server, getClient, featureFlags);
   }
 }
 

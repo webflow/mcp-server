@@ -3,6 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
+import { getFeatureFlags } from "./featureFlags";
 
 // Verify WEBFLOW_TOKEN exists
 if (!process.env.WEBFLOW_TOKEN) {
@@ -19,10 +20,12 @@ function getClient() {
   return webflowClient;
 }
 
+const featureFlags = getFeatureFlags(process.env);
+
 // Configure and run local MCP server (stdio transport)
 async function run() {
-  const server = createMcpServer();
-  registerTools(server, getClient);
+  const server = createMcpServer(featureFlags);
+  registerTools(server, getClient, featureFlags);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
