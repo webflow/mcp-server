@@ -1,6 +1,6 @@
 # Webflow MCP
 
-A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI Clients to interact with the [Webflow APIs](https://developers.webflow.com/data/reference) through the Model Context Protocol (MCP). Learn more about Webflow's APIs in the [developer documentation](https://developers.webflow.com/data/reference).
+A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI agents to interact with Webflow APIs. Learn more about Webflow's Data API in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
@@ -43,7 +43,13 @@ Or if you'd like to connect to Webflow's official remote MCP server:
   "mcpServers": {
     "webflow-remote": {
       "command": "npx",
-      "args": ["mcp-remote", "<URL>/sse?accessToken=<YOUR_WEBFLOW_TOKEN>"]
+      "args": [
+        "-y",
+        "mcp-remote",
+        "<URL>/sse",
+        "--header",
+        "Authorization: Bearer <YOUR_WEBFLOW_TOKEN>"
+      ]
     }
   }
 }
@@ -136,7 +142,7 @@ collections - items - update - items - live; // Update items
 
 # 🗣️ Prompts & Resources
 
-This implementation **does not** include prompts and resources. However, this may change in the future.
+This implementation **does not** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
 
 # 🚧 Development mode
 
@@ -150,7 +156,7 @@ cd mcp-server
 npm install
 ```
 
-2. Add your token:
+2. Add your token to a `.env` file at the root of the project:
 
 ```shell
 # .env
