@@ -47,10 +47,12 @@ export async function fetchUpstreamAuthToken({
   client_id,
   client_secret,
   code,
+  grant_type,
   redirect_uri,
   upstream_url,
 }: {
   code: string | undefined;
+  grant_type: string;
   upstream_url: string;
   client_secret: string;
   redirect_uri: string;
@@ -69,9 +71,12 @@ export async function fetchUpstreamAuthToken({
       client_id,
       client_secret,
       code,
+      grant_type,
       redirect_uri,
     }).toString(),
   });
+  // TODO REMOVE!
+  console.log(resp);
   if (!resp.ok) {
     console.log(await resp.text());
     return [
@@ -79,8 +84,8 @@ export async function fetchUpstreamAuthToken({
       new Response("Failed to fetch access token", { status: 500 }),
     ];
   }
-  const body = await resp.formData();
-  const accessToken = body.get("access_token") as string;
+  const body = (await resp.json()) as { access_token: string };
+  const accessToken = body["access_token"];
   if (!accessToken) {
     return [null, new Response("Missing access token", { status: 400 })];
   }

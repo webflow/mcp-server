@@ -77,13 +77,14 @@ app.get("/callback", async (c) => {
   const [accessToken, errResponse] = await fetchUpstreamAuthToken({
     upstream_url: "https://webflow.com/oauth/access_token",
     client_id: c.env.WEBFLOW_CLIENT_ID,
-    client_secret: c.env.WEBFLOW_CLIENT_ID,
+    client_secret: c.env.WEBFLOW_CLIENT_SECRET,
     code: c.req.query("code"),
+    grant_type: "authorization_code",
     redirect_uri: new URL("/callback", c.req.url).href,
   });
   if (errResponse) return errResponse;
 
-  // Fetch the user info from Webflow?
+  // TODO Fetch the user info from Webflow?
   const { login, name, email } = {
     login: "test",
     name: "test",
