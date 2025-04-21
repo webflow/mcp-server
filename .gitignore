@@ -3,6 +3,7 @@
 .wrangler/
 dist/
 node_modules/
+.dev.vars
 
 # System
 .DS_Store

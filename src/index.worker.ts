@@ -1,7 +1,9 @@
+import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { McpAgent } from "agents/mcp";
 import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
 import { BearerAuthProvider } from "./bearerAuthProvider";
+import { WebflowOAuthHandler } from "./webflow-oauth-handler";
 
 type Props = Record<string, unknown> & {
   accessToken?: string;
@@ -31,8 +33,8 @@ export class WebflowMcp extends McpAgent<Env, unknown, Props> {
   }
 }
 
-// BearerAuthProvider version
-export default new BearerAuthProvider({
+// OAuthProvider version
+export default new OAuthProvider({
   apiRoute: "/sse",
   // @ts-ignore
   apiHandler: WebflowMcp.mount("/sse", {
@@ -43,6 +45,10 @@ export default new BearerAuthProvider({
       headers: "Content-Type, Authorization",
     },
   }),
+  defaultHandler: WebflowOAuthHandler,
+  authorizeEndpoint: "/authorize",
+  tokenEndpoint: "/token",
+  clientRegistrationEndpoint: "/register",
   // Validate that the access token exists
   validateToken: async (token: string) => {
     if (!token.length) {
