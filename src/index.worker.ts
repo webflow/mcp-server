@@ -36,7 +36,7 @@ export class WebflowMcp extends McpAgent<Env, unknown, Props> {
 // OAuthProvider version
 export default new OAuthProvider({
   apiRoute: "/sse",
-  // @ts-ignore
+  // @ts-ignore TS error, but works as expected (same issue with the GitHub demo project of Cloudflare)
   apiHandler: WebflowMcp.mount("/sse", {
     binding: "MCP_OBJECT",
     corsOptions: {
@@ -45,16 +45,9 @@ export default new OAuthProvider({
       headers: "Content-Type, Authorization",
     },
   }),
-  // @ts-ignore this is not an exact match but works as expected (same issue with the GitHub demo project of Cloudflare)
+  // @ts-ignore TS error, but works as expected (same issue with the GitHub demo project of Cloudflare)
   defaultHandler: WebflowOAuthHandler,
   authorizeEndpoint: "/authorize",
   tokenEndpoint: "/token",
   clientRegistrationEndpoint: "/register",
-  // Validate that the access token exists
-  validateToken: async (token: string) => {
-    if (!token.length) {
-      return new Error("Access token is missing");
-    }
-    return null;
-  },
 });
