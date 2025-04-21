@@ -23,19 +23,6 @@ app.get("/authorize", async (c) => {
   return redirectToWebflow(c.req.raw, oauthReqInfo);
 });
 
-// app.post("/authorize", async (c) => {
-//   // Validates form submission, extracts state, and generates Set-Cookie headers to skip approval dialog next time
-//   const { state, headers } = await parseRedirectApproval(
-//     c.req.raw,
-//     env.COOKIE_ENCRYPTION_KEY
-//   );
-//   if (!state.oauthReqInfo) {
-//     return c.text("Invalid request", 400);
-//   }
-
-//   return redirectToWebflow(c.req.raw, state.oauthReqInfo, headers);
-// });
-
 async function redirectToWebflow(
   request: Request,
   oauthReqInfo: AuthRequest,
