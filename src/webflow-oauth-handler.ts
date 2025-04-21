@@ -3,6 +3,7 @@ import type {
   OAuthHelpers,
 } from "@cloudflare/workers-oauth-provider";
 import { Hono } from "hono";
+import { WebflowClient } from "webflow-api";
 import {
   fetchUpstreamAuthToken,
   getUpstreamAuthorizeUrl,
@@ -84,28 +85,30 @@ app.get("/callback", async (c) => {
   });
   if (errResponse) return errResponse;
 
-  // TODO Fetch the user info from Webflow?
-  const { login, name, email } = {
-    login: "test",
-    name: "test",
-    email: "test",
-  };
+  // Fetch the user info from Webflow
+  const webflowClient = new WebflowClient({
+    accessToken: accessToken,
+  });
+  const user = await webflowClient.token.authorizedBy();
+  const { id, firstName, lastName, email } = user;
 
   // Return back to the MCP client a new token
   const { redirectTo } = await c.env.OAUTH_PROVIDER.completeAuthorization({
     request: oauthReqInfo,
-    userId: login,
+    userId: id || "not_provided",
     metadata: {
-      label: name,
+      label: `${firstName} ${lastName}`,
     },
     scope: oauthReqInfo.scope,
-    // This will be available on this.props inside MyMCP
+
+    // This will be available on this.props inside WebflowMCP
     props: {
-      login,
-      name,
+      id,
+      firstName,
+      lastName,
       email,
       accessToken,
-    } as Props,
+    },
   });
 
   return Response.redirect(redirectTo);
