@@ -45,6 +45,7 @@ export default new OAuthProvider({
       headers: "Content-Type, Authorization",
     },
   }),
+  // @ts-ignore this is not an exact match but works as expected (same issue with the GitHub demo project of Cloudflare)
   defaultHandler: WebflowOAuthHandler,
   authorizeEndpoint: "/authorize",
   tokenEndpoint: "/token",
