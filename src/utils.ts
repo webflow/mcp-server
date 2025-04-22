@@ -4,6 +4,7 @@
  * @param {Object} options
  * @param {string} options.upstream_url - The base URL of the upstream service.
  * @param {string} options.client_id - The client ID of the application.
+ * @param {string} options.scope - The scope of the application.
  * @param {string} options.redirect_uri - The redirect URI of the application.
  * @param {string} [options.state] - The state parameter.
  *
@@ -38,6 +39,7 @@ export function getUpstreamAuthorizeUrl({
  * @param {string} options.client_id - The client ID of the application.
  * @param {string} options.client_secret - The client secret of the application.
  * @param {string} options.code - The authorization code.
+ * @param {string} options.grant_type - The grant type.
  * @param {string} options.redirect_uri - The redirect URI of the application.
  * @param {string} options.upstream_url - The token endpoint URL of the upstream service.
  *
