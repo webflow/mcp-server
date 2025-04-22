@@ -17,8 +17,11 @@
     "build:watch": "tsup src/index.ts src/index.worker.ts --external=cloudflare:workers --dts --watch"
   },
   "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.0.3",
+    "@cloudflare/workers-types": "^4.20250421.0",
     "@modelcontextprotocol/sdk": "^1.8.0",
-    "agents": "^0.0.59",
+    "agents": "^0.0.61",
+    "hono": "^4.7.7",
     "webflow-api": "^3.1.1",
     "zod": "^3.24.2"
   },
@@ -28,6 +31,6 @@
     "nodemon": "^3.1.9",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
-    "wrangler": "^4.9.1"
+    "wrangler": "^4.12.1"
   }
 }
