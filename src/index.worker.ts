@@ -2,7 +2,6 @@ import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { McpAgent } from "agents/mcp";
 import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
-import { BearerAuthProvider } from "./bearerAuthProvider";
 import { WebflowOAuthHandler } from "./webflow-oauth-handler";
 
 type Props = Record<string, unknown> & {
