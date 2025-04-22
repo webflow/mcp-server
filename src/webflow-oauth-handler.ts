@@ -10,6 +10,11 @@ import {
   Props,
 } from "./utils";
 import { env } from "cloudflare:workers";
+import {
+  clientIdAlreadyApproved,
+  parseRedirectApproval,
+  renderApprovalDialog,
+} from "./workers-oauth-utils";
 
 const app = new Hono<{ Bindings: Env & { OAUTH_PROVIDER: OAuthHelpers } }>();
 
@@ -20,7 +25,39 @@ app.get("/authorize", async (c) => {
     return c.text("Invalid request", 400);
   }
 
-  return redirectToWebflow(c.req.raw, oauthReqInfo);
+  if (
+    await clientIdAlreadyApproved(
+      c.req.raw,
+      oauthReqInfo.clientId,
+      env.COOKIE_ENCRYPTION_KEY
+    )
+  ) {
+    return redirectToWebflow(c.req.raw, oauthReqInfo);
+  }
+
+  return renderApprovalDialog(c.req.raw, {
+    client: await c.env.OAUTH_PROVIDER.lookupClient(clientId),
+    server: {
+      name: "Webflow MCP Server",
+      logo: "https://dhygzobemt712.cloudfront.net/Logo/Social_Square_Blue.png",
+      description:
+        "You are about to get redirect to Webflow OAuth consent screen to give Webflow MCP server access to some of your sites. If you didn't initiate that request, click on cancel or close this tab.",
+    },
+    state: { oauthReqInfo }, // arbitrary data that flows through the form submission below
+  });
+});
+
+app.post("/authorize", async (c) => {
+  // Validates form submission, extracts state, and generates Set-Cookie headers to skip approval dialog next time
+  const { state, headers } = await parseRedirectApproval(
+    c.req.raw,
+    env.COOKIE_ENCRYPTION_KEY
+  );
+  if (!state.oauthReqInfo) {
+    return c.text("Invalid request", 400);
+  }
+
+  return redirectToWebflow(c.req.raw, state.oauthReqInfo, headers);
 });
 
 async function redirectToWebflow(
