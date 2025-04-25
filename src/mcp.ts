@@ -778,13 +778,12 @@ export function registerTools(
       server.tool(
         "delete_site_script",
         {
-          site_id: z.string(),
-          requestOptions
+          site_id: z.string()
         },
         async ({ site_id }) => {
           try {
             const response = await getClient().sites.scripts.deleteCustomCode(
-              site_id,
+              site_id, 
               requestOptions
             );
             return {
