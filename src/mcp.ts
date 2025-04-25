@@ -2,6 +2,8 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
+import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
+
 import { z } from "zod";
 
 const packageJson = require("../package.json") as any;
@@ -121,6 +123,8 @@ export function registerTools(
     }
   );
 
+  const WebflowPageSchema2 = z.object({
+  })
   // body: Webflow.Page
   const WebflowPageSchema = z.object({
     id: z.string(),
@@ -667,4 +671,139 @@ export function registerTools(
       };
     }
   );
-}
+  // -- Custom Code --
+
+  // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
+  server.tool(
+    "site_registered_scripts_list",
+    {
+      site_id: z.string(),
+    },
+    async ({ site_id }) => {
+      const response = await getClient().scripts.list(
+        site_id,
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+    // GET https://api.webflow.com/v2/sites/:site_id/custom_code
+    server.tool(
+      "site_applied_scripts_list",
+      {
+        site_id: z.string(),
+      },
+      async ({ site_id }) => {
+        const response = await getClient().scripts.list(
+          site_id,
+          requestOptions
+        );
+        return {
+          content: [{ type: "text", text: JSON.stringify(response) }],
+        };
+      }
+    );
+
+  const RegisterInlineSiteScriptSchema = z.object({
+    sourceCode: z.string(),
+    version: z.string(),
+    canCopy: z.boolean().optional(),
+    displayName: z.string(),
+    location: z.string().optional(),
+    attributes: z.record(z.any()).optional()
+  });
+
+
+  // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
+  server.tool(
+    "add_inline_site_script",
+    {
+      site_id: z.string(),
+      request: RegisterInlineSiteScriptSchema,
+    },
+    async ({ site_id, request }) => {
+      try{
+      const registerScriptResponse = await getClient().scripts.registerInline(
+        site_id,
+        {
+          sourceCode: request.sourceCode,
+          version: request.version,
+          displayName: request.displayName,
+          canCopy: request.canCopy !== undefined ? request.canCopy : true,
+        },
+        requestOptions
+      ); 
+
+      let existingScripts: any[] =  [];
+        try {
+         const allScriptsResponse = await getClient().sites.scripts.getCustomCode(
+            site_id,
+            requestOptions
+          );
+          existingScripts = allScriptsResponse.scripts || [];
+        } catch (error) {
+          console.log("Failed to get custom code, assuming empty scripts array", error);
+          existingScripts = [];
+        }
+        
+        const newScript = {
+          id: registerScriptResponse.id ?? " ",
+          location: request.location === "footer" ? ScriptApplyLocation.Footer : ScriptApplyLocation.Header,
+          version: registerScriptResponse.version ??  " ",
+          attributes: request.attributes
+        }
+
+        existingScripts.push(newScript);
+
+        const addedSiteCustomCoderesponse = await getClient().sites.scripts.upsertCustomCode(
+          site_id,
+          {
+            scripts: existingScripts
+          },
+          requestOptions
+        );
+      
+        console.log("Upserted Custom Code", JSON.stringify(addedSiteCustomCoderesponse));
+        return {
+          content: [{ type: "text", text: JSON.stringify(registerScriptResponse) }],
+        };
+      } catch (error) {
+       throw error;
+      }
+      });
+
+      server.tool(
+        "delete_site_script",
+        {
+          site_id: z.string()
+        },
+        async ({ site_id }) => {
+          try {
+            const response = await getClient().sites.scripts.deleteCustomCode(
+              site_id
+            );
+            return {
+              content: [{ type: "text", text: JSON.stringify("Custom Code Deleted") }],
+            };
+          } catch (error) {
+
+            // If it's a 404, we'll try to clear the scripts another way
+            if (isApiError(error) && error.status === 404) {
+              
+              return {
+                content: [{ type: "text", text: error.message ?? "No custom code found" }],
+              };
+            }
+            throw error;
+          }
+        }
+      );
+      
+      function isApiError(error: unknown): error is { status: number; message?: string } {
+        return typeof error === "object" && error !== null && "status" in error;
+      }
+    }
+
