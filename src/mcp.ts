@@ -123,8 +123,6 @@ export function registerTools(
     }
   );
 
-  const WebflowPageSchema2 = z.object({
-  })
   // body: Webflow.Page
   const WebflowPageSchema = z.object({
     id: z.string(),
@@ -697,7 +695,7 @@ export function registerTools(
         site_id: z.string(),
       },
       async ({ site_id }) => {
-        const response = await getClient().scripts.list(
+        const response = await getClient().sites.scripts.getCustomCode(
           site_id,
           requestOptions
         );
@@ -725,7 +723,7 @@ export function registerTools(
       request: RegisterInlineSiteScriptSchema,
     },
     async ({ site_id, request }) => {
-      try{
+
       const registerScriptResponse = await getClient().scripts.registerInline(
         site_id,
         {
@@ -770,9 +768,7 @@ export function registerTools(
         return {
           content: [{ type: "text", text: JSON.stringify(registerScriptResponse) }],
         };
-      } catch (error) {
-       throw error;
-      }
+      
       });
 
       server.tool(
