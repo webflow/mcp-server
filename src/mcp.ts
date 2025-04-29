@@ -244,6 +244,154 @@ export function registerTools(
     }
   );
 
+  // -- COMPONENTS --
+
+  // GET https://api.webflow.com/v2/sites/:site_id/components
+  server.tool(
+    "components_list",
+    {
+      site_id: z.string(),
+      limit: z.number().optional(),
+      offset: z.number().optional(),
+    },
+    async ({ site_id, limit, offset }) => {
+      const response = await getClient().components.list(
+        site_id,
+        {
+          limit,
+          offset,
+        },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
+  server.tool(
+    "components_get_content",
+    {
+      site_id: z.string(),
+      component_id: z.string(),
+      localeId: z.string().optional(),
+      limit: z.number().optional(),
+      offset: z.number().optional(),
+    },
+    async ({ site_id, component_id, localeId, limit, offset }) => {
+      const response = await getClient().components.getContent(
+        site_id,
+        component_id,
+        {
+          localeId,
+          limit,
+          offset,
+        },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
+  server.tool(
+    "components_update_content",
+    {
+      site_id: z.string(),
+      component_id: z.string(),
+      localeId: z.string(),
+      nodes: z.array(z.union([
+        z.object({
+          nodeId: z.string(),
+          text: z.string(),
+        }),
+        z.object({
+          nodeId: z.string(),
+          propertyOverrides: z.array(
+            z.object({
+              propertyId: z.string(),
+              text: z.string(),
+            })
+          ),
+        }),
+      ])),
+    },
+    async ({ site_id, component_id, localeId, nodes }) => {
+      const response = await getClient().components.updateContent(
+        site_id,
+        component_id,
+        {
+          localeId,
+          nodes,
+        },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
+  server.tool(
+    "components_get_properties",
+    {
+      site_id: z.string(),
+      component_id: z.string(),
+      localeId: z.string().optional(),
+      limit: z.number().optional(),
+      offset: z.number().optional(),
+    },
+    async ({ site_id, component_id, localeId, limit, offset }) => {
+      const response = await getClient().components.getProperties(
+        site_id,
+        component_id,
+        {
+          localeId,
+          limit,
+          offset,
+        },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
+  server.tool(
+    "components_update_properties",
+    {
+      site_id: z.string(),
+      component_id: z.string(),
+      localeId: z.string(),
+      properties: z.array(
+        z.object({
+          propertyId: z.string(),
+          text: z.string(),
+        })
+      ),
+    },
+    async ({ site_id, component_id, localeId, properties }) => {
+      const response = await getClient().components.updateProperties(
+        site_id,
+        component_id,
+        {
+          localeId,
+          properties,
+        },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
   // -- CMS --
 
   // GET https://api.webflow.com/v2/sites/:site_id/collections

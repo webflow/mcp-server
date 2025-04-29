@@ -107,6 +107,16 @@ pages - get - content; // Get page content
 pages - update - static - content; // Update page content
 ```
 
+### Components
+
+```
+components - list // List all components in a site
+components - get - content // Get component content (text, images, nested components)
+components - update - content // Update component content for localization
+components - get - properties // Get component properties (default values)
+components - update - properties // Update component properties for localization
+```
+
 ### CMS
 
 ```
