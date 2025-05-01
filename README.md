@@ -11,7 +11,74 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [A Webflow Account](https://webflow.com/signup)
 
-## ▶️ Quick start
+## ▶️ Quick start (hosted on Cloudflare workers)
+
+**For Cursor:**
+
+1. Go to `Settings` → `Cursor Settings` → `MCP`
+2. Click `+ Add New Global MCP Server`
+3. Paste the following configuration (or add the `webflow` part to your existing configuration)
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx mcp-remote https://mcp.webflow.com/sse"
+    }
+  }
+}
+```
+
+4. Save, Cursor will automatically open a new browser window showing an OAuth login page to authorize the Webflow sites you want the MCP server to have access to.
+
+**For Claude Desktop:**
+
+1. Open `Settings` → `Developer`
+2. Click `Edit Config`
+3. Open `claude_desktop_config.json` in a code editor and paste the following configuration (or add the `webflow` part to your existing configuration)
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
+    }
+  }
+}
+```
+
+4. Save the file and restart Claude Desktop (command/ctrl + R). When Claude restarts, it will automatically open a new browser window showing an OAuth login page to authorize the Webflow sites you want the MCP server to have access to.
+
+**For Windsurf:**
+
+1. Navigate to `Windsurf - Settings` → `Advanced Settings`
+2. Scroll down to the `Cascade` section → `Add Server` → `Add custom server +`
+3. Paste the following configuration (or add the `webflow` part to your existing configuration)
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
+    }
+  }
+}
+```
+
+4. Click `Save`, Windsurf will automatically open a new browser window showing an OAuth login page to authorize the Webflow sites you want the MCP server to have access to.
+
+**Important note**
+
+All these methods rely on the `mcp-remote` [npm package](https://www.npmjs.com/package/mcp-remote) which is still considered experimental as of 04/30/2025.
+If at any point you have issues, and want to reset your OAuth tokens, you can run the following command before restarting your MCP client:
+
+```shell
+rm -rf ~/.mcp-auth
+```
+
+## ▶️ Quick start (local installation)
 
 1. **Get your Webflow API token**
 
