@@ -29,16 +29,21 @@ export function registerTools(
   // -- SITES --
 
   // GET https://api.webflow.com/v2/sites
-  server.tool("sites_list", async () => {
-    const response = await getClient().sites.list(requestOptions);
-    return {
-      content: [{ type: "text", text: JSON.stringify(response) }],
-    };
-  });
+  server.tool(
+    "sites_list",
+    "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
+    async () => {
+      const response = await getClient().sites.list(requestOptions);
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
 
   // GET https://api.webflow.com/v2/sites/:site_id
   server.tool(
     "sites_get",
+    "Get detailed information about a specific site including its settings, domains, and publishing status.",
     {
       site_id: z.string(),
     },
@@ -53,6 +58,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/sites/:site_id/publish
   server.tool(
     "sites_publish",
+    "Publish a site to specified domains. This will make the latest changes live on the specified domains.",
     {
       site_id: z.string(),
       customDomains: z.string().array().optional(),
@@ -78,6 +84,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/sites/:site_id/pages
   server.tool(
     "pages_list",
+    "List all pages within a site. Returns page metadata including IDs, titles, and slugs.",
     {
       site_id: z.string(),
       localeId: z.string().optional(),
@@ -103,6 +110,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/pages/:page_id
   server.tool(
     "pages_get_metadata",
+    "Get metadata for a specific page including SEO settings, Open Graph data, and page status (draft/published).",
     {
       page_id: z.string(),
       localeId: z.string().optional(),
@@ -157,6 +165,7 @@ export function registerTools(
   // PUT https://api.webflow.com/v2/pages/:page_id
   server.tool(
     "pages_update_page_settings",
+    "Update page settings including SEO metadata, Open Graph data, slug, and publishing status.",
     {
       page_id: z.string(),
       localeId: z.string().optional(),
@@ -180,6 +189,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/pages/:page_id/dom
   server.tool(
     "pages_get_content",
+    "Get the content structure and data for a specific page including all elements and their properties.",
     {
       page_id: z.string(),
       localeId: z.string().optional(),
@@ -224,6 +234,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/pages/:page_id/dom
   server.tool(
     "pages_update_static_content",
+    "Update static content on a page by modifying text nodes and property overrides.",
     {
       page_id: z.string(),
       localeId: z.string(),
@@ -249,6 +260,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/sites/:site_id/collections
   server.tool(
     "collections_list",
+    "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas.",
     {
       site_id: z.string(),
     },
@@ -266,6 +278,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/collections/:collection_id
   server.tool(
     "collections_get",
+    "Get detailed information about a specific CMS collection including its schema and field definitions.",
     {
       collection_id: z.string(),
     },
@@ -343,6 +356,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/sites/:site_id/collections
   server.tool(
     "collections_create",
+    "Create a new CMS collection in a site with specified name and schema.",
     {
       site_id: z.string(),
       request: WebflowCollectionsCreateRequestSchema,
@@ -360,6 +374,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_static",
+    "Create a new static field in a CMS collection (e.g., text, number, date, etc.).",
     {
       collection_id: z.string(),
       request: StaticFieldSchema,
@@ -377,6 +392,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_option",
+    "Create a new option field in a CMS collection with predefined choices.",
     {
       collection_id: z.string(),
       request: OptionFieldSchema,
@@ -394,6 +410,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_reference",
+    "Create a new reference field in a CMS collection that links to items in another collection.",
     {
       collection_id: z.string(),
       request: ReferenceFieldSchema,
@@ -418,6 +435,7 @@ export function registerTools(
   // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
   server.tool(
     "collection_fields_update",
+    "Update properties of an existing field in a CMS collection.",
     {
       collection_id: z.string(),
       field_id: z.string(),
@@ -461,6 +479,7 @@ export function registerTools(
   // NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
   server.tool(
     "collections_items_create_item_live",
+    "Create and publish new items in a CMS collection directly to the live site.",
     {
       collection_id: z.string(),
       request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
@@ -506,6 +525,7 @@ export function registerTools(
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
   server.tool(
     "collections_items_update_items_live",
+    "Update and publish existing items in a CMS collection directly to the live site.",
     {
       collection_id: z.string(),
       request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
@@ -525,6 +545,7 @@ export function registerTools(
   // GET https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_list_items",
+    "List items in a CMS collection with optional filtering and sorting.",
     {
       collection_id: z.string(),
       cmsLocaleId: z.string().optional(),
@@ -590,6 +611,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_create_item",
+    "Create new items in a CMS collection as drafts.",
     {
       collection_id: z.string(),
       request: WebflowCollectionsItemsCreateItemRequestSchema,
@@ -631,6 +653,7 @@ export function registerTools(
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_update_items",
+    "Update existing items in a CMS collection as drafts.",
     {
       collection_id: z.string(),
       request: WebflowCollectionsItemsUpdateItemsRequestSchema,
@@ -650,6 +673,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
   server.tool(
     "collections_items_publish_items",
+    "Publish draft items in a CMS collection to make them live.",
     {
       collection_id: z.string(),
       itemIds: z.array(z.string()),
