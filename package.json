@@ -19,7 +19,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "agents": "^0.0.59",
-    "webflow-api": "^3.1.1",
+    "webflow-api": "3.1.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
