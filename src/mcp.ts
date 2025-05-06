@@ -698,8 +698,9 @@ export function registerTools(
   // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
   server.tool(
     "site_registered_scripts_list",
+    "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
     {
-      site_id: z.string(),
+      site_id: z.string().describe("Unique identifier for the site."),
     },
     async ({ site_id }) => {
       const response = await getClient().scripts.list(
@@ -715,8 +716,9 @@ export function registerTools(
     // GET https://api.webflow.com/v2/sites/:site_id/custom_code
     server.tool(
       "site_applied_scripts_list",
+      "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
       {
-        site_id: z.string(),
+        site_id: z.string().describe("Unique identifier for the site."),
       },
       async ({ site_id }) => {
         const response = await getClient().sites.scripts.getCustomCode(
@@ -730,20 +732,21 @@ export function registerTools(
     );
 
   const RegisterInlineSiteScriptSchema = z.object({
-    sourceCode: z.string(),
-    version: z.string(),
-    canCopy: z.boolean().optional(),
-    displayName: z.string(),
-    location: z.string().optional(),
-    attributes: z.record(z.any()).optional()
-  });
+    sourceCode: z.string().describe("The inline script source code (hosted by Webflow). Inline scripts are limited to 2000 characters."),
+    version: z.string().describe("A Semantic Version (SemVer) string, denoting the version of the script."),
+    canCopy: z.boolean().optional().describe("Indicates whether the script can be copied on site duplication and transfer."),
+    displayName: z.string().describe("User-facing name for the script. Must be between 1 and 50 alphanumeric characters."),
+    location: z.string().optional().describe("Location where the script is applied. Allowed values: \"header\", \"footer\"."),
+    attributes: z.record(z.any()).optional().describe("Developer-specified key/value pairs to be applied as attributes to the script."),
+  }).describe("Request schema to register an inline script for a site.");
 
 
   // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
   server.tool(
     "add_inline_site_script",
+    "Register an inline script for a site. Inline scripts are limited to 2000 characters. ", 
     {
-      site_id: z.string(),
+      site_id: z.string().describe("Unique identifier for the site."),
       request: RegisterInlineSiteScriptSchema,
     },
     async ({ site_id, request }) => {
