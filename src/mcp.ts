@@ -31,18 +31,23 @@ export function registerTools(
   // -- SITES --
 
   // GET https://api.webflow.com/v2/sites
-  server.tool("sites_list", async () => {
-    const response = await getClient().sites.list(requestOptions);
-    return {
-      content: [{ type: "text", text: JSON.stringify(response) }],
-    };
-  });
+  server.tool(
+    "sites_list",
+    "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
+    async () => {
+      const response = await getClient().sites.list(requestOptions);
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
 
   // GET https://api.webflow.com/v2/sites/:site_id
   server.tool(
     "sites_get",
+    "Get detailed information about a specific site including its settings, domains, and publishing status.",
     {
-      site_id: z.string(),
+      site_id: z.string().describe( "Unique identifier for the site."),
     },
     async ({ site_id }) => {
       const response = await getClient().sites.get(site_id, requestOptions);
@@ -55,10 +60,11 @@ export function registerTools(
   // POST https://api.webflow.com/v2/sites/:site_id/publish
   server.tool(
     "sites_publish",
+    "Publish a site to specified domains. This will make the latest changes live on the specified domains.",
     {
-      site_id: z.string(),
-      customDomains: z.string().array().optional(),
-      publishToWebflowSubdomain: z.boolean().optional().default(false),
+      site_id: z.string().describe( "Unique identifier for the site."),
+      customDomains: z.string().array().optional().describe( "Array of custom domains to publish the site to."),
+      publishToWebflowSubdomain: z.boolean().optional().default(false).describe("Whether to publish to the Webflow subdomain."),
     },
     async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
       const response = await getClient().sites.publish(
@@ -80,11 +86,12 @@ export function registerTools(
   // GET https://api.webflow.com/v2/sites/:site_id/pages
   server.tool(
     "pages_list",
+    "List all pages within a site. Returns page metadata including IDs, titles, and slugs.",
     {
-      site_id: z.string(),
-      localeId: z.string().optional(),
-      limit: z.number().optional(),
-      offset: z.number().optional(),
+      site_id: z.string().describe("The site’s unique ID, used to list its pages."),
+      localeId: z.string().optional().describe("Unique identifier for a specific locale. Applicable when using localization."),
+      limit: z.number().optional().describe("Maximum number of records to be returned (max limit: 100)"),
+      offset: z.number().optional().describe("Offset used for pagination if the results have more than limit records."),
     },
     async ({ site_id, localeId, limit, offset }) => {
       const response = await getClient().pages.list(
@@ -105,9 +112,10 @@ export function registerTools(
   // GET https://api.webflow.com/v2/pages/:page_id
   server.tool(
     "pages_get_metadata",
+    "Get metadata for a specific page including SEO settings, Open Graph data, and page status (draft/published).",
     {
-      page_id: z.string(),
-      localeId: z.string().optional(),
+      page_id: z.string().describe("Unique identifier for the page."),
+      localeId: z.string().optional().describe("Unique identifier for a specific locale. Applicable when using localization."),
     },
     async ({ page_id, localeId }) => {
       const response = await getClient().pages.getMetadata(
@@ -125,43 +133,44 @@ export function registerTools(
 
   // body: Webflow.Page
   const WebflowPageSchema = z.object({
-    id: z.string(),
-    siteId: z.string().optional(),
-    title: z.string().optional(),
-    slug: z.string().optional(),
-    parentId: z.string().optional(),
-    collectionId: z.string().optional(),
-    createdOn: z.date().optional(),
-    lastUpdated: z.date().optional(),
-    archived: z.boolean().optional(),
-    draft: z.boolean().optional(),
-    canBranch: z.boolean().optional(),
-    isBranch: z.boolean().optional(),
-    isMembersOnly: z.boolean().optional(),
+    id: z.string().describe("Unique identifier for a Page."),
+    siteId: z.string().optional().describe("Unique identifier for the Site."),
+    title: z.string().optional().describe("Title of the page."),
+    slug: z.string().optional().describe("Slug of the page (derived from title)."),
+    parentId: z.string().optional().describe("Unique identifier for the parent folder."),
+    collectionId: z.string().optional().describe("Unique identifier for the linked collection, NULL id the Page is not part of a collection."),
+    createdOn: z.date().optional().describe("Date when the page was created."),
+    lastUpdated: z.date().optional().describe("Date when the page was last updated."),
+    archived: z.boolean().optional().describe("Indicates if the page is archived."),
+    draft: z.boolean().optional().describe("Indicates if the page is a draft."),
+    canBranch: z.boolean().optional().describe("Indicates if the page can be branched."),
+    isBranch: z.boolean().optional().describe("Indicates if the page is Branch of another page."),
+    isMembersOnly: z.boolean().optional().describe("Indicates whether the Page is restricted by Memberships Controls."),
     seo: z
       .object({
-        title: z.string().optional(),
-        description: z.string().optional(),
+        title: z.string().optional().describe("The Page title shown in search engine results."),
+        description: z.string().optional().describe("The Page description shown in search engine results."),
       })
-      .optional(),
+      .optional().describe("SEO-related fields for the page."),
     openGraph: z
       .object({
-        title: z.string().optional(),
-        titleCopied: z.boolean().optional(),
-        description: z.string().optional(),
-        descriptionCopied: z.boolean().optional(),
+        title: z.string().optional().describe("The title supplied to Open Graph annotations."),
+        titleCopied: z.boolean().optional().describe("Indicates the Open Graph title was copied from the SEO title."),
+        description: z.string().optional().describe("The description supplied to Open Graph annotations."),
+        descriptionCopied: z.boolean().optional().describe("Indicates the Open Graph description was copied from the SEO description."),
       })
       .optional(),
-    localeId: z.string().optional(),
-    publishedPath: z.string().optional(),
+    localeId: z.string().optional().describe("Unique identifier for the page locale. Applicable when using localization."),
+    publishedPath: z.string().optional().describe("Relative path of the published page."),
   });
 
   // PUT https://api.webflow.com/v2/pages/:page_id
   server.tool(
     "pages_update_page_settings",
+    "Update page settings including SEO metadata, Open Graph data, slug, and publishing status.",
     {
-      page_id: z.string(),
-      localeId: z.string().optional(),
+      page_id: z.string().describe("Unique identifier for the page."),
+      localeId: z.string().optional().describe("Unique identifier for a specific locale. Applicable when using localization."),
       body: WebflowPageSchema,
     },
     async ({ page_id, localeId, body }) => {
@@ -182,11 +191,12 @@ export function registerTools(
   // GET https://api.webflow.com/v2/pages/:page_id/dom
   server.tool(
     "pages_get_content",
+    "Get the content structure and data for a specific page including all elements and their properties.",
     {
-      page_id: z.string(),
-      localeId: z.string().optional(),
-      limit: z.number().optional(),
-      offset: z.number().optional(),
+      page_id: z.string().describe("Unique identifier for the page."),
+      localeId: z.string().optional().describe("Unique identifier for a specific locale. Applicable when using localization."),
+      limit: z.number().optional().describe("Maximum number of records to be returned (max limit: 100)"),
+      offset: z.number().optional().describe("Offset used for pagination if the results have more than limit records."),
     },
     async ({ page_id, localeId, limit, offset }) => {
       const response = await getClient().pages.getContent(
@@ -208,27 +218,28 @@ export function registerTools(
   const WebflowPageDomWriteNodesItemSchema = z
     .union([
       z.object({
-        nodeId: z.string(),
-        text: z.string(),
-      }),
+        nodeId: z.string().describe("Unique identifier for the node."),
+        text: z.string().describe("HTML content of the node, including the HTML tag. The HTML tags must be the same as what’s returned from the Get Content endpoint."),
+      }).describe("Text node to be updated."),
       z.object({
-        nodeId: z.string(),
+        nodeId: z.string().describe("Unique identifier for the node."),
         propertyOverrides: z.array(
           z.object({
-            propertyId: z.string(),
-            text: z.string(),
-          })
+            propertyId: z.string().describe("Unique identifier for the property."),
+            text: z.string().describe("Value used to override a component property; must be type-compatible to prevent errors."),
+          }).describe("Properties to override for this locale’s component instances."),
         ),
-      }),
+      }).describe("Update text property overrides of a component instance."),
     ])
     .array();
 
   // POST https://api.webflow.com/v2/pages/:page_id/dom
   server.tool(
     "pages_update_static_content",
+    "Update content on a static page in secondary locales by modifying text nodes and property overrides.",
     {
-      page_id: z.string(),
-      localeId: z.string(),
+      page_id: z.string().describe("Unique identifier for the page."),
+      localeId: z.string().describe("Unique identifier for a specific locale. Applicable when using localization."),
       nodes: WebflowPageDomWriteNodesItemSchema,
     },
     async ({ page_id, localeId, nodes }) => {
@@ -251,8 +262,9 @@ export function registerTools(
   // GET https://api.webflow.com/v2/sites/:site_id/collections
   server.tool(
     "collections_list",
+    "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas.",
     {
-      site_id: z.string(),
+      site_id: z.string().describe("Unique identifier for the Site."),
     },
     async ({ site_id }) => {
       const response = await getClient().collections.list(
@@ -268,8 +280,9 @@ export function registerTools(
   // GET https://api.webflow.com/v2/collections/:collection_id
   server.tool(
     "collections_get",
+    "Get detailed information about a specific CMS collection including its schema and field definitions.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
     },
     async ({ collection_id }) => {
       const response = await getClient().collections.get(
@@ -283,9 +296,9 @@ export function registerTools(
   );
 
   const StaticFieldSchema = z.object({
-    id: z.string().optional(),
-    isEditable: z.boolean().optional(),
-    isRequired: z.boolean().optional(),
+    id: z.string().optional().describe("Unique identifier for the Field."),
+    isEditable: z.boolean().optional().describe("Indicates if the field is editable."),
+    isRequired: z.boolean().optional().describe("Indicates if the field is required."),
     type: z.union([
       z.literal("Color"),
       z.literal("DateTime"),
@@ -300,53 +313,54 @@ export function registerTools(
       z.literal("RichText"),
       z.literal("Switch"),
       z.literal("Video"),
-    ]),
-    displayName: z.string(),
-    helpText: z.string().optional(),
+    ]).describe("Type of the field. Choose of these appropriate field types."),
+    displayName: z.string().describe("Name of the field."),
+    helpText: z.string().optional().describe("Help text for the field."),
   });
 
   const OptionFieldSchema = z.object({
-    id: z.string().optional(),
-    isEditable: z.boolean().optional(),
-    isRequired: z.boolean().optional(),
-    type: z.literal("Option"),
-    displayName: z.string(),
-    helpText: z.string().optional(),
+    id: z.string().optional().describe("Unique identifier for the Field."),
+    isEditable: z.boolean().optional().describe("Indicates if the field is editable."),
+    isRequired: z.boolean().optional().describe("Indicates if the field is required."),
+    type: z.literal("Option").describe("Type of the field. Set this to \"Option\"."),
+    displayName: z.string().describe("Name of the field."),
+    helpText: z.string().optional().describe("Help text for the field."),
     metadata: z.object({
       options: z.array(
         z.object({
-          name: z.string(),
-          id: z.string().optional(),
-        })
+          name: z.string().describe("Name of the option."),
+          id: z.string().optional().describe("Unique identifier for the option."),
+        }).describe("Array of options for the field."),
       ),
     }),
   });
 
   const ReferenceFieldSchema = z.object({
-    id: z.string().optional(),
-    isEditable: z.boolean().optional(),
-    isRequired: z.boolean().optional(),
-    type: z.union([z.literal("MultiReference"), z.literal("Reference")]),
-    displayName: z.string(),
-    helpText: z.string().optional(),
+    id: z.string().optional().describe("Unique identifier for the Field."),
+    isEditable: z.boolean().optional().describe("Indicates if the field is editable."),
+    isRequired: z.boolean().optional().describe("Indicates if the field is required."),
+    type: z.union([z.literal("MultiReference"), z.literal("Reference")]).describe("Type of the field. Choose of these appropriate field types."),
+    displayName: z.string().describe("Name of the field."),
+    helpText: z.string().optional().describe("Help text for the field."),
     metadata: z.object({
       collectionId: z.string(),
-    }),
+    }).describe("ID of the referenced collection. Use this only for Reference and MultiReference fields."),
   });
 
   // request: Webflow.CollectionsCreateRequest
   // NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
   const WebflowCollectionsCreateRequestSchema = z.object({
-    displayName: z.string(),
-    singularName: z.string(),
-    slug: z.string().optional(),
+    displayName: z.string().describe("Name of the collection. Each collection must have a unique name within the site."),
+    singularName: z.string().describe("Singular name of the collection."),
+    slug: z.string().optional().describe("Slug of the collection in the site URL structure. "),
   });
 
   // POST https://api.webflow.com/v2/sites/:site_id/collections
   server.tool(
     "collections_create",
+    "Create a new CMS collection in a site with specified name and schema.",
     {
-      site_id: z.string(),
+      site_id: z.string().describe("Unique identifier for the Site."),
       request: WebflowCollectionsCreateRequestSchema,
     },
     async ({ site_id, request }) => {
@@ -362,8 +376,9 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_static",
+    "Create a new static field in a CMS collection (e.g., text, number, date, etc.).",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: StaticFieldSchema,
     },
     async ({ collection_id, request }) => {
@@ -379,8 +394,9 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_option",
+    "Create a new option field in a CMS collection with predefined choices.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: OptionFieldSchema,
     },
     async ({ collection_id, request }) => {
@@ -396,8 +412,9 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
   server.tool(
     "collection_fields_create_reference",
+    "Create a new reference field in a CMS collection that links to items in another collection.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: ReferenceFieldSchema,
     },
     async ({ collection_id, request }) => {
@@ -412,17 +429,18 @@ export function registerTools(
 
   // request: Webflow.collections.FieldUpdate
   const WebflowCollectionsFieldUpdateSchema = z.object({
-    isRequired: z.boolean().optional(),
-    displayName: z.string().optional(),
-    helpText: z.string().optional(),
-  });
+    isRequired: z.boolean().optional().describe("Indicates if the field is required in a collection."),
+    displayName: z.string().optional().describe("Name of the field."),
+    helpText: z.string().optional().describe("Help text for the field."),
+  }).describe("Request schema to update collection field metadata.");
 
   // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
   server.tool(
     "collection_fields_update",
+    "Update properties of an existing field in a CMS collection.",
     {
-      collection_id: z.string(),
-      field_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
+      field_id: z.string().describe("Unique identifier for the Field."),
       request: WebflowCollectionsFieldUpdateSchema,
     },
     async ({ collection_id, field_id, request }) => {
@@ -442,29 +460,30 @@ export function registerTools(
       .array(
         z.object({
           id: z.string().optional(),
-          cmsLocaleId: z.string().optional(),
-          lastPublished: z.string().optional(),
-          lastUpdated: z.string().optional(),
-          createdOn: z.string().optional(),
-          isArchived: z.boolean().optional(),
-          isDraft: z.boolean().optional(),
+          cmsLocaleId: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+          lastPublished: z.string().optional().describe("Date when the item was last published."),
+          lastUpdated: z.string().optional().describe("Date when the item was last updated."),
+          createdOn: z.string().optional().describe("Date when the item was created."),
+          isArchived: z.boolean().optional().describe("Indicates if the item is archived."),
+          isDraft: z.boolean().optional().describe("Indicates if the item is a draft."),
           fieldData: z.record(z.any()).and(
             z.object({
-              name: z.string(),
-              slug: z.string(),
+              name: z.string().describe("Name of the field."),
+              slug: z.string().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
             })
           ),
         })
       )
-      .optional(),
+      .optional().describe("Array of items to be created."),
   });
 
   // POST https://api.webflow.com/v2/collections/:collection_id/items/live
   // NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
   server.tool(
     "collections_items_create_item_live",
+    "Create and publish new items in a CMS collection directly to the live site.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
@@ -485,21 +504,21 @@ export function registerTools(
       .array(
         z.object({
           id: z.string(),
-          cmsLocaleId: z.string().optional(),
-          lastPublished: z.string().optional(),
-          lastUpdated: z.string().optional(),
-          createdOn: z.string().optional(),
-          isArchived: z.boolean().optional(),
-          isDraft: z.boolean().optional(),
+          cmsLocaleId: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+          lastPublished: z.string().optional().describe("Date when the item was last published."),
+          lastUpdated: z.string().optional().describe("Date when the item was last updated."),
+          createdOn: z.string().optional().describe("Date when the item was created."),
+          isArchived: z.boolean().optional().describe("Indicates if the item is archived."),
+          isDraft: z.boolean().optional().describe("Indicates if the item is a draft."),
           fieldData: z
             .record(z.any())
             .and(
               z.object({
-                name: z.string().optional(),
-                slug: z.string().optional(),
+                name: z.string().optional().describe("Name of the field."),
+                slug: z.string().optional().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
               })
             )
-            .optional(),
+            .optional().describe("Array of items to be updated."),
         })
       )
       .optional(),
@@ -508,8 +527,9 @@ export function registerTools(
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
   server.tool(
     "collections_items_update_items_live",
+    "Update and publish existing items in a CMS collection directly to the live site.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
@@ -527,15 +547,16 @@ export function registerTools(
   // GET https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_list_items",
+    "List items in a CMS collection with optional filtering and sorting.",
     {
-      collection_id: z.string(),
-      cmsLocaleId: z.string().optional(),
-      offset: z.number().optional(),
-      limit: z.number().optional(),
-      name: z.string().optional(),
-      slug: z.string().optional(),
-      sortBy: z.enum(["lastPublished", "name", "slug"]).optional(),
-      sortOrder: z.enum(["asc", "desc"]).optional(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
+      cmsLocaleId: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+      limit: z.number().optional().describe("Maximum number of records to be returned (max limit: 100)"),
+      offset: z.number().optional().describe("Offset used for pagination if the results have more than limit records."),
+      name: z.string().optional().describe("Name of the field."),
+      slug: z.string().optional().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
+      sortBy: z.enum(["lastPublished", "name", "slug"]).optional().describe("Field to sort the items by. Allowed values: lastPublished, name, slug."),
+      sortOrder: z.enum(["asc", "desc"]).optional().describe("Order to sort the items by. Allowed values: asc, desc."),
     },
     async ({
       collection_id,
@@ -592,6 +613,7 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_create_item",
+    "Create new items in a CMS collection as drafts.",
     {
       collection_id: z.string(),
       request: WebflowCollectionsItemsCreateItemRequestSchema,
@@ -610,20 +632,20 @@ export function registerTools(
 
   // CollectionItemWithIdInput
   const CollectionItemWithIdInputSchema = z.object({
-    id: z.string(),
-    cmsLocaleId: z.string().optional(),
-    lastPublished: z.string().optional(),
-    lastUpdated: z.string().optional(),
-    createdOn: z.string().optional(),
-    isArchived: z.boolean().optional(),
-    isDraft: z.boolean().optional(),
+    id: z.string().describe("Unique identifier for the item."),
+    cmsLocaleId: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+    lastPublished: z.string().optional().describe("Date when the item was last published."),
+    lastUpdated: z.string().optional().describe("Date when the item was last updated."),
+    createdOn: z.string().optional().describe("Date when the item was created."),
+    isArchived: z.boolean().optional().describe("Indicates if the item is archived."),
+    isDraft: z.boolean().optional().describe("Indicates if the item is a draft."),
     fieldData: z.record(z.any()).and(
       z.object({
-        name: z.string(),
-        slug: z.string(),
+        name: z.string().describe("Name of the field."),
+        slug: z.string().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
       })
     ),
-  });
+  }).describe("Collection item update request schema.");
 
   // request: Webflow.collections.ItemsUpdateItemsRequest
   const WebflowCollectionsItemsUpdateItemsRequestSchema = z.object({
@@ -633,8 +655,9 @@ export function registerTools(
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_update_items",
+    "Update existing items in a CMS collection as drafts.",
     {
-      collection_id: z.string(),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
       request: WebflowCollectionsItemsUpdateItemsRequestSchema,
     },
     async ({ collection_id, request }) => {
@@ -652,9 +675,10 @@ export function registerTools(
   // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
   server.tool(
     "collections_items_publish_items",
+    "Publish draft items in a CMS collection to make them live.",
     {
-      collection_id: z.string(),
-      itemIds: z.array(z.string()),
+      collection_id: z.string().describe("Unique identifier for the Collection."),
+      itemIds: z.array(z.string()).describe("Array of item IDs to be published."),
     },
     async ({ collection_id, itemIds }) => {
       const response = await getClient().collections.items.publishItem(
