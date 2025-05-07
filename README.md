@@ -1,4 +1,4 @@
-# Webflow Official MCP Server
+# Webflow's Official MCP Server
 
 A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI agents to interact with Webflow APIs. Learn more about Webflow's Data API in the [developer documentation](https://developers.webflow.com/data/reference).
 
