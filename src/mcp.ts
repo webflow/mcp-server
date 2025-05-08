@@ -589,17 +589,17 @@ export function registerTools(
 
   // CollectionItemPostSingle
   const CollectionItemPostSingleSchema = z.object({
-    id: z.string().optional(),
-    cmsLocaleId: z.string().optional(),
-    lastPublished: z.string().optional(),
-    lastUpdated: z.string().optional(),
-    createdOn: z.string().optional(),
-    isArchived: z.boolean().optional(),
-    isDraft: z.boolean().optional(),
+    id: z.string().optional().describe("Unique identifier for the Collection."),
+    cmsLocaleId: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+    lastPublished: z.string().optional().describe("Date when the item was last published."),
+    lastUpdated: z.string().optional().describe("Date when the item was last updated."),
+    createdOn: z.string().optional().describe("Date when the item was created."),
+    isArchived: z.boolean().optional().describe("Indicates if the item is archived."),
+    isDraft: z.boolean().optional().describe("Indicates if the item is a draft."),
     fieldData: z.record(z.any()).and(
       z.object({
-        name: z.string(),
-        slug: z.string(),
+        name: z.string().describe("Name of the field."),
+        slug: z.string().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
       })
     ),
   });
@@ -644,7 +644,7 @@ export function registerTools(
         name: z.string().optional().describe("Name of the field."),
         slug: z.string().optional().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
       })
-    ),
+    ) ,
   }).describe("Collection item update request schema.");
 
   // request: Webflow.collections.ItemsUpdateItemsRequest
@@ -686,6 +686,28 @@ export function registerTools(
         {
           itemIds: itemIds,
         },
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+   // DEL https://api.webflow.com/v2/collections/:collection_id/items/
+   server.tool(
+    "collections_items_delete_item",
+    "Delete an item in a CMS collection. Items will only be deleted in the primary locale unless a cmsLocaleId is included in the request. ",
+    {
+      collection_id: z.string().describe("Unique identifier for the Collection."),
+      itemId: z.string().describe("Item ID to be deleted."),
+      cmsLocaleIds: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+    },
+    async ({ collection_id, itemId, cmsLocaleIds }) => {
+      const response = await getClient().collections.items.deleteItem(
+        collection_id,
+        itemId,
+        { cmsLocaleId: cmsLocaleIds},
         requestOptions
       );
       return {
@@ -800,8 +822,9 @@ export function registerTools(
 
       server.tool(
         "delete_site_script",
+        "Delete a custom script from a site.",
         {
-          site_id: z.string()
+          site_id: z.string().describe("Unique identifier for the site."),
         },
         async ({ site_id }) => {
           try {
