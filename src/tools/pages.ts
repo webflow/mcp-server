@@ -6,7 +6,7 @@ import {
   WebflowPageDomWriteNodesItemSchema,
   WebflowPageSchema,
 } from "../schemas";
-import { formatResponse } from "../utils";
+import { formatErrorResponse, formatResponse } from "../utils";
 
 export function registerPagesTools(
   server: McpServer,
@@ -38,16 +38,20 @@ export function registerPagesTools(
         ),
     },
     async ({ site_id, localeId, limit, offset }) => {
-      const response = await getClient().pages.list(
-        site_id,
-        {
-          localeId,
-          limit,
-          offset,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().pages.list(
+          site_id,
+          {
+            localeId,
+            limit,
+            offset,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -65,14 +69,18 @@ export function registerPagesTools(
         ),
     },
     async ({ page_id, localeId }) => {
-      const response = await getClient().pages.getMetadata(
-        page_id,
-        {
-          localeId,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().pages.getMetadata(
+          page_id,
+          {
+            localeId,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -91,15 +99,19 @@ export function registerPagesTools(
       body: WebflowPageSchema,
     },
     async ({ page_id, localeId, body }) => {
-      const response = await getClient().pages.updatePageSettings(
-        page_id,
-        {
-          localeId,
-          body,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().pages.updatePageSettings(
+          page_id,
+          {
+            localeId,
+            body,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -127,16 +139,20 @@ export function registerPagesTools(
         ),
     },
     async ({ page_id, localeId, limit, offset }) => {
-      const response = await getClient().pages.getContent(
-        page_id,
-        {
-          localeId,
-          limit,
-          offset,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().pages.getContent(
+          page_id,
+          {
+            localeId,
+            limit,
+            offset,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -154,15 +170,19 @@ export function registerPagesTools(
       nodes: WebflowPageDomWriteNodesItemSchema,
     },
     async ({ page_id, localeId, nodes }) => {
-      const response = await getClient().pages.updateStaticContent(
-        page_id,
-        {
-          localeId,
-          nodes,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().pages.updateStaticContent(
+          page_id,
+          {
+            localeId,
+            nodes,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 }

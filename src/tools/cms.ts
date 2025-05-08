@@ -15,7 +15,7 @@ import {
   WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
   WebflowCollectionsItemsUpdateItemsRequestSchema,
 } from "../schemas";
-import { formatResponse } from "../utils";
+import { formatErrorResponse, formatResponse } from "../utils";
 
 export function registerCmsTools(
   server: McpServer,
@@ -29,11 +29,15 @@ export function registerCmsTools(
       site_id: z.string().describe("Unique identifier for the Site."),
     },
     async ({ site_id }) => {
-      const response = await getClient().collections.list(
-        site_id,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.list(
+          site_id,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -47,11 +51,15 @@ export function registerCmsTools(
         .describe("Unique identifier for the Collection."),
     },
     async ({ collection_id }) => {
-      const response = await getClient().collections.get(
-        collection_id,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.get(
+          collection_id,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -64,12 +72,16 @@ export function registerCmsTools(
       request: WebflowCollectionsCreateRequestSchema,
     },
     async ({ site_id, request }) => {
-      const response = await getClient().collections.create(
-        site_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.create(
+          site_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -84,12 +96,16 @@ export function registerCmsTools(
       request: StaticFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.fields.create(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.fields.create(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -104,12 +120,16 @@ export function registerCmsTools(
       request: OptionFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.fields.create(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.fields.create(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -124,12 +144,16 @@ export function registerCmsTools(
       request: ReferenceFieldSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.fields.create(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.fields.create(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -145,13 +169,17 @@ export function registerCmsTools(
       request: WebflowCollectionsFieldUpdateSchema,
     },
     async ({ collection_id, field_id, request }) => {
-      const response = await getClient().collections.fields.update(
-        collection_id,
-        field_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.fields.update(
+          collection_id,
+          field_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -167,12 +195,16 @@ export function registerCmsTools(
       request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.items.createItemLive(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.createItemLive(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -187,12 +219,16 @@ export function registerCmsTools(
       request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.items.updateItemsLive(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.updateItemsLive(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -238,20 +274,24 @@ export function registerCmsTools(
       sortBy,
       sortOrder,
     }) => {
-      const response = await getClient().collections.items.listItems(
-        collection_id,
-        {
-          cmsLocaleId,
-          offset,
-          limit,
-          name,
-          slug,
-          sortBy,
-          sortOrder,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.listItems(
+          collection_id,
+          {
+            cmsLocaleId,
+            offset,
+            limit,
+            name,
+            slug,
+            sortBy,
+            sortOrder,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -264,12 +304,16 @@ export function registerCmsTools(
       request: WebflowCollectionsItemsCreateItemRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.items.createItem(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.createItem(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -284,12 +328,16 @@ export function registerCmsTools(
       request: WebflowCollectionsItemsUpdateItemsRequestSchema,
     },
     async ({ collection_id, request }) => {
-      const response = await getClient().collections.items.updateItems(
-        collection_id,
-        request,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.updateItems(
+          collection_id,
+          request,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -306,14 +354,18 @@ export function registerCmsTools(
         .describe("Array of item IDs to be published."),
     },
     async ({ collection_id, itemIds }) => {
-      const response = await getClient().collections.items.publishItem(
-        collection_id,
-        {
-          itemIds: itemIds,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().collections.items.publishItem(
+          collection_id,
+          {
+            itemIds: itemIds,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 }

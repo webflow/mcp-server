@@ -4,7 +4,7 @@ import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
-import { formatResponse, isApiError } from "../utils";
+import { formatErrorResponse, formatResponse, isApiError } from "../utils";
 
 export function registerScriptsTools(
   server: McpServer,
@@ -18,8 +18,15 @@ export function registerScriptsTools(
       site_id: z.string().describe("Unique identifier for the site."),
     },
     async ({ site_id }) => {
-      const response = await getClient().scripts.list(site_id, requestOptions);
-      return formatResponse(response);
+      try {
+        const response = await getClient().scripts.list(
+          site_id,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -31,11 +38,15 @@ export function registerScriptsTools(
       site_id: z.string().describe("Unique identifier for the site."),
     },
     async ({ site_id }) => {
-      const response = await getClient().sites.scripts.getCustomCode(
-        site_id,
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().sites.scripts.getCustomCode(
+          site_id,
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 

@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
-import { formatResponse } from "../utils";
+import { formatErrorResponse, formatResponse } from "../utils";
 
 export function registerSiteTools(
   server: McpServer,
@@ -13,8 +13,12 @@ export function registerSiteTools(
     "sites_list",
     "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
     async () => {
-      const response = await getClient().sites.list(requestOptions);
-      return formatResponse(response);
+      try {
+        const response = await getClient().sites.list(requestOptions);
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -26,8 +30,12 @@ export function registerSiteTools(
       site_id: z.string().describe("Unique identifier for the site."),
     },
     async ({ site_id }) => {
-      const response = await getClient().sites.get(site_id, requestOptions);
-      return formatResponse(response);
+      try {
+        const response = await getClient().sites.get(site_id, requestOptions);
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 
@@ -49,15 +57,19 @@ export function registerSiteTools(
         .describe("Whether to publish to the Webflow subdomain."),
     },
     async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
-      const response = await getClient().sites.publish(
-        site_id,
-        {
-          customDomains,
-          publishToWebflowSubdomain,
-        },
-        requestOptions
-      );
-      return formatResponse(response);
+      try {
+        const response = await getClient().sites.publish(
+          site_id,
+          {
+            customDomains,
+            publishToWebflowSubdomain,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 }
