@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
+import { formatResponse } from "../utils";
 
 export function registerSiteTools(
   server: McpServer,
@@ -13,9 +14,7 @@ export function registerSiteTools(
     "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
     async () => {
       const response = await getClient().sites.list(requestOptions);
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -28,9 +27,7 @@ export function registerSiteTools(
     },
     async ({ site_id }) => {
       const response = await getClient().sites.get(site_id, requestOptions);
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -60,9 +57,7 @@ export function registerSiteTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 }

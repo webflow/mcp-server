@@ -6,6 +6,7 @@ import {
   WebflowPageDomWriteNodesItemSchema,
   WebflowPageSchema,
 } from "../schemas";
+import { formatResponse } from "../utils";
 
 export function registerPagesTools(
   server: McpServer,
@@ -46,9 +47,7 @@ export function registerPagesTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -73,9 +72,7 @@ export function registerPagesTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -102,9 +99,7 @@ export function registerPagesTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -141,9 +136,7 @@ export function registerPagesTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -169,9 +162,7 @@ export function registerPagesTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 }

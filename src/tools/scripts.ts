@@ -4,6 +4,7 @@ import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
+import { formatResponse, isApiError } from "../utils";
 
 export function registerScriptsTools(
   server: McpServer,
@@ -18,9 +19,7 @@ export function registerScriptsTools(
     },
     async ({ site_id }) => {
       const response = await getClient().scripts.list(site_id, requestOptions);
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -36,9 +35,7 @@ export function registerScriptsTools(
         site_id,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -103,11 +100,7 @@ export function registerScriptsTools(
         "Upserted Custom Code",
         JSON.stringify(addedSiteCustomCoderesponse)
       );
-      return {
-        content: [
-          { type: "text", text: JSON.stringify(registerScriptResponse) },
-        ],
-      };
+      return formatResponse(registerScriptResponse);
     }
   );
 
@@ -122,28 +115,14 @@ export function registerScriptsTools(
           site_id,
           requestOptions
         );
-        return {
-          content: [
-            { type: "text", text: JSON.stringify("Custom Code Deleted") },
-          ],
-        };
+        return formatResponse("Custom Code Deleted");
       } catch (error) {
         // If it's a 404, we'll try to clear the scripts another way
         if (isApiError(error) && error.status === 404) {
-          return {
-            content: [
-              { type: "text", text: error.message ?? "No custom code found" },
-            ],
-          };
+          return formatResponse(error.message ?? "No custom code found");
         }
         throw error;
       }
     }
   );
-
-  function isApiError(
-    error: unknown
-  ): error is { status: number; message?: string } {
-    return typeof error === "object" && error !== null && "status" in error;
-  }
 }

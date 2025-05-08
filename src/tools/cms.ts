@@ -15,6 +15,7 @@ import {
   WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
   WebflowCollectionsItemsUpdateItemsRequestSchema,
 } from "../schemas";
+import { formatResponse } from "../utils";
 
 export function registerCmsTools(
   server: McpServer,
@@ -32,9 +33,7 @@ export function registerCmsTools(
         site_id,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -52,9 +51,7 @@ export function registerCmsTools(
         collection_id,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -72,7 +69,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return { content: [{ type: "text", text: JSON.stringify(response) }] };
+      return formatResponse(response);
     }
   );
 
@@ -92,7 +89,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return { content: [{ type: "text", text: JSON.stringify(response) }] };
+      return formatResponse(response);
     }
   );
 
@@ -112,7 +109,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return { content: [{ type: "text", text: JSON.stringify(response) }] };
+      return formatResponse(response);
     }
   );
 
@@ -132,7 +129,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return { content: [{ type: "text", text: JSON.stringify(response) }] };
+      return formatResponse(response);
     }
   );
 
@@ -154,7 +151,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return { content: [{ type: "text", text: JSON.stringify(response) }] };
+      return formatResponse(response);
     }
   );
 
@@ -175,9 +172,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -197,9 +192,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -258,9 +251,7 @@ export function registerCmsTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -278,9 +269,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -300,9 +289,7 @@ export function registerCmsTools(
         request,
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 
@@ -326,9 +313,7 @@ export function registerCmsTools(
         },
         requestOptions
       );
-      return {
-        content: [{ type: "text", text: JSON.stringify(response) }],
-      };
+      return formatResponse(response);
     }
   );
 }
