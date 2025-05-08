@@ -641,8 +641,8 @@ export function registerTools(
     isDraft: z.boolean().optional().describe("Indicates if the item is a draft."),
     fieldData: z.record(z.any()).and(
       z.object({
-        name: z.string().describe("Name of the field."),
-        slug: z.string().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
+        name: z.string().optional().describe("Name of the field."),
+        slug: z.string().optional().describe("URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."),
       })
     ),
   }).describe("Collection item update request schema.");
