@@ -1,0 +1,186 @@
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { WebflowClient } from "webflow-api";
+import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
+import { z } from "zod";
+import { requestOptions } from "../mcp";
+
+export function registerScriptsTools(
+  server: McpServer,
+  getClient: () => WebflowClient
+) {
+  // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
+  server.tool(
+    "site_registered_scripts_list",
+    "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
+    {
+      site_id: z.string().describe("Unique identifier for the site."),
+    },
+    async ({ site_id }) => {
+      const response = await getClient().scripts.list(site_id, requestOptions);
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  // GET https://api.webflow.com/v2/sites/:site_id/custom_code
+  server.tool(
+    "site_applied_scripts_list",
+    "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
+    {
+      site_id: z.string().describe("Unique identifier for the site."),
+    },
+    async ({ site_id }) => {
+      const response = await getClient().sites.scripts.getCustomCode(
+        site_id,
+        requestOptions
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(response) }],
+      };
+    }
+  );
+
+  const RegisterInlineSiteScriptSchema = z
+    .object({
+      sourceCode: z
+        .string()
+        .describe(
+          "The inline script source code (hosted by Webflow). Inline scripts are limited to 2000 characters."
+        ),
+      version: z
+        .string()
+        .describe(
+          "A Semantic Version (SemVer) string, denoting the version of the script."
+        ),
+      canCopy: z
+        .boolean()
+        .optional()
+        .describe(
+          "Indicates whether the script can be copied on site duplication and transfer."
+        ),
+      displayName: z
+        .string()
+        .describe(
+          "User-facing name for the script. Must be between 1 and 50 alphanumeric characters."
+        ),
+      location: z
+        .string()
+        .optional()
+        .describe(
+          'Location where the script is applied. Allowed values: "header", "footer".'
+        ),
+      attributes: z
+        .record(z.any())
+        .optional()
+        .describe(
+          "Developer-specified key/value pairs to be applied as attributes to the script."
+        ),
+    })
+    .describe("Request schema to register an inline script for a site.");
+
+  // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
+  server.tool(
+    "add_inline_site_script",
+    "Register an inline script for a site. Inline scripts are limited to 2000 characters. ",
+    {
+      site_id: z.string().describe("Unique identifier for the site."),
+      request: RegisterInlineSiteScriptSchema,
+    },
+    async ({ site_id, request }) => {
+      const registerScriptResponse = await getClient().scripts.registerInline(
+        site_id,
+        {
+          sourceCode: request.sourceCode,
+          version: request.version,
+          displayName: request.displayName,
+          canCopy: request.canCopy !== undefined ? request.canCopy : true,
+        },
+        requestOptions
+      );
+
+      let existingScripts: any[] = [];
+      try {
+        const allScriptsResponse =
+          await getClient().sites.scripts.getCustomCode(
+            site_id,
+            requestOptions
+          );
+        existingScripts = allScriptsResponse.scripts || [];
+      } catch (error) {
+        console.log(
+          "Failed to get custom code, assuming empty scripts array",
+          error
+        );
+        existingScripts = [];
+      }
+
+      const newScript = {
+        id: registerScriptResponse.id ?? " ",
+        location:
+          request.location === "footer"
+            ? ScriptApplyLocation.Footer
+            : ScriptApplyLocation.Header,
+        version: registerScriptResponse.version ?? " ",
+        attributes: request.attributes,
+      };
+
+      existingScripts.push(newScript);
+
+      const addedSiteCustomCoderesponse =
+        await getClient().sites.scripts.upsertCustomCode(
+          site_id,
+          {
+            scripts: existingScripts,
+          },
+          requestOptions
+        );
+
+      console.log(
+        "Upserted Custom Code",
+        JSON.stringify(addedSiteCustomCoderesponse)
+      );
+      return {
+        content: [
+          { type: "text", text: JSON.stringify(registerScriptResponse) },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "delete_site_script",
+    {
+      site_id: z.string(),
+    },
+    async ({ site_id }) => {
+      try {
+        const response = await getClient().sites.scripts.deleteCustomCode(
+          site_id,
+          requestOptions
+        );
+        return {
+          content: [
+            { type: "text", text: JSON.stringify("Custom Code Deleted") },
+          ],
+        };
+      } catch (error) {
+        // If it's a 404, we'll try to clear the scripts another way
+        if (isApiError(error) && error.status === 404) {
+          return {
+            content: [
+              { type: "text", text: error.message ?? "No custom code found" },
+            ],
+          };
+        }
+        throw error;
+      }
+    }
+  );
+
+  function isApiError(
+    error: unknown
+  ): error is { status: number; message?: string } {
+    return typeof error === "object" && error !== null && "status" in error;
+  }
+}
