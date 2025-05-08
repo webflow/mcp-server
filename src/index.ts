@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createMcpServer, registerTools } from "./mcp";
 import { WebflowClient } from "webflow-api";
+import { createMcpServer, registerTools } from "./mcp";
 
 // Verify WEBFLOW_TOKEN exists
 if (!process.env.WEBFLOW_TOKEN) {
