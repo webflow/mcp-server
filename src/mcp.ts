@@ -1,9 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { registerCmsTools } from "./tools/cms";
-import { registerPagesTools } from "./tools/pages";
-import { registerScriptsTools } from "./tools/scripts";
-import { registerSiteTools } from "./tools/sites";
+import {
+  registerCmsTools,
+  registerPagesTools,
+  registerScriptsTools,
+  registerSiteTools,
+} from "./tools";
 
 const packageJson = require("../package.json") as any;
 
