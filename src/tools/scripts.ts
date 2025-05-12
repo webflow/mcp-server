@@ -79,8 +79,7 @@ export function registerScriptsTools(
           );
         existingScripts = allScriptsResponse.scripts || [];
       } catch (error) {
-        console.log(
-          "Failed to get custom code, assuming empty scripts array",
+        formatErrorResponse(
           error
         );
         existingScripts = [];
@@ -107,10 +106,6 @@ export function registerScriptsTools(
           requestOptions
         );
 
-      console.log(
-        "Upserted Custom Code",
-        JSON.stringify(addedSiteCustomCoderesponse)
-      );
       return formatResponse(registerScriptResponse);
     }
   );
