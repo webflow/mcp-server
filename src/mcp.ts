@@ -29,8 +29,9 @@ export function registerTools(
   server: McpServer,
   getClient: () => WebflowClient
 ) {
-  registerCmsTools(server, getClient);
-  registerPagesTools(server, getClient);
-  registerScriptsTools(server, getClient);
-  registerSiteTools(server, getClient);
+
+ registerCmsTools(server, getClient);
+ registerPagesTools(server, getClient);
+ registerScriptsTools(server, getClient);
+ registerSiteTools(server, getClient);
 }
