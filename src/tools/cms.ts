@@ -378,15 +378,17 @@ export function registerCmsTools(
         cmsLocaleIds: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
       },
       async ({ collection_id, itemId, cmsLocaleIds }) => {
+        try {
         const response = await getClient().collections.items.deleteItem(
           collection_id,
           itemId,
           { cmsLocaleId: cmsLocaleIds},
           requestOptions
         );
-        return {
-          content: [{ type: "text", text: JSON.stringify(response) }],
-        };
+        return formatResponse(error.message ?? "No custom code found");
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
       }
     );
 }
