@@ -368,4 +368,25 @@ export function registerCmsTools(
       }
     }
   );
+    // DEL https://api.webflow.com/v2/collections/:collection_id/items/
+    server.tool(
+      "collections_items_delete_item",
+      "Delete an item in a CMS collection. Items will only be deleted in the primary locale unless a cmsLocaleId is included in the request. ",
+      {
+        collection_id: z.string().describe("Unique identifier for the Collection."),
+        itemId: z.string().describe("Item ID to be deleted."),
+        cmsLocaleIds: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+      },
+      async ({ collection_id, itemId, cmsLocaleIds }) => {
+        const response = await getClient().collections.items.deleteItem(
+          collection_id,
+          itemId,
+          { cmsLocaleId: cmsLocaleIds},
+          requestOptions
+        );
+        return {
+          content: [{ type: "text", text: JSON.stringify(response) }],
+        };
+      }
+    );
 }
