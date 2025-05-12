@@ -192,6 +192,14 @@ collections - items - update - items; // Update collection items (staged)
 collections - items - publish - items; // Publish collection items
 ```
 
+### Custom Code 
+```
+custom code - add - inline - site - script // Register an inline script for a site
+custom code - get - registered - site - script - list // List all scripts registered to a site
+custom code - get - applied - site - script - list //Get all scripts applied to a site
+custom code - delete site custom code // Remove scripts from a site 
+```
+
 # 🗣️ Prompts & Resources
 
 This implementation **does not** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
@@ -225,3 +233,8 @@ npm start
 
 - [Webflow API Documentation](https://developers.webflow.com/data/reference)
 - [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api)
+
+## ⚠️ Known Limitations
+
+### Static Page Content Updates
+The pages_update_static_content endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale are not supported and will result in errors.
