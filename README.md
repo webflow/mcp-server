@@ -94,7 +94,7 @@ rm -rf ~/.mcp-auth
   "mcpServers": {
     "webflow": {
       "command": "npx",
-      "args": ["-y", "webflow-mcp-server@0.4.1"],
+      "args": ["-y", "webflow-mcp-server@0.5.1"],
       "env": {
         "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
       }
