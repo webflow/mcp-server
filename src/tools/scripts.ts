@@ -111,7 +111,7 @@ export function registerScriptsTools(
   );
 
   server.tool(
-    "delete_site_script",
+    "delete_all_site_scripts",
     {
       site_id: z.string(),
     },
