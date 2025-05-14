@@ -5,7 +5,7 @@ export interface FeatureFlags {
   
   export function getFeatureFlags(env: NodeJS.ProcessEnv): FeatureFlags {
     return {
-      enableWebflowAiChat: true,
+      enableWebflowAiChat: env.ENABLE_WEBFLOW_AI_CHAT === "true",
       // Add more feature flag parsing here as needed
     };
   }
