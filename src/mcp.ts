@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import {
   registerCmsTools,
+  registerComponentsTools,
   registerPagesTools,
   registerScriptsTools,
   registerSiteTools,
@@ -31,6 +32,7 @@ export function registerTools(
 ) {
 
  registerCmsTools(server, getClient);
+ registerComponentsTools(server, getClient);
  registerPagesTools(server, getClient);
  registerScriptsTools(server, getClient);
  registerSiteTools(server, getClient);
