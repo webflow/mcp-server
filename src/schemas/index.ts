@@ -1,5 +1,7 @@
 export { CollectionItemPostSingleSchema } from "./CollectionItemPostSingleSchema";
 export { CollectionItemWithIdInputSchema } from "./CollectionItemWithIdInputSchema";
+export { ComponentDomWriteNodesItemSchema } from "./ComponentDomWriteNodesItemSchema";
+export { ComponentPropertyUpdateSchema } from "./ComponentPropertyUpdateSchema";
 export { OptionFieldSchema } from "./OptionFieldSchema";
 export { ReferenceFieldSchema } from "./ReferenceFieldSchema";
 export { RegisterInlineSiteScriptSchema } from "./RegisterInlineSiteScriptSchema";
