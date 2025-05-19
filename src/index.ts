@@ -3,7 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { WebflowClient } from "webflow-api";
 import { createMcpServer, registerTools } from "./mcp";
-import { getFeatureFlags } from "./featureFlags"
+import { getFeatureFlags } from "./tools/featureFlags"
 
 // Verify WEBFLOW_TOKEN exists
 if (!process.env.WEBFLOW_TOKEN) {

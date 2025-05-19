@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { postChat } from "./aiChat";
-import { FeatureFlags } from "./featureFlags";
+import { postChat } from "./tools/aiChat";
+import { FeatureFlags } from "./tools/featureFlags";
 import { z } from "zod";
 import {
   registerCmsTools,
