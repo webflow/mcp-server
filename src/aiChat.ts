@@ -10,6 +10,7 @@ export async function postChat(message: string) {
       messages: [{ role: "user", content: message }],
       url: "https://buildwithfern.com/learn",
       filters: [],
+      source: "mcp",
     }),
   });
 
