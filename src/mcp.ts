@@ -21,7 +21,7 @@ export function createMcpServer(featureFlags: FeatureFlags) {
 {
   instructions: `These tools give you access to the Webflow's Data API.${
     featureFlags.enableWebflowAiChat
-      ? `If you are ever unsure about anything Webflow-related, use the "ask_webflow_ai" tool.`
+      ? `If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`
       : ""
   }`,
 });
@@ -48,7 +48,7 @@ export function registerTools(
  if (featureFlags.enableWebflowAiChat) {
   server.tool(
     "ask_webflow_ai",
-    "Ask Webflow AI about anything related to Webflow.",
+    "Ask Webflow AI about anything related to Webflow API.",
     { message: z.string() },
     async ({ message }) => {
       const result = await postChat(message);
