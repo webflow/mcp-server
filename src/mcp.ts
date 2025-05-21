@@ -8,23 +8,18 @@ import {
   registerScriptsTools,
   registerSiteTools,
 } from "./tools";
-import { FeatureFlags } from "./utils";
 
 const packageJson = require("../package.json") as any;
 
 // Create an MCP server
-export function createMcpServer(featureFlags: FeatureFlags) {
+export function createMcpServer() {
   return new McpServer(
     {
       name: packageJson.name,
       version: packageJson.version,
     },
     {
-      instructions: `These tools give you access to the Webflow's Data API.${
-        featureFlags.enableWebflowAiChat
-          ? `\nIf you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`
-          : ""
-      }`,
+      instructions: `These tools give you access to the Webflow's Data API. If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`,
     }
   );
 }
@@ -39,15 +34,12 @@ export const requestOptions = {
 // Register tools
 export function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient,
-  featureFlags: FeatureFlags
+  getClient: () => WebflowClient
 ) {
+  registerAiChatTools(server);
   registerCmsTools(server, getClient);
   registerComponentsTools(server, getClient);
   registerPagesTools(server, getClient);
   registerScriptsTools(server, getClient);
   registerSiteTools(server, getClient);
-  if (featureFlags.enableWebflowAiChat) {
-    registerAiChatTools(server);
-  }
 }
