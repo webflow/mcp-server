@@ -1,6 +1,23 @@
-const BASE_URL = "https://webflow-ai.docs.buildwithfern.com/";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
 
-export async function postChat(message: string) {
+const BASE_URL = "https://developers.webflow.com/";
+
+export function registerAiChatTools(server: McpServer) {
+  server.tool(
+    "ask_webflow_ai",
+    "Ask Webflow AI about anything related to Webflow API.",
+    { message: z.string() },
+    async ({ message }) => {
+      const result = await postChat(message);
+      return {
+        content: [{ type: "text", text: result }],
+      };
+    }
+  );
+}
+
+async function postChat(message: string) {
   const response = await fetch(`${BASE_URL}/api/fern-docs/search/v2/chat`, {
     method: "POST",
     headers: {
@@ -8,7 +25,7 @@ export async function postChat(message: string) {
     },
     body: JSON.stringify({
       messages: [{ role: "user", content: message }],
-      url: "https://buildwithfern.com/learn",
+      url: BASE_URL,
       filters: [],
       source: "mcp",
     }),

@@ -79,9 +79,7 @@ export function registerScriptsTools(
           );
         existingScripts = allScriptsResponse.scripts || [];
       } catch (error) {
-        formatErrorResponse(
-          error
-        );
+        formatErrorResponse(error);
         existingScripts = [];
       }
 
