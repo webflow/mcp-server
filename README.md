@@ -96,12 +96,16 @@ rm -rf ~/.mcp-auth
       "command": "npx",
       "args": ["-y", "webflow-mcp-server@0.5.1"],
       "env": {
-        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>",
+        "APP_PORT": "<PORT_NUMBER>",
+        "TOOL_CONFIG": "<TOOL_CONFIG>"
       }
     }
   }
 }
 ```
+
+> Note: `TOOL_CONFIG` is a comma-separated list of tools to enable. valid values are `cms`, `component-management`, `custom-code`, `element-manipulation`, `style-management`, `asset-management`, `variable-management`. Use this to enable or disable tools as per your need. and use `all` to enable all tools.
 
 **For Cursor:**
 
@@ -202,12 +206,13 @@ collections - items - update - items; // Update collection items (staged)
 collections - items - publish - items; // Publish collection items
 ```
 
-### Custom Code 
+### Custom Code
+
 ```
 custom code - add - inline - site - script // Register an inline script for a site
 custom code - get - registered - site - script - list // List all scripts registered to a site
 custom code - get - applied - site - script - list //Get all scripts applied to a site
-custom code - delete site custom code // Remove scripts from a site 
+custom code - delete site custom code // Remove scripts from a site
 ```
 
 # 🗣️ Prompts & Resources
@@ -247,4 +252,5 @@ npm start
 ## ⚠️ Known Limitations
 
 ### Static Page Content Updates
+
 The pages_update_static_content endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale are not supported and will result in errors.

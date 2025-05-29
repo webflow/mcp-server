@@ -1,13 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import {
-  registerAiChatTools,
-  registerCmsTools,
-  registerComponentsTools,
-  registerPagesTools,
-  registerScriptsTools,
-  registerSiteTools,
+  registerDataTools,
+  registerDesignerTools,
 } from "./tools";
+import { initDesignerAppBridge } from "./designerAppBridge";
+import { ToolConfig } from "./utils/getToolConfig";
 
 const packageJson = require("../package.json") as any;
 
@@ -19,7 +17,7 @@ export function createMcpServer() {
       version: packageJson.version,
     },
     {
-      instructions: `These tools give you access to the Webflow's Data API. If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`,
+      instructions: `These tools give you access to the Webflow's Data And Designer API. If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`,
     }
   );
 }
@@ -32,14 +30,12 @@ export const requestOptions = {
 };
 
 // Register tools
-export function registerTools(
+export async function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
+  toolConfig: ToolConfig
 ) {
-  registerAiChatTools(server);
-  registerCmsTools(server, getClient);
-  registerComponentsTools(server, getClient);
-  registerPagesTools(server, getClient);
-  registerScriptsTools(server, getClient);
-  registerSiteTools(server, getClient);
+  const rpc = await initDesignerAppBridge();
+  registerDataTools(server, getClient, toolConfig);
+  registerDesignerTools(server, rpc, toolConfig);
 }
