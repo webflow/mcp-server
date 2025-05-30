@@ -69,6 +69,26 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 4. Click `Save`, Windsurf will automatically open a new browser window showing an OAuth login page to authorize the Webflow sites you want the MCP server to have access to.
 
+**For VS Code:**
+
+1. Open `settings.json`
+2. Paste the following configuration (or add the `webflow` part to your existing configuration)
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "webflow": {
+        "command": "npx",
+        "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
+      }
+    }
+  }
+}
+```
+
+4. `Save` the file. You should see a `start` button appear over the "webflow" key which you can click to open and run the auth flow. Alternatively, restart VS Code and the auth flow should start automatically.
+
 **Important note**
 
 All these methods rely on the `mcp-remote` [npm package](https://www.npmjs.com/package/mcp-remote) which is still considered experimental as of 04/30/2025.
@@ -202,12 +222,13 @@ collections - items - update - items; // Update collection items (staged)
 collections - items - publish - items; // Publish collection items
 ```
 
-### Custom Code 
+### Custom Code
+
 ```
 custom code - add - inline - site - script // Register an inline script for a site
 custom code - get - registered - site - script - list // List all scripts registered to a site
 custom code - get - applied - site - script - list //Get all scripts applied to a site
-custom code - delete site custom code // Remove scripts from a site 
+custom code - delete site custom code // Remove scripts from a site
 ```
 
 # 🗣️ Prompts & Resources
@@ -247,4 +268,5 @@ npm start
 ## ⚠️ Known Limitations
 
 ### Static Page Content Updates
+
 The pages_update_static_content endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale are not supported and will result in errors.
