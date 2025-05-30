@@ -1,12 +1,15 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
-import { requestOptions } from "../mcp";
+import { requestOptions } from "../../mcp";
 import {
   ComponentDomWriteNodesItemSchema,
-  ComponentPropertyUpdateSchema
-} from "../schemas";
-import { formatErrorResponse, formatResponse } from "../utils";
+  ComponentPropertyUpdateSchema,
+} from "../../schemas";
+import {
+  formatErrorResponse,
+  formatResponse,
+} from "../../utils";
 
 export function registerComponentsTools(
   server: McpServer,
@@ -17,11 +20,15 @@ export function registerComponentsTools(
     "components_list",
     "List all components in a site. Returns component metadata including IDs, names, and versions.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
+      site_id: z
+        .string()
+        .describe("Unique identifier for the Site."),
       limit: z
         .number()
         .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
+        .describe(
+          "Maximum number of records to be returned (max limit: 100)"
+        ),
       offset: z
         .number()
         .optional()
@@ -51,8 +58,12 @@ export function registerComponentsTools(
     "components_get_content",
     "Get the content structure and data for a specific component including text, images, and nested components.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
+      site_id: z
+        .string()
+        .describe("Unique identifier for the Site."),
+      component_id: z
+        .string()
+        .describe("Unique identifier for the Component."),
       localeId: z
         .string()
         .optional()
@@ -62,7 +73,9 @@ export function registerComponentsTools(
       limit: z
         .number()
         .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
+        .describe(
+          "Maximum number of records to be returned (max limit: 100)"
+        ),
       offset: z
         .number()
         .optional()
@@ -70,18 +83,25 @@ export function registerComponentsTools(
           "Offset used for pagination if the results have more than limit records."
         ),
     },
-    async ({ site_id, component_id, localeId, limit, offset }) => {
+    async ({
+      site_id,
+      component_id,
+      localeId,
+      limit,
+      offset,
+    }) => {
       try {
-        const response = await getClient().components.getContent(
-          site_id,
-          component_id,
-          {
-            localeId,
-            limit,
-            offset,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().components.getContent(
+            site_id,
+            component_id,
+            {
+              localeId,
+              limit,
+              offset,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
@@ -94,8 +114,12 @@ export function registerComponentsTools(
     "components_update_content",
     "Update content on a component in secondary locales by modifying text nodes and property overrides.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
+      site_id: z
+        .string()
+        .describe("Unique identifier for the Site."),
+      component_id: z
+        .string()
+        .describe("Unique identifier for the Component."),
       localeId: z
         .string()
         .describe(
@@ -105,15 +129,16 @@ export function registerComponentsTools(
     },
     async ({ site_id, component_id, localeId, nodes }) => {
       try {
-        const response = await getClient().components.updateContent(
-          site_id,
-          component_id,
-          {
-            localeId,
-            nodes,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().components.updateContent(
+            site_id,
+            component_id,
+            {
+              localeId,
+              nodes,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
@@ -126,8 +151,12 @@ export function registerComponentsTools(
     "components_get_properties",
     "Get component properties including default values and configuration for a specific component.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
+      site_id: z
+        .string()
+        .describe("Unique identifier for the Site."),
+      component_id: z
+        .string()
+        .describe("Unique identifier for the Component."),
       localeId: z
         .string()
         .optional()
@@ -137,7 +166,9 @@ export function registerComponentsTools(
       limit: z
         .number()
         .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
+        .describe(
+          "Maximum number of records to be returned (max limit: 100)"
+        ),
       offset: z
         .number()
         .optional()
@@ -145,18 +176,25 @@ export function registerComponentsTools(
           "Offset used for pagination if the results have more than limit records."
         ),
     },
-    async ({ site_id, component_id, localeId, limit, offset }) => {
+    async ({
+      site_id,
+      component_id,
+      localeId,
+      limit,
+      offset,
+    }) => {
       try {
-        const response = await getClient().components.getProperties(
-          site_id,
-          component_id,
-          {
-            localeId,
-            limit,
-            offset,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().components.getProperties(
+            site_id,
+            component_id,
+            {
+              localeId,
+              limit,
+              offset,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
@@ -169,8 +207,12 @@ export function registerComponentsTools(
     "components_update_properties",
     "Update component properties for localization to customize behavior in different languages.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
+      site_id: z
+        .string()
+        .describe("Unique identifier for the Site."),
+      component_id: z
+        .string()
+        .describe("Unique identifier for the Component."),
       localeId: z
         .string()
         .describe(
@@ -178,17 +220,23 @@ export function registerComponentsTools(
         ),
       properties: ComponentPropertyUpdateSchema,
     },
-    async ({ site_id, component_id, localeId, properties }) => {
+    async ({
+      site_id,
+      component_id,
+      localeId,
+      properties,
+    }) => {
       try {
-        const response = await getClient().components.updateProperties(
-          site_id,
-          component_id,
-          {
-            localeId,
-            properties,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().components.updateProperties(
+            site_id,
+            component_id,
+            {
+              localeId,
+              properties,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);

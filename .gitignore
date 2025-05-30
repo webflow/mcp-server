@@ -8,3 +8,5 @@ node_modules/
 .DS_Store
 .idea/
 .vscode/
+pnpm-lock.yaml
+.cursor

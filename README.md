@@ -116,12 +116,16 @@ rm -rf ~/.mcp-auth
       "command": "npx",
       "args": ["-y", "webflow-mcp-server@0.5.1"],
       "env": {
-        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>",
+        "APP_PORT": "<PORT_NUMBER>",
+        "TOOL_CONFIG": "<TOOL_CONFIG>"
       }
     }
   }
 }
 ```
+
+> Note: `TOOL_CONFIG` is a comma-separated list of tools to enable. valid values are `cms`, `component-management`, `custom-code`, `element-manipulation`, `style-management`, `asset-management`, `variable-management`. Use this to enable or disable tools as per your need. and use `all` to enable all tools.
 
 **For Cursor:**
 

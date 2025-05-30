@@ -1,12 +1,15 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
-import { requestOptions } from "../mcp";
+import { requestOptions } from "../../mcp";
 import {
   WebflowPageDomWriteNodesItemSchema,
   WebflowPageSchema,
-} from "../schemas";
-import { formatErrorResponse, formatResponse } from "../utils";
+} from "../../schemas";
+import {
+  formatErrorResponse,
+  formatResponse,
+} from "../../utils";
 
 export function registerPagesTools(
   server: McpServer,
@@ -19,7 +22,9 @@ export function registerPagesTools(
     {
       site_id: z
         .string()
-        .describe("The site’s unique ID, used to list its pages."),
+        .describe(
+          "The site’s unique ID, used to list its pages."
+        ),
       localeId: z
         .string()
         .optional()
@@ -29,7 +34,9 @@ export function registerPagesTools(
       limit: z
         .number()
         .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
+        .describe(
+          "Maximum number of records to be returned (max limit: 100)"
+        ),
       offset: z
         .number()
         .optional()
@@ -60,7 +67,9 @@ export function registerPagesTools(
     "pages_get_metadata",
     "Get metadata for a specific page including SEO settings, Open Graph data, and page status (draft/published).",
     {
-      page_id: z.string().describe("Unique identifier for the page."),
+      page_id: z
+        .string()
+        .describe("Unique identifier for the page."),
       localeId: z
         .string()
         .optional()
@@ -70,13 +79,14 @@ export function registerPagesTools(
     },
     async ({ page_id, localeId }) => {
       try {
-        const response = await getClient().pages.getMetadata(
-          page_id,
-          {
-            localeId,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().pages.getMetadata(
+            page_id,
+            {
+              localeId,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
@@ -89,7 +99,9 @@ export function registerPagesTools(
     "pages_update_page_settings",
     "Update page settings including SEO metadata, Open Graph data, slug, and publishing status.",
     {
-      page_id: z.string().describe("Unique identifier for the page."),
+      page_id: z
+        .string()
+        .describe("Unique identifier for the page."),
       localeId: z
         .string()
         .optional()
@@ -100,14 +112,15 @@ export function registerPagesTools(
     },
     async ({ page_id, localeId, body }) => {
       try {
-        const response = await getClient().pages.updatePageSettings(
-          page_id,
-          {
-            localeId,
-            body,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().pages.updatePageSettings(
+            page_id,
+            {
+              localeId,
+              body,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
@@ -120,7 +133,9 @@ export function registerPagesTools(
     "pages_get_content",
     "Get the content structure and data for a specific page including all elements and their properties.",
     {
-      page_id: z.string().describe("Unique identifier for the page."),
+      page_id: z
+        .string()
+        .describe("Unique identifier for the page."),
       localeId: z
         .string()
         .optional()
@@ -130,7 +145,9 @@ export function registerPagesTools(
       limit: z
         .number()
         .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
+        .describe(
+          "Maximum number of records to be returned (max limit: 100)"
+        ),
       offset: z
         .number()
         .optional()
@@ -161,7 +178,9 @@ export function registerPagesTools(
     "pages_update_static_content",
     "Update content on a static page in secondary locales by modifying text nodes and property overrides.",
     {
-      page_id: z.string().describe("Unique identifier for the page."),
+      page_id: z
+        .string()
+        .describe("Unique identifier for the page."),
       localeId: z
         .string()
         .describe(
@@ -171,14 +190,15 @@ export function registerPagesTools(
     },
     async ({ page_id, localeId, nodes }) => {
       try {
-        const response = await getClient().pages.updateStaticContent(
-          page_id,
-          {
-            localeId,
-            nodes,
-          },
-          requestOptions
-        );
+        const response =
+          await getClient().pages.updateStaticContent(
+            page_id,
+            {
+              localeId,
+              nodes,
+            },
+            requestOptions
+          );
         return formatResponse(response);
       } catch (error) {
         return formatErrorResponse(error);
