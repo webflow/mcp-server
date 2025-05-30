@@ -71,7 +71,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 **For VS Code:**
 
-1. Open to `settings.json`
+1. Open `settings.json`
 2. Paste the following configuration (or add the `webflow` part to your existing configuration)
 
 ```json
