@@ -231,6 +231,22 @@ custom code - get - applied - site - script - list //Get all scripts applied to 
 custom code - delete site custom code // Remove scripts from a site
 ```
 
+### Components 
+
+```
+components - list; // List all components for a site
+components - content - get; // Get static content from a component definition
+components - content - update; // Update content within a component definition for secondary locales
+components - properties - get; // Get the default property values of a component definition
+components - properties - update; // Update the default property values of a component definition for secondary locales
+```
+
+### Ask Webflow AI 
+
+```
+ask - webflow - ai; // Search Webflow Docs using AI search
+```
+
 # 🗣️ Prompts & Resources
 
 This implementation **does not** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
