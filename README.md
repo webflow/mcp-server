@@ -238,7 +238,7 @@ components - list; // List all components for a site
 components - content - get; // Get static content from a component definition
 components - content - update; // Update content within a component definition for secondary locales
 components - properties - get; // Get the default property values of a component definition
-components - properties - update; // Update the default property values of a component definition in a specificed locale
+components - properties - update; // Update the default property values of a component definition for secondary locales
 ```
 
 ### Ask Webflow AI 
