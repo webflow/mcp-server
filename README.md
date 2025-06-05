@@ -1,5 +1,7 @@
 # Webflow's Official MCP Server
 
+[![Add to Cursor](https://img.shields.io/badge/Add%20to%20Cursor-000000)](cursor://anysphere.cursor-deeplink/mcp/install?name=webflow&config=eyJjb21tYW5kIjoibnB4IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3Aud2ViZmxvdy5jb20vc3NlIn0=)
+
 A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI agents to interact with Webflow APIs. Learn more about Webflow's Data API in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
