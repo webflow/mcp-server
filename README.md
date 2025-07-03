@@ -217,9 +217,11 @@ collection - fields - update; // Update a custom field
 collections - items - create - item - live; // Create items
 collections - items - update - items - live; // Update items
 collections - items - list - items; // List collection items
+collections - items - get - item; // Get a specific collection item
 collections - items - create - item; // Create collection items (staged)
 collections - items - update - items; // Update collection items (staged)
 collections - items - publish - items; // Publish collection items
+collections - items - delete - item; // Delete a collection item
 ```
 
 ### Custom Code
