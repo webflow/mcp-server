@@ -1,7 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { randomUUID } from "crypto";
 import { z } from "zod";
 
 const BASE_URL = "https://developers.webflow.com/";
+const X_FERN_HOST = "developers.webflow.com";
 
 export function registerAiChatTools(server: McpServer) {
   server.tool(
@@ -22,11 +24,12 @@ async function postChat(message: string) {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      "x-fern-host": X_FERN_HOST,
     },
     body: JSON.stringify({
-      messages: [{ role: "user", content: message }],
+      messages: [{ role: "user", parts: [{ type: "text", text: message }] }],
+      conversationId: randomUUID(),
       url: BASE_URL,
-      filters: [],
       source: "mcp",
     }),
   });
