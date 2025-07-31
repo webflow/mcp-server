@@ -42,7 +42,6 @@ export function registerDEComponentsTools(
               ...DEElementIDSchema,
               name: z
                 .string()
-                .optional()
                 .describe("The name of the component"),
             })
             .optional()
