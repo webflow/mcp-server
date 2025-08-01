@@ -15,3 +15,6 @@ export { registerDEVariableTools } from "./deVariable";
 
 // Rules Tools
 export { registerRulesTools } from "./rules";
+
+// Only valid for OSS MCP Version, local MCP connection tools
+export { registerLocalDeMCPConnectionTools } from "./localDeMCPConnection";

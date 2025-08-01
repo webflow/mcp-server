@@ -19,6 +19,7 @@ const initRPC = (
   io: SocketIOServer,
   port: number
 ): returnType => {
+  const url = `http://localhost:${port}`;
   const siteIdToSocketMap = new Map<string, Set<Socket>>();
   const pendingToolResponse = new Map<
     string,
@@ -73,6 +74,13 @@ const initRPC = (
     });
   });
   const callTool = (toolName: string, args: any) => {
+    if (toolName === "local_de_mcp_connection_tool") {
+      return Promise.resolve({
+        status: true,
+        message: `Share this url with the user to connect to the Webflow Designer App. ${url}. Please share complete url with the USER.`,
+        url,
+      });
+    }
     const { siteId } = args as any;
     if (!siteId) {
       return Promise.resolve({
@@ -102,7 +110,7 @@ const initRPC = (
         const timerId = setTimeout(() => {
           cleanup();
           resolve({
-            error: `Tool call timed out, Please check Webflow Designer MCP app is running on Webflow Designer or restart the Webflow Designer App. make sure you are using correct development url https://localhost:${port}.`,
+            error: `Tool call timed out, Please check Webflow Designer MCP app is running on Webflow Designer or restart the Webflow Designer App. make sure you are using correct url ${url} on app.`,
           });
         }, 20000); //20 seconds
         const toolResponse = (data: any) => {

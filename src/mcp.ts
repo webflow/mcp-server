@@ -14,6 +14,7 @@ import {
   registerDEStyleTools,
   registerDEVariableTools,
   registerRulesTools,
+  registerLocalDeMCPConnectionTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -66,4 +67,14 @@ export function registerDesignerTools(
 
 export function registerMiscTools(server: McpServer) {
   registerRulesTools(server);
+}
+
+/**
+ * IMPORTANT: registerLocalTools is only valid for OSS MCP Version
+ */
+export function registerLocalTools(
+  server: McpServer,
+  rpc: RPCType
+) {
+  registerLocalDeMCPConnectionTools(server, rpc);
 }

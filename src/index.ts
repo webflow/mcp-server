@@ -5,6 +5,7 @@ import { WebflowClient } from "webflow-api";
 import {
   createMcpServer,
   registerDesignerTools,
+  registerLocalTools,
   registerMiscTools,
   registerTools,
 } from "./mcp";
@@ -32,6 +33,12 @@ async function run() {
   registerMiscTools(server);
   registerTools(server, getClient);
   registerDesignerTools(server, {
+    callTool,
+    getClient,
+  });
+
+  //Only valid for OSS MCP Version.
+  registerLocalTools(server, {
     callTool,
     getClient,
   });
