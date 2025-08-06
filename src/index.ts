@@ -2,7 +2,14 @@
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { WebflowClient } from "webflow-api";
-import { createMcpServer, registerTools } from "./mcp";
+import {
+  createMcpServer,
+  registerDesignerTools,
+  registerLocalTools,
+  registerMiscTools,
+  registerTools,
+} from "./mcp";
+import { initDesignerAppBridge } from "./modules/designerAppBridge";
 
 // Verify WEBFLOW_TOKEN exists
 if (!process.env.WEBFLOW_TOKEN) {
@@ -22,7 +29,19 @@ function getClient() {
 // Configure and run local MCP server (stdio transport)
 async function run() {
   const server = createMcpServer();
+  const { callTool } = await initDesignerAppBridge();
+  registerMiscTools(server);
   registerTools(server, getClient);
+  registerDesignerTools(server, {
+    callTool,
+    getClient,
+  });
+
+  //Only valid for OSS MCP Version.
+  registerLocalTools(server, {
+    callTool,
+    getClient,
+  });
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
