@@ -295,6 +295,39 @@ export function registerCmsTools(
     }
   );
 
+  // GET https://api.webflow.com/v2/collections/:collection_id/items/:item_id
+  server.tool(
+    "collections_items_get_item",
+    "Get a specific item from a CMS collection by its ID.",
+    {
+      collection_id: z
+        .string()
+        .describe("Unique identifier for the Collection."),
+      item_id: z
+        .string()
+        .describe("Unique identifier for the Item."),
+      cmsLocaleId: z
+        .string()
+        .optional()
+        .describe("Unique identifier for the locale of the CMS Item."),
+    },
+    async ({ collection_id, item_id, cmsLocaleId }) => {
+      try {
+        const response = await getClient().collections.items.getItem(
+          collection_id,
+          item_id,
+          {
+            cmsLocaleId,
+          },
+          requestOptions
+        );
+        return formatResponse(response);
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
+    }
+  );
+
   // POST https://api.webflow.com/v2/collections/:collection_id/items
   server.tool(
     "collections_items_create_item",
