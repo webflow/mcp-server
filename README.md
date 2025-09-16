@@ -19,7 +19,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 
 - Node.js 22.3.0 or higher
 
-> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see the Node.js compatibility section below.
+> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see the [Node.js compatibility guidance.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
 
 ### Cursor
 
@@ -121,6 +121,18 @@ Find older blog posts that mention similar topics and add internal links to my l
 ```text
 Create a hero section card on my home page with a CTA button and responsive design
 ```
+
+### Reset your OAuth Token
+
+To reset your OAuth token, run the following command in your terminal.
+
+```bash
+rm -rf ~/.mcp-auth
+```
+
+### Node.js compatibility
+
+Please see the Node.js [compatibility guidance on Webflow's developer docs.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
 
 ## ❓ Troubleshooting
 
