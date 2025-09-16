@@ -11,6 +11,184 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [A Webflow Account](https://webflow.com/signup)
 
+## 🚀 Getting started (OAuth remote MCP server)
+
+Get started by installing Webflow's remote MCP server, which uses OAuth to authenticate with your Webflow sites, and a companion app that syncs your live canvas with your AI agent.
+
+For local installation, see the [NPM package documentation](https://www.npmjs.com/package/webflow-mcp-server).
+
+### Requirements
+
+- Node.js 22.3.0 or higher
+
+> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see Node.js compatibility below.
+
+### Cursor
+
+1. Go to `Settings → Cursor Settings → MCP & Integrations`.
+2. Under MCP Tools, click `+ New MCP Server`.
+3. Paste the following configuration into `.cursor/mcp.json` (or add the `webflow` part to your existing configuration):
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx mcp-remote https://mcp.webflow.com/sse"
+    }
+  }
+}
+```
+
+> Tip: Prefer a project-level `mcp.json` to avoid repeated auth prompts across multiple Cursor windows. See Cursor’s docs on configuration locations.
+
+4. Save and close the file. Cursor will automatically open an OAuth login page where you can authorize the Webflow sites and install the companion app.
+
+#### Open the Webflow Designer
+
+- Open your site in the Webflow Designer.
+- Or ask your AI agent:
+
+```text
+Give me a link to open <MY_SITE_NAME> in the Webflow Designer
+```
+
+#### Open the MCP Webflow App
+
+1. In the Designer, open the Apps panel (press `E`).
+2. Launch "Webflow MCP Bridge App" (installed during OAuth).
+3. Wait for the app to connect to the MCP server.
+
+#### Write your first prompt
+
+Try these in your AI chat:
+
+```text
+Analyze my last 5 blog posts and suggest 3 new topic ideas with SEO keywords
+```
+
+```text
+Find older blog posts that mention similar topics and add internal links to my latest post
+```
+
+```text
+Create a hero section card on my home page with a CTA button and responsive design
+```
+
+### Claude Desktop
+
+1. Enable developer mode: `Help → Troubleshooting → Enable Developer Mode`.
+2. Open developer settings: `File → Settings → Developer`.
+3. Click `Get Started` or edit the configuration to open `claude_desktop_config.json` and add:
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
+    }
+  }
+}
+```
+
+4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites and install the companion app.
+
+Then follow the same steps as Cursor to open the Webflow Designer, open the MCP Bridge App, and try your first prompts.
+
+### Windsurf
+
+1. Navigate to `Windsurf → Settings → Windsurf Settings`.
+2. Go to `Cascade → MCP Servers → Manage MCPs`.
+3. Click "View raw configuration" and add:
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
+    }
+  }
+}
+```
+
+4. Save. Use the settings page "Refresh" button. A browser will open the OAuth flow to authorize sites (this also installs the companion app). Then open the Webflow Designer, open the MCP Bridge App, and try prompts as above.
+
+### Reset your OAuth token
+
+If you need to reset your OAuth token, run:
+
+```bash
+rm -rf ~/.mcp-auth
+```
+
+### Node.js compatibility
+
+If you encounter issues with Node.js, try one of the following:
+
+#### Use Node.js 22.3.0 with nvm
+
+1. Install nvm:
+
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+   ```
+
+2. Restart your terminal or source your shell configuration file, e.g.:
+
+   ```bash
+   source ~/.bashrc
+   ```
+
+3. Install and set default:
+
+   ```bash
+   nvm install 22.3.0
+   nvm use 22.3.0
+   nvm alias default 22.3.0
+   ```
+
+4. Clear `npx` cache (optional):
+
+   ```bash
+   rm -rf ~/.npm/_npx
+   ```
+
+5. Verify installation:
+
+   ```bash
+   node --version
+   npm --version
+   ```
+
+#### Use Node Version Switcher (NVS)
+
+1. Install Node Version Switcher (NVS) (see the official repository for OS-specific steps):
+
+   ```bash
+   git clone https://github.com/jasongin/nvs ~/.nvs && ~/.nvs/nvs.sh install
+   ```
+
+2. Add Node.js 22.3.0 and use it:
+
+   ```bash
+   nvs add 22.3.0
+   nvs use 22.3.0
+   ```
+
+3. (Optional) Install `mcp-remote` globally when on 22.3.0:
+
+   ```bash
+   npm install -g mcp-remote
+   ```
+
+4. If your AI client needs explicit paths, determine them:
+
+   ```bash
+   nvs which 22.3.0
+   which mcp-remote
+   ```
+
 ## ▶️ Quick start (hosted on Cloudflare workers)
 
 **For Cursor:**
@@ -91,7 +269,7 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 **Important note**
 
-All these methods rely on the `mcp-remote` [npm package](https://www.npmjs.com/package/mcp-remote) which is still considered experimental as of 04/30/2025.
+All these methods rely on the `mcp-remote` [npm package](https://www.npmjs.com/package/mcp-remote) which is still considered experimental as of April 30, 2025.
 If at any point you have issues, and want to reset your OAuth tokens, you can run the following command before restarting your MCP client:
 
 ```shell
@@ -231,7 +409,7 @@ custom code - get - applied - site - script - list //Get all scripts applied to 
 custom code - delete site custom code // Remove scripts from a site
 ```
 
-### Components 
+### Components
 
 ```
 components - list; // List all components for a site
@@ -241,7 +419,7 @@ components - properties - get; // Get the default property values of a component
 components - properties - update; // Update the default property values of a component definition for secondary locales
 ```
 
-### Ask Webflow AI 
+### Ask Webflow AI
 
 ```
 ask - webflow - ai; // Search Webflow Docs using AI search
@@ -249,7 +427,7 @@ ask - webflow - ai; // Search Webflow Docs using AI search
 
 # 🗣️ Prompts & Resources
 
-This implementation **does not** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
+This implementation **doesn't** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
 
 # 🚧 Development mode
 
@@ -285,4 +463,4 @@ npm start
 
 ### Static Page Content Updates
 
-The pages_update_static_content endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale are not supported and will result in errors.
+The `pages_update_static_content` endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale aren't supported and will result in errors.
