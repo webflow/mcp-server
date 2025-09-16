@@ -1,21 +1,19 @@
-# Webflow's Official MCP Server
+# Webflow's MCP server
 
 A Node.js server implementing Model Context Protocol (MCP) for Webflow using the [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api). Enable AI agents to interact with Webflow APIs. Learn more about Webflow's Data API in the [developer documentation](https://developers.webflow.com/data/reference).
 
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwebflow%2Fmcp-server)
+![Webflow](https://img.shields.io/badge/webflow-%23146EF5.svg?style=for-the-badge&logo=webflow&logoColor=white)
 
-## ℹ Prerequisites
+## Prerequisites
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [A Webflow Account](https://webflow.com/signup)
 
-## 🚀 Getting started (OAuth remote MCP server)
+## 🚀 Remote installation
 
-Get started by installing Webflow's remote MCP server, which uses OAuth to authenticate with your Webflow sites, and a companion app that syncs your live canvas with your AI agent.
-
-For local installation, see the [NPM package documentation](https://www.npmjs.com/package/webflow-mcp-server).
+Get started by installing Webflow's remote MCP server. The remote server uses OAuth to authenticate with your Webflow sites, and a companion app that syncs your live canvas with your AI agent.
 
 ### Requirements
 
@@ -24,6 +22,8 @@ For local installation, see the [NPM package documentation](https://www.npmjs.co
 > Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see Node.js compatibility below.
 
 ### Cursor
+
+#### Add MCP server to Cursor
 
 1. Go to `Settings → Cursor Settings → MCP & Integrations`.
 2. Under MCP Tools, click `+ New MCP Server`.
@@ -39,9 +39,9 @@ For local installation, see the [NPM package documentation](https://www.npmjs.co
 }
 ```
 
-> Tip: Prefer a project-level `mcp.json` to avoid repeated auth prompts across multiple Cursor windows. See Cursor’s docs on configuration locations.
+> Tip: You can create a project-level `mcp.json` to avoid repeated auth prompts across multiple Cursor windows. See Cursor’s docs on [configuration locations.](https://docs.cursor.com/en/context/mcp#configuration-locations)
 
-4. Save and close the file. Cursor will automatically open an OAuth login page where you can authorize the Webflow sites and install the companion app.
+4. Save and close the file. Cursor will automatically open an OAuth login page where you can authorize the Webflow sites.
 
 #### Open the Webflow Designer
 
@@ -55,7 +55,7 @@ Give me a link to open <MY_SITE_NAME> in the Webflow Designer
 #### Open the MCP Webflow App
 
 1. In the Designer, open the Apps panel (press `E`).
-2. Launch "Webflow MCP Bridge App" (installed during OAuth).
+2. Launch your published "Webflow MCP Bridge App".
 3. Wait for the app to connect to the MCP server.
 
 #### Write your first prompt
@@ -74,7 +74,9 @@ Find older blog posts that mention similar topics and add internal links to my l
 Create a hero section card on my home page with a CTA button and responsive design
 ```
 
-### Claude Desktop
+### Claude desktop
+
+#### Add MCP Server to Claude desktop
 
 1. Enable developer mode: `Help → Troubleshooting → Enable Developer Mode`.
 2. Open developer settings: `File → Settings → Developer`.
@@ -91,27 +93,70 @@ Create a hero section card on my home page with a CTA button and responsive desi
 }
 ```
 
-4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites and install the companion app.
+4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites.
 
 #### Open the Webflow Designer
 
+#### Open the MCP Webflow App
+
+1. In the Designer, open the Apps panel (press `E`).
+2. Launch your published "Webflow MCP Bridge App".
+3. Wait for the app to connect to the MCP server.
+
+#### Write your first prompt
+
+```text
+Analyze my last 5 blog posts and suggest 3 new topic ideas with SEO keywords
+```
+
+```text
+Find older blog posts that mention similar topics and add internal links to my latest post
+```
+
+```text
+Create a hero section card on my home page with a CTA button and responsive design
+```
+
+---
+
 ## Local Installation
 
-1. **Get your Webflow API token**
+You can also configure thee MCP server to run locally. This requires:
 
-- Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by)
-- Log in and generate a token
-- Copy the token from the Request Generator
-  ![Get API Token](https://prod.ferndocs.com/_next/image?url=https%3A%2F%2Ffiles.buildwithfern.com%2Fwebflow-preview-6a549203-c0da-4038-8adf-1dbed286cb83.docs.buildwithfern.com%2F2025-03-28T17%3A56%3A04.435Z%2Fassets%2Fimages%2Fapi-key-playground.png&w=3840&q=75)
+- Creating and registering your own MCP Bridge App in a Webflow workspace with Admin permissions
+- Configuring your AI client to start the local MCP server with a Webflow API token
 
-2. **Add to your AI editor**
+### 1. Create and publish the MCP bridge app
+
+Before connecting the local MCP server to your AI client, create and publish the Webflow MCP Bridge App in your workspace.
+
+1. Register a Webflow App in your Workspace. Follow the [Register an App](https://developers.webflow.com/data/v2.0.0/docs/register-an-app) guidance for more details.
+2. Clone the MCP Bridge App code:
+   ```bash
+   git clone https://github.com/virat21/webflow-mcp-bridge-app
+   cd webflow-designer-mcp-bridge-app
+   ```
+3. Configure the app with your App credentials:
+   - Set your Client ID and Client Secret in a `.env` file for the App you registered.
+   - See the app repo’s README for exact variables and build steps.
+4. Build and publish the Designer Extension to your workspace:
+   - Build per the repo instructions.
+   - Publish the App to your workspace via the Webflow Dashboard → Workspace settings → Apps & Integrations → Develop→ your App → “Publish Extension Version” and upload your `bundle.zip` file.
+
+Once published to your workspace, open your MCP Bridge App in a site on your workspace from the Designer’s Apps panel.
+
+### 2. Configure your AI client
+
+#### Cursor
+
+Add to `.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "webflow": {
       "command": "npx",
-      "args": ["-y", "webflow-mcp-server@0.6.0"],
+      "args": ["-y", "webflow-mcp-server@latest"],
       "env": {
         "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
       }
@@ -120,32 +165,47 @@ Create a hero section card on my home page with a CTA button and responsive desi
 }
 ```
 
-**For Cursor:**
+#### Claude desktop
 
-1. Go to Settings → Cursor Settings → MCP
-2. Click `+ Add New Global MCP Server`
-3. Paste configuration
-4. Replace `YOUR_WEBFLOW_TOKEN` with the token you copied earlier
-5. Save and **restart** Cursor
+Add to `claude_desktop_config.json`:
 
-**For Claude Desktop:**
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["-y", "webflow-mcp-server@latest"],
+      "env": {
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+      }
+    }
+  }
+}
+```
 
-1. Open Settings → Developer
-2. Click `Edit Config`
-3. Open `claude_desktop_config.json` in a code editor and paste configuration
-4. Replace `YOUR_WEBFLOW_TOKEN` with the token you copied earlier 5. Save and **restart** Claude
+### 3. Use the MCP server with the Webflow Designer
+
+- Open your site in the Webflow Designer.
+- Open the Apps panel (press `E`) and launch your published “Webflow MCP Bridge App”.
+- Wait for the app to connect to the MCP server, then use tools from your AI client.
+
+### Optional: Run locally via shell
+
+```bash
+WEBFLOW_TOKEN="<YOUR_WEBFLOW_TOKEN>" npx -y webflow-mcp-server@latest
+```
 
 ## ❓ Troubleshooting
 
 If you are having issues starting the server in your MCP client e.g. Cursor or Claude Desktop, please try the following.
 
-### Ensure you have a valid Webflow API token
+### Make sure you have a valid Webflow API token
 
 1. Go to [Webflow's API Playground](https://developers.webflow.com/data/reference/token/authorized-by), log in and generate a token, then copy the token from the Request Generator
 2. Replace `YOUR_WEBFLOW_TOKEN` in your MCP client configuration with the token you copied
 3. Save and **restart** your MCP client
 
-### Ensure you have the Node and NPM installed
+### Make sure you have the Node and NPM installed
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
@@ -173,113 +233,19 @@ Note: if you are making changes to your shell configuration, you may need to res
 
 ## 🛠️ Available tools
 
-### Sites
+See the `./tools` directory for a list of available tools
 
-```
-sites - list; // List all sites
-sites - get; // Get site details
-sites - publish; // Publish site changes
-```
-
-### Pages
-
-```
-pages - list; // List all pages
-pages - get - metadata; // Get page metadata
-pages - update - page - settings; // Update page settings
-pages - get - content; // Get page content
-pages - update - static - content; // Update page content
-```
-
-### Components
-
-```
-components - list // List all components in a site
-components - get - content // Get component content (text, images, nested components)
-components - update - content // Update component content for localization
-components - get - properties // Get component properties (default values)
-components - update - properties // Update component properties for localization
-```
-
-### CMS
-
-```
-collections - list; // List collections
-collections - get; // Get collection details
-collections - create; // Create a collection
-collection - fields - create - static; // Create a static field
-collection - fields - create - option; // Create an option field
-collection - fields - create - reference; // Create a reference field
-collection - fields - update; // Update a custom field
-collections - items - create - item - live; // Create items
-collections - items - update - items - live; // Update items
-collections - items - list - items; // List collection items
-collections - items - create - item; // Create collection items (staged)
-collections - items - update - items; // Update collection items (staged)
-collections - items - publish - items; // Publish collection items
-```
-
-### Custom Code
-
-```
-custom code - add - inline - site - script // Register an inline script for a site
-custom code - get - registered - site - script - list // List all scripts registered to a site
-custom code - get - applied - site - script - list //Get all scripts applied to a site
-custom code - delete site custom code // Remove scripts from a site
-```
-
-### Components
-
-```
-components - list; // List all components for a site
-components - content - get; // Get static content from a component definition
-components - content - update; // Update content within a component definition for secondary locales
-components - properties - get; // Get the default property values of a component definition
-components - properties - update; // Update the default property values of a component definition for secondary locales
-```
-
-### Ask Webflow AI
-
-```
-ask - webflow - ai; // Search Webflow Docs using AI search
-```
-
-# 🗣️ Prompts & Resources
+# 🗣️ Prompts & resources
 
 This implementation **doesn't** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
 
-# 🚧 Development mode
-
-If you want to run the server in development mode, you can install dependencies and run the server using the following command:
-
-1. Clone and install:
-
-```shell
-git clone git@github.com:webflow/mcp-server.git
-cd mcp-server
-npm install
-```
-
-2. Add your token to a `.env` file at the root of the project:
-
-```shell
-# .env
-WEBFLOW_TOKEN=<YOUR_WEBFLOW_TOKEN>
-```
-
-3. Start development server:
-
-```shell
-npm start
-```
-
-## 📄 Webflow Developer resources
+## 📄 Webflow developer resources
 
 - [Webflow API Documentation](https://developers.webflow.com/data/reference)
 - [Webflow JavaScript SDK](https://github.com/webflow/js-webflow-api)
 
-## ⚠️ Known Limitations
+## ⚠️ Known limitations
 
-### Static Page Content Updates
+### Static page content updates
 
 The `pages_update_static_content` endpoint currently only supports updates to localized static pages in secondary locales. Updates to static content in the default locale aren't supported and will result in errors.
