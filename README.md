@@ -19,7 +19,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 
 - Node.js 22.3.0 or higher
 
-> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see Node.js compatibility below.
+> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see the Node.js compatibility section below.
 
 ### Cursor
 
@@ -41,12 +41,11 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 
 > Tip: You can create a project-level `mcp.json` to avoid repeated auth prompts across multiple Cursor windows. See Cursor’s docs on [configuration locations.](https://docs.cursor.com/en/context/mcp#configuration-locations)
 
-4. Save and close the file. Cursor will automatically open an OAuth login page where you can authorize the Webflow sites.
+4. Save and close the file. Cursor will automatically open an OAuth login page where you can authorize Webflow sites to use with the MCP server.
 
 #### Open the Webflow Designer
 
-- Open your site in the Webflow Designer.
-- Or ask your AI agent:
+- Open your site in the Webflow Designer, or ask your AI agent:
 
 ```text
 Give me a link to open <MY_SITE_NAME> in the Webflow Designer
@@ -76,7 +75,7 @@ Create a hero section card on my home page with a CTA button and responsive desi
 
 ### Claude desktop
 
-#### Add MCP Server to Claude desktop
+#### Add MCP server to Claude desktop
 
 1. Enable developer mode: `Help → Troubleshooting → Enable Developer Mode`.
 2. Open developer settings: `File → Settings → Developer`.
@@ -96,6 +95,12 @@ Create a hero section card on my home page with a CTA button and responsive desi
 4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites.
 
 #### Open the Webflow Designer
+
+- Open your site in the Webflow Designer, or ask your AI agent:
+
+```text
+Give me a link to open <MY_SITE_NAME> in the Webflow Designer
+```
 
 #### Open the MCP Webflow App
 
@@ -121,7 +126,7 @@ Create a hero section card on my home page with a CTA button and responsive desi
 
 ## Local Installation
 
-You can also configure thee MCP server to run locally. This requires:
+You can also configure the MCP server to run locally. This requires:
 
 - Creating and registering your own MCP Bridge App in a Webflow workspace with Admin permissions
 - Configuring your AI client to start the local MCP server with a Webflow API token
@@ -134,10 +139,10 @@ Before connecting the local MCP server to your AI client, create and publish the
 2. Clone the MCP Bridge App code:
    ```bash
    git clone https://github.com/virat21/webflow-mcp-bridge-app
-   cd webflow-designer-mcp-bridge-app
+   cd webflow-mcp-bridge-app
    ```
 3. Configure the app with your App credentials:
-   - Set your Client ID and Client Secret in a `.env` file for the App you registered.
+   - Set your Client ID and Client Secret in an `.env` file for the App you registered.
    - See the app repo’s README for exact variables and build steps.
 4. Build and publish the Designer Extension to your workspace:
    - Build per the repo instructions.
@@ -188,11 +193,18 @@ Add to `claude_desktop_config.json`:
 - Open your site in the Webflow Designer.
 - Open the Apps panel (press `E`) and launch your published “Webflow MCP Bridge App”.
 - Wait for the app to connect to the MCP server, then use tools from your AI client.
+- If the Bridge App prompts for a local connection URL, call the `get_designer_app_connection_info` tool from your AI client and paste the returned `http://localhost:<port>` URL.
 
 ### Optional: Run locally via shell
 
 ```bash
 WEBFLOW_TOKEN="<YOUR_WEBFLOW_TOKEN>" npx -y webflow-mcp-server@latest
+```
+
+```powershell
+# PowerShell
+$env:WEBFLOW_TOKEN="<YOUR_WEBFLOW_TOKEN>"
+npx -y webflow-mcp-server@latest
 ```
 
 ## ❓ Troubleshooting
