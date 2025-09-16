@@ -93,7 +93,34 @@ Create a hero section card on my home page with a CTA button and responsive desi
 
 4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites and install the companion app.
 
-Then follow the same steps as Cursor to open the Webflow Designer, open the MCP Bridge App, and try your first prompts.
+#### Open the Webflow Designer (Claude Desktop)
+
+- Open your site in the Webflow Designer.
+- Or ask your AI agent:
+
+```text
+Give me a link to open <MY_SITE_NAME> in the Webflow Designer
+```
+
+#### Open the MCP Webflow App (Claude Desktop)
+
+1. In the Designer, open the Apps panel (press `E`).
+2. Launch "Webflow MCP Bridge App" (installed during OAuth).
+3. Wait for the app to connect to the MCP server.
+
+#### Write your first prompt (Claude Desktop)
+
+```text
+Analyze my last 5 blog posts and suggest 3 new topic ideas with SEO keywords
+```
+
+```text
+Find older blog posts that mention similar topics and add internal links to my latest post
+```
+
+```text
+Create a hero section card on my home page with a CTA button and responsive design
+```
 
 ### Windsurf
 
@@ -112,7 +139,36 @@ Then follow the same steps as Cursor to open the Webflow Designer, open the MCP 
 }
 ```
 
-4. Save. Use the settings page "Refresh" button. A browser will open the OAuth flow to authorize sites (this also installs the companion app). Then open the Webflow Designer, open the MCP Bridge App, and try prompts as above.
+4. Save. Use the settings page "Refresh" button. A browser will open the OAuth flow to authorize sites (this also installs the companion app).
+
+#### Open the Webflow Designer (Windsurf)
+
+- Open your site in the Webflow Designer.
+- Or ask your AI agent:
+
+```text
+Give me a link to open <MY_SITE_NAME> in the Webflow Designer
+```
+
+#### Open the MCP Webflow App (Windsurf)
+
+1. In the Designer, open the Apps panel (press `E`).
+2. Launch "Webflow MCP Bridge App" (installed during OAuth).
+3. Wait for the app to connect to the MCP server.
+
+#### Write your first prompt (Windsurf)
+
+```text
+Analyze my last 5 blog posts and suggest 3 new topic ideas with SEO keywords
+```
+
+```text
+Find older blog posts that mention similar topics and add internal links to my latest post
+```
+
+```text
+Create a hero section card on my home page with a CTA button and responsive design
+```
 
 ### Reset your OAuth token
 
