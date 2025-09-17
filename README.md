@@ -122,7 +122,7 @@ Find older blog posts that mention similar topics and add internal links to my l
 Create a hero section card on my home page with a CTA button and responsive design
 ```
 
-### Reset your OAuth Token
+### Reset your OAuth token
 
 To reset your OAuth token, run the following command in your terminal.
 
