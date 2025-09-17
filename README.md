@@ -33,7 +33,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 {
   "mcpServers": {
     "webflow": {
-      "command": "npx mcp-remote https://mcp.webflow.com/sse"
+      "url": "https://mcp.webflow.com/sse"
     }
   }
 }
@@ -120,6 +120,112 @@ Find older blog posts that mention similar topics and add internal links to my l
 
 ```text
 Create a hero section card on my home page with a CTA button and responsive design
+```
+
+### Reset your OAuth token
+
+To reset your OAuth token, run the following command in your terminal.
+
+```bash
+rm -rf ~/.mcp-auth
+```
+
+### Node.js compatibility
+
+Please see the Node.js [compatibility guidance on Webflow's developer docs.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
+
+---
+
+
+## Local Installation
+
+You can also configure the MCP server to run locally. This requires:
+
+- Creating and registering your own MCP Bridge App in a Webflow workspace with Admin permissions
+- Configuring your AI client to start the local MCP server with a Webflow API token
+
+### 1. Create and publish the MCP bridge app
+
+Before connecting the local MCP server to your AI client, you must create and publish the **Webflow MCP Bridge App** in your workspace.
+
+### Steps
+
+1. **Register a Webflow App**
+   - Go to your Webflow Workspace and register a new app.  
+   - Follow the official guide: [Register an App](https://developers.webflow.com/data/v2.0.0/docs/register-an-app).
+
+2. **Get the MCP Bridge App code**
+   - Option A: Download the latest `bundle.zip` from the [releases page](https://github.com/virat21/webflow-mcp-bridge-app/releases).
+   - Option B: Clone the repository and build it:
+     ```bash
+     git clone https://github.com/virat21/webflow-mcp-bridge-app
+     cd webflow-mcp-bridge-app
+     ```
+     - Then build the project following the repository instructions.
+
+3. **Publish the Designer Extension**
+   - Go to **Webflow Dashboard → Workspace settings → Apps & Integrations → Develop → Your App**.
+   - Click **“Publish Extension Version”**.
+   - Upload your built `bundle.zip` file.
+
+4. **Open the App in Designer**
+   - Once published, open the MCP Bridge App from the **Designer → Apps panel** in a site within your workspace.
+
+### 2. Configure your AI client
+
+#### Cursor
+
+Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["-y", "webflow-mcp-server@latest"],
+      "env": {
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+#### Claude desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "webflow": {
+      "command": "npx",
+      "args": ["-y", "webflow-mcp-server@latest"],
+      "env": {
+        "WEBFLOW_TOKEN": "<YOUR_WEBFLOW_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### 3. Use the MCP server with the Webflow Designer
+
+- Open your site in the Webflow Designer.
+- Open the Apps panel (press `E`) and launch your published “Webflow MCP Bridge App”.
+- Wait for the app to connect to the MCP server, then use tools from your AI client.
+- If the Bridge App prompts for a local connection URL, call the `get_designer_app_connection_info` tool from your AI client and paste the returned `http://localhost:<port>` URL.
+
+### Optional: Run locally via shell
+
+```bash
+WEBFLOW_TOKEN="<YOUR_WEBFLOW_TOKEN>" npx -y webflow-mcp-server@latest
+```
+
+```powershell
+# PowerShell
+$env:WEBFLOW_TOKEN="<YOUR_WEBFLOW_TOKEN>"
+npx -y webflow-mcp-server@latest
 ```
 
 ### Reset your OAuth Token
