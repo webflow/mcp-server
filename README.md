@@ -230,22 +230,30 @@ You can also configure the MCP server to run locally. This requires:
 
 ### 1. Create and publish the MCP bridge app
 
-Before connecting the local MCP server to your AI client, create and publish the Webflow MCP Bridge App in your workspace.
+Before connecting the local MCP server to your AI client, you must create and publish the **Webflow MCP Bridge App** in your workspace.
 
-1. Register a Webflow App in your Workspace. Follow the [Register an App](https://developers.webflow.com/data/v2.0.0/docs/register-an-app) guidance for more details.
-2. Clone the MCP Bridge App code:
-   ```bash
-   git clone https://github.com/virat21/webflow-mcp-bridge-app
-   cd webflow-mcp-bridge-app
-   ```
-3. Configure the app with your App credentials:
-   - Set your Client ID and Client Secret in an `.env` file for the App you registered.
-   - See the app repo’s README for exact variables and build steps.
-4. Build and publish the Designer Extension to your workspace:
-   - Build per the repo instructions.
-   - Publish the App to your workspace via the Webflow Dashboard → Workspace settings → Apps & Integrations → Develop→ your App → “Publish Extension Version” and upload your `bundle.zip` file.
+### Steps
 
-Once published to your workspace, open your MCP Bridge App in a site on your workspace from the Designer’s Apps panel.
+1. **Register a Webflow App**
+   - Go to your Webflow Workspace and register a new app.  
+   - Follow the official guide: [Register an App](https://developers.webflow.com/data/v2.0.0/docs/register-an-app).
+
+2. **Get the MCP Bridge App code**
+   - Option A: Download the latest `bundle.zip` from the [releases page](https://github.com/virat21/webflow-mcp-bridge-app/releases).
+   - Option B: Clone the repository and build it:
+     ```bash
+     git clone https://github.com/virat21/webflow-mcp-bridge-app
+     cd webflow-mcp-bridge-app
+     ```
+     - Then build the project following the repository instructions.
+
+3. **Publish the Designer Extension**
+   - Go to **Webflow Dashboard → Workspace settings → Apps & Integrations → Develop → Your App**.
+   - Click **“Publish Extension Version”**.
+   - Upload your built `bundle.zip` file.
+
+4. **Open the App in Designer**
+   - Once published, open the MCP Bridge App from the **Designer → Apps panel** in a site within your workspace.
 
 ### 2. Configure your AI client
 
