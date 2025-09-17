@@ -33,7 +33,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 {
   "mcpServers": {
     "webflow": {
-      "command": "npx mcp-remote https://mcp.webflow.com/sse"
+      "url": "https://mcp.webflow.com/sse"
     }
   }
 }
