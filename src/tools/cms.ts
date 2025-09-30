@@ -167,7 +167,7 @@ export function registerCmsTools(
     return response;
   }
 
-  server.tool("data_cms_tool","Data tool - CMS tool to perform actions like get collection list, get collection details, create collection, create collection static field, create collection option field, create collection reference field, update collection field, create collection item live, update collection items live, list collection items, create collection item, update collection items, publish collection items, delete collection item",{
+  server.tool("data_cms_tool","Data tool - CMS tool to perform actions like get collection list, get collection details, create collection, create collection fields (static/option/reference), update collection field, list collection items, create collection items, update collection items, publish collection items, and delete collection items",{
     actions:z.array(
       z.object({
         // GET https://api.webflow.com/v2/sites/:site_id/collections
