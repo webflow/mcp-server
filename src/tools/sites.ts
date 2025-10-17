@@ -2,7 +2,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
-import { Content, formatErrorResponse, textContent, toolResponse } from "../utils";
+import {
+  type Content,
+  formatErrorResponse,
+  textContent,
+  toolResponse,
+} from "../utils";
 
 export function registerSiteTools(
   server: McpServer,
@@ -83,10 +88,12 @@ export function registerSiteTools(
           if (action.list_sites) {
             const content = await listSites();
             result.push(textContent(content));
-          } else if (action.get_site) {
+          }
+          if (action.get_site) {
             const content = await getSite(action.get_site);
             result.push(textContent(content));
-          } else if (action.publish_site) {
+          }
+          if (action.publish_site) {
             const content = await publishSite(action.publish_site);
             result.push(textContent(content));
           }

@@ -6,7 +6,12 @@ import {
   WebflowPageDomWriteNodesItemSchema,
   WebflowPageSchema,
 } from "../schemas";
-import { Content, formatErrorResponse, textContent, toolResponse } from "../utils";
+import {
+  type Content,
+  formatErrorResponse,
+  textContent,
+  toolResponse,
+} from "../utils";
 
 export function registerPagesTools(
   server: McpServer,
@@ -212,17 +217,25 @@ export function registerPagesTools(
           if (action.list_pages) {
             const content = await listPages(action.list_pages);
             result.push(textContent(content));
-          } else if (action.get_page_metadata) {
+          }
+          if (action.get_page_metadata) {
             const content = await getPageMetadata(action.get_page_metadata);
             result.push(textContent(content));
-          } else if (action.update_page_settings) {
-            const content = await updatePageSettings(action.update_page_settings);
+          }
+          if (action.update_page_settings) {
+            const content = await updatePageSettings(
+              action.update_page_settings
+            );
             result.push(textContent(content));
-          } else if (action.get_page_content) {
+          }
+          if (action.get_page_content) {
             const content = await getPageContent(action.get_page_content);
             result.push(textContent(content));
-          } else if (action.update_static_content) {
-            const content = await updateStaticContent(action.update_static_content);
+          }
+          if (action.update_static_content) {
+            const content = await updateStaticContent(
+              action.update_static_content
+            );
             result.push(textContent(content));
           }
         }

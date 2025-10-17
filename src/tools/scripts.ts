@@ -4,7 +4,13 @@ import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
 import { z } from "zod";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
-import { Content, formatErrorResponse, textContent, toolResponse, isApiError } from "../utils";
+import {
+  type Content,
+  formatErrorResponse,
+  textContent,
+  toolResponse,
+  isApiError,
+} from "../utils";
 
 export function registerScriptsTools(
   server: McpServer,
@@ -50,11 +56,10 @@ export function registerScriptsTools(
 
     let existingScripts: any[] = [];
     try {
-      const allScriptsResponse =
-        await getClient().sites.scripts.getCustomCode(
-          arg.site_id,
-          requestOptions
-        );
+      const allScriptsResponse = await getClient().sites.scripts.getCustomCode(
+        arg.site_id,
+        requestOptions
+      );
       existingScripts = allScriptsResponse.scripts || [];
     } catch (error) {
       existingScripts = [];
@@ -154,17 +159,20 @@ export function registerScriptsTools(
               action.list_registered_scripts
             );
             result.push(textContent(content));
-          } else if (action.list_applied_scripts) {
+          }
+          if (action.list_applied_scripts) {
             const content = await listAppliedScripts(
               action.list_applied_scripts
             );
             result.push(textContent(content));
-          } else if (action.add_inline_site_script) {
+          }
+          if (action.add_inline_site_script) {
             const content = await addInlineSiteScript(
               action.add_inline_site_script
             );
             result.push(textContent(content));
-          } else if (action.delete_all_site_scripts) {
+          }
+          if (action.delete_all_site_scripts) {
             const content = await deleteAllSiteScripts(
               action.delete_all_site_scripts
             );

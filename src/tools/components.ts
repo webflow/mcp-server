@@ -4,9 +4,14 @@ import { z } from "zod";
 import { requestOptions } from "../mcp";
 import {
   ComponentDomWriteNodesItemSchema,
-  ComponentPropertyUpdateSchema
+  ComponentPropertyUpdateSchema,
 } from "../schemas";
-import { Content, formatErrorResponse, textContent, toolResponse } from "../utils";
+import {
+  type Content,
+  formatErrorResponse,
+  textContent,
+  toolResponse,
+} from "../utils";
 
 export function registerComponentsTools(
   server: McpServer,
@@ -237,22 +242,26 @@ export function registerComponentsTools(
           if (action.list_components) {
             const content = await listComponents(action.list_components);
             result.push(textContent(content));
-          } else if (action.get_component_content) {
+          }
+          if (action.get_component_content) {
             const content = await getComponentContent(
               action.get_component_content
             );
             result.push(textContent(content));
-          } else if (action.update_component_content) {
+          }
+          if (action.update_component_content) {
             const content = await updateComponentContent(
               action.update_component_content
             );
             result.push(textContent(content));
-          } else if (action.get_component_properties) {
+          }
+          if (action.get_component_properties) {
             const content = await getComponentProperties(
               action.get_component_properties
             );
             result.push(textContent(content));
-          } else if (action.update_component_properties) {
+          }
+          if (action.update_component_properties) {
             const content = await updateComponentProperties(
               action.update_component_properties
             );
