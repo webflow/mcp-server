@@ -10,3 +10,8 @@ node_modules/
 .vscode/
 .cursor
 pnpm-lock.yaml
+
+# Private keys
+key.pem
+key.pem.pub
+*.pem
