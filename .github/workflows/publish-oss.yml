@@ -25,5 +25,5 @@ jobs:
 
       - name: Login and Publish to MCP Registry
         run: |
-          ./mcp-publisher login dns --domain webflow.com --private-key ${{ secrets.MCP_PRIVATE_KEY }}
+          ./mcp-publisher login dns --domain webflow.com --private-key ${{ secrets.OSS_PRIVATE_KEY }}
           ./mcp-publisher publish
