@@ -1,0 +1,16 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "com.webflow/mcp",
+  "description": "AI-powered design and management for Webflow Sites",
+  "repository": {
+    "url": "https://github.com/webflow/mcp-server",
+    "source": "github"
+  },
+  "version": "2.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.webflow.com/mcp"
+    }
+  ]
+}
