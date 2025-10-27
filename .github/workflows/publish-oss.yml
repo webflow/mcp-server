@@ -1,0 +1,29 @@
+name: Publish MCP Server
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update server.json version from tag
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "Updating server.json to version $VERSION"
+          jq --arg v "$VERSION" '.version = $v' server.json > server.json.tmp && mv server.json.tmp server.json
+
+      - name: Download mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64" -o mcp-publisher
+          chmod +x mcp-publisher
+
+      - name: Login and Publish to MCP Registry
+        run: |
+          ./mcp-publisher login dns --domain webflow.com --private-key ${{ secrets.OSS_PRIVATE_KEY }}
+          ./mcp-publisher publish
