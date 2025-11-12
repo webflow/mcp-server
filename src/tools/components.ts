@@ -109,131 +109,138 @@ export function registerComponentsTools(
     return response;
   };
 
-  server.tool(
+  server.registerTool(
     "data_components_tool",
-    "Data tool - Components tool to perform actions like list components, get component content, update component content, get component properties, and update component properties",
     {
-      actions: z.array(
-        z.object({
-          // GET https://api.webflow.com/v2/sites/:site_id/components
-          list_components: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the Site."),
-              limit: z
-                .number()
-                .optional()
-                .describe(
-                  "Maximum number of records to be returned (max limit: 100)"
-                ),
-              offset: z
-                .number()
-                .optional()
-                .describe(
-                  "Offset used for pagination if the results have more than limit records."
-                ),
-            })
-            .optional()
-            .describe(
-              "List all components in a site. Returns component metadata including IDs, names, and versions."
-            ),
-          // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
-          get_component_content: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the Site."),
-              component_id: z
-                .string()
-                .describe("Unique identifier for the Component."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              limit: z
-                .number()
-                .optional()
-                .describe(
-                  "Maximum number of records to be returned (max limit: 100)"
-                ),
-              offset: z
-                .number()
-                .optional()
-                .describe(
-                  "Offset used for pagination if the results have more than limit records."
-                ),
-            })
-            .optional()
-            .describe(
-              "Get the content structure and data for a specific component including text, images, and nested components."
-            ),
-          // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
-          update_component_content: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the Site."),
-              component_id: z
-                .string()
-                .describe("Unique identifier for the Component."),
-              localeId: z
-                .string()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              nodes: ComponentDomWriteNodesItemSchema,
-            })
-            .optional()
-            .describe(
-              "Update content on a component in secondary locales by modifying text nodes and property overrides."
-            ),
-          // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
-          get_component_properties: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the Site."),
-              component_id: z
-                .string()
-                .describe("Unique identifier for the Component."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              limit: z
-                .number()
-                .optional()
-                .describe(
-                  "Maximum number of records to be returned (max limit: 100)"
-                ),
-              offset: z
-                .number()
-                .optional()
-                .describe(
-                  "Offset used for pagination if the results have more than limit records."
-                ),
-            })
-            .optional()
-            .describe(
-              "Get component properties including default values and configuration for a specific component."
-            ),
-          // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
-          update_component_properties: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the Site."),
-              component_id: z
-                .string()
-                .describe("Unique identifier for the Component."),
-              localeId: z
-                .string()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              properties: ComponentPropertyUpdateSchema,
-            })
-            .optional()
-            .describe(
-              "Update component properties for localization to customize behavior in different languages."
-            ),
-        })
-      ),
+      title: "Data Components Tool",
+      annotations: {
+        readOnlyHint: false,
+      },
+      description:
+        "Data tool - Components tool to perform actions like list components, get component content, update component content, get component properties, and update component properties",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites/:site_id/components
+            list_components: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the Site."),
+                limit: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Maximum number of records to be returned (max limit: 100)"
+                  ),
+                offset: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Offset used for pagination if the results have more than limit records."
+                  ),
+              })
+              .optional()
+              .describe(
+                "List all components in a site. Returns component metadata including IDs, names, and versions."
+              ),
+            // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
+            get_component_content: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the Site."),
+                component_id: z
+                  .string()
+                  .describe("Unique identifier for the Component."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                limit: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Maximum number of records to be returned (max limit: 100)"
+                  ),
+                offset: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Offset used for pagination if the results have more than limit records."
+                  ),
+              })
+              .optional()
+              .describe(
+                "Get the content structure and data for a specific component including text, images, and nested components."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
+            update_component_content: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the Site."),
+                component_id: z
+                  .string()
+                  .describe("Unique identifier for the Component."),
+                localeId: z
+                  .string()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                nodes: ComponentDomWriteNodesItemSchema,
+              })
+              .optional()
+              .describe(
+                "Update content on a component in secondary locales by modifying text nodes and property overrides."
+              ),
+            // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
+            get_component_properties: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the Site."),
+                component_id: z
+                  .string()
+                  .describe("Unique identifier for the Component."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                limit: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Maximum number of records to be returned (max limit: 100)"
+                  ),
+                offset: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Offset used for pagination if the results have more than limit records."
+                  ),
+              })
+              .optional()
+              .describe(
+                "Get component properties including default values and configuration for a specific component."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
+            update_component_properties: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the Site."),
+                component_id: z
+                  .string()
+                  .describe("Unique identifier for the Component."),
+                localeId: z
+                  .string()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                properties: ComponentPropertyUpdateSchema,
+              })
+              .optional()
+              .describe(
+                "Update component properties for localization to customize behavior in different languages."
+              ),
+          })
+        ),
+      },
     },
     async ({ actions }) => {
       const result: Content[] = [];

@@ -39,47 +39,50 @@ export function registerSiteTools(
     return response;
   };
 
-  server.tool(
+  server.registerTool(
     "data_sites_tool",
-    "Data tool - Sites tool to perform actions like list sites, get site details, and publish sites",
     {
-      actions: z.array(
-        z.object({
-          // GET https://api.webflow.com/v2/sites
-          list_sites: z
-            .object({})
-            .optional()
-            .describe(
-              "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date."
-            ),
-          // GET https://api.webflow.com/v2/sites/:site_id
-          get_site: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-            })
-            .optional()
-            .describe(
-              "Get detailed information about a specific site including its settings, domains, and publishing status."
-            ),
-          // POST https://api.webflow.com/v2/sites/:site_id/publish
-          publish_site: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-              customDomains: z
-                .array(z.string())
-                .optional()
-                .describe("Array of custom domains to publish the site to."),
-              publishToWebflowSubdomain: z
-                .boolean()
-                .optional()
-                .describe("Whether to publish to the Webflow subdomain."),
-            })
-            .optional()
-            .describe(
-              "Publish a site to specified domains. This will make the latest changes live on the specified domains."
-            ),
-        })
-      ),
+      description:
+        "Data tool - Sites tool to perform actions like list sites, get site details, and publish sites",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites
+            list_sites: z
+              .object({})
+              .optional()
+              .describe(
+                "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date."
+              ),
+            // GET https://api.webflow.com/v2/sites/:site_id
+            get_site: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "Get detailed information about a specific site including its settings, domains, and publishing status."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/publish
+            publish_site: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+                customDomains: z
+                  .array(z.string())
+                  .optional()
+                  .describe("Array of custom domains to publish the site to."),
+                publishToWebflowSubdomain: z
+                  .boolean()
+                  .optional()
+                  .describe("Whether to publish to the Webflow subdomain."),
+              })
+              .optional()
+              .describe(
+                "Publish a site to specified domains. This will make the latest changes live on the specified domains."
+              ),
+          })
+        ),
+      },
     },
     async ({ actions }) => {
       const result: Content[] = [];

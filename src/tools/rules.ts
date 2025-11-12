@@ -1,10 +1,18 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerRulesTools(server: McpServer) {
-  server.tool(
+  server.registerTool(
     "webflow_guide_tool",
-    "Provides essential guidelines and best practices for effectively using the Webflow tools. Call this tool to understand recommended workflows and important considerations before performing actions. ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS.  ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS. ",
-    {},
+    {
+      title: "Webflow Guide Tool",
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: false,
+      },
+      description:
+        "Provides essential guidelines and best practices for effectively using the Webflow tools. Call this tool to understand recommended workflows and important considerations before performing actions. ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS.  ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS. ",
+      inputSchema: {},
+    },
     async ({}) => ({
       content: [
         {

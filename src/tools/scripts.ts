@@ -104,51 +104,58 @@ export function registerScriptsTools(
     }
   };
 
-  server.tool(
+  server.registerTool(
     "data_scripts_tool",
-    "Data tool - Scripts tool to perform actions like list registered scripts, list applied scripts, add inline site script, and delete all site scripts",
     {
-      actions: z.array(
-        z.object({
-          // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
-          list_registered_scripts: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-            })
-            .optional()
-            .describe(
-              "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
-            ),
-          // GET https://api.webflow.com/v2/sites/:site_id/custom_code
-          list_applied_scripts: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-            })
-            .optional()
-            .describe(
-              "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
-            ),
-          // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
-          add_inline_site_script: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-              request: RegisterInlineSiteScriptSchema,
-            })
-            .optional()
-            .describe(
-              "Register an inline script for a site. Inline scripts are limited to 2000 characters."
-            ),
-          // DELETE https://api.webflow.com/v2/sites/:site_id/custom_code
-          delete_all_site_scripts: z
-            .object({
-              site_id: z.string().describe("Unique identifier for the site."),
-            })
-            .optional()
-            .describe(
-              "Delete all custom scripts applied to a site by the App."
-            ),
-        })
-      ),
+      title: "Data Scripts Tool",
+      annotations: {
+        readOnlyHint: false,
+      },
+      description:
+        "Data tool - Scripts tool to perform actions like list registered scripts, list applied scripts, add inline site script, and delete all site scripts",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
+            list_registered_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+              ),
+            // GET https://api.webflow.com/v2/sites/:site_id/custom_code
+            list_applied_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
+            add_inline_site_script: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+                request: RegisterInlineSiteScriptSchema,
+              })
+              .optional()
+              .describe(
+                "Register an inline script for a site. Inline scripts are limited to 2000 characters."
+              ),
+            // DELETE https://api.webflow.com/v2/sites/:site_id/custom_code
+            delete_all_site_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "Delete all custom scripts applied to a site by the App."
+              ),
+          })
+        ),
+      },
     },
     async ({ actions }) => {
       const result: Content[] = [];
