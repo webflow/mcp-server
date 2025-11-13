@@ -205,243 +205,255 @@ export function registerCmsTools(
     return response;
   };
 
-  server.tool(
+  server.registerTool(
     "data_cms_tool",
-    "Data tool - CMS tool to perform actions like get collection list, get collection details, create collection, create collection fields (static/option/reference), update collection field, list collection items, create collection items, update collection items, publish collection items, and delete collection items",
     {
-      actions: z.array(
-        z.object({
-          // GET https://api.webflow.com/v2/sites/:site_id/collections
-          get_collection_list: z
-            .object({
-              ...SiteIdSchema,
-            })
-            .optional()
-            .describe(
-              "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas."
-            ),
-          // GET https://api.webflow.com/v2/collections/:collection_id
-          get_collection_details: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-            })
-            .optional()
-            .describe(
-              "Get detailed information about a specific CMS collection including its schema and field definitions."
-            ),
-          // POST https://api.webflow.com/v2/sites/:site_id/collections
-          create_collection: z
-            .object({
-              ...SiteIdSchema,
-              request: WebflowCollectionsCreateRequestSchema,
-            })
-            .optional()
-            .describe(
-              "Create a new CMS collection in a site with specified name and schema."
-            ),
-          // POST https://api.webflow.com/v2/collections/:collection_id/fields
-          create_collection_static_field: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: StaticFieldSchema,
-            })
-            .optional()
-            .describe(
-              "Create a new static field in a CMS collection (e.g., text, number, date, etc.)."
-            ),
-          // POST https://api.webflow.com/v2/collections/:collection_id/fields
-          create_collection_option_field: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: OptionFieldSchema,
-            })
-            .optional()
-            .describe(
-              "Create a new option field in a CMS collection with predefined choices."
-            ),
-          // POST https://api.webflow.com/v2/collections/:collection_id/fields
-          create_collection_reference_field: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: ReferenceFieldSchema,
-            })
-            .optional()
-            .describe(
-              "Create a new reference field in a CMS collection that links to items in another collection."
-            ),
-          // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
-          update_collection_field: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              field_id: z.string().describe("Unique identifier for the Field."),
-              request: WebflowCollectionsFieldUpdateSchema,
-            })
-            .optional()
-            .describe(
-              "Update properties of an existing field in a CMS collection."
-            ),
-          // // POST https://api.webflow.com/v2/collections/:collection_id/items/live
-          // //NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
-          // create_collection_items_live:z.object({
-          //   collection_id: z.string().describe("Unique identifier for the Collection."),
-          //   request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
-          // }).optional().describe("Create and publish new items in a CMS collection directly to the live site."),
-          // // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
-          // update_collection_items_live:z.object({
-          //   collection_id: z.string().describe("Unique identifier for the Collection."),
-          //   request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
-          // }).optional().describe("Update and publish existing items in a CMS collection directly to the live site."),
-          // GET https://api.webflow.com/v2/collections/:collection_id/items
-          list_collection_items: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: z
-                .object({
-                  cmsLocaleId: z
-                    .string()
-                    .optional()
-                    .describe(
-                      "Unique identifier for the locale of the CMS Item."
-                    ),
-                  limit: z
-                    .number()
-                    .optional()
-                    .describe(
-                      "Maximum number of records to be returned (max limit: 100)"
-                    ),
-                  offset: z
-                    .number()
-                    .optional()
-                    .describe(
-                      "Offset used for pagination if the results have more than limit records."
-                    ),
-                  name: z.string().optional().describe("Name of the field."),
-                  slug: z
-                    .string()
-                    .optional()
-                    .describe(
-                      "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
-                    ),
-                  sortBy: WebflowCollectionsItemsListItemsRequestSortBySchema,
-                  sortOrder:
-                    WebflowCollectionsItemsListItemsRequestSortOrderSchema,
-                })
-                .optional()
-                .describe("Filter and sort items in a CMS collection."),
-            })
-            .optional()
-            .describe(
-              "List items in a CMS collection with optional filtering and sorting."
-            ),
-          // POST https://api.webflow.com/v2/collections/:collection_id/items/bulk
-          create_collection_items: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: z
-                .object({
-                  cmsLocaleIds: z
-                    .array(z.string())
-                    .optional()
-                    .describe(
-                      "Unique identifier for the locale of the CMS Item."
-                    ),
-                  isArchived: z
-                    .boolean()
-                    .optional()
-                    .describe("Indicates if the item is archived."),
-                  isDraft: z
-                    .boolean()
-                    .optional()
-                    .describe("Indicates if the item is a draft."),
-                  fieldData: z
-                    .array(
-                      z.record(z.any()).and(
+      title: "Data CMS Tool",
+      annotations: {
+        readOnlyHint: false,
+      },
+      description:
+        "Data tool - CMS tool to perform actions like get collection list, get collection details, create collection, create collection fields (static/option/reference), update collection field, list collection items, create collection items, update collection items, publish collection items, and delete collection items",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites/:site_id/collections
+            get_collection_list: z
+              .object({
+                ...SiteIdSchema,
+              })
+              .optional()
+              .describe(
+                "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas."
+              ),
+            // GET https://api.webflow.com/v2/collections/:collection_id
+            get_collection_details: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+              })
+              .optional()
+              .describe(
+                "Get detailed information about a specific CMS collection including its schema and field definitions."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/collections
+            create_collection: z
+              .object({
+                ...SiteIdSchema,
+                request: WebflowCollectionsCreateRequestSchema,
+              })
+              .optional()
+              .describe(
+                "Create a new CMS collection in a site with specified name and schema."
+              ),
+            // POST https://api.webflow.com/v2/collections/:collection_id/fields
+            create_collection_static_field: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: StaticFieldSchema,
+              })
+              .optional()
+              .describe(
+                "Create a new static field in a CMS collection (e.g., text, number, date, etc.)."
+              ),
+            // POST https://api.webflow.com/v2/collections/:collection_id/fields
+            create_collection_option_field: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: OptionFieldSchema,
+              })
+              .optional()
+              .describe(
+                "Create a new option field in a CMS collection with predefined choices."
+              ),
+            // POST https://api.webflow.com/v2/collections/:collection_id/fields
+            create_collection_reference_field: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: ReferenceFieldSchema,
+              })
+              .optional()
+              .describe(
+                "Create a new reference field in a CMS collection that links to items in another collection."
+              ),
+            // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
+            update_collection_field: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                field_id: z
+                  .string()
+                  .describe("Unique identifier for the Field."),
+                request: WebflowCollectionsFieldUpdateSchema,
+              })
+              .optional()
+              .describe(
+                "Update properties of an existing field in a CMS collection."
+              ),
+            // // POST https://api.webflow.com/v2/collections/:collection_id/items/live
+            // //NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
+            // create_collection_items_live:z.object({
+            //   collection_id: z.string().describe("Unique identifier for the Collection."),
+            //   request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
+            // }).optional().describe("Create and publish new items in a CMS collection directly to the live site."),
+            // // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
+            // update_collection_items_live:z.object({
+            //   collection_id: z.string().describe("Unique identifier for the Collection."),
+            //   request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
+            // }).optional().describe("Update and publish existing items in a CMS collection directly to the live site."),
+            // GET https://api.webflow.com/v2/collections/:collection_id/items
+            list_collection_items: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: z
+                  .object({
+                    cmsLocaleId: z
+                      .string()
+                      .optional()
+                      .describe(
+                        "Unique identifier for the locale of the CMS Item."
+                      ),
+                    limit: z
+                      .number()
+                      .optional()
+                      .describe(
+                        "Maximum number of records to be returned (max limit: 100)"
+                      ),
+                    offset: z
+                      .number()
+                      .optional()
+                      .describe(
+                        "Offset used for pagination if the results have more than limit records."
+                      ),
+                    name: z.string().optional().describe("Name of the field."),
+                    slug: z
+                      .string()
+                      .optional()
+                      .describe(
+                        "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+                      ),
+                    sortBy: WebflowCollectionsItemsListItemsRequestSortBySchema,
+                    sortOrder:
+                      WebflowCollectionsItemsListItemsRequestSortOrderSchema,
+                  })
+                  .optional()
+                  .describe("Filter and sort items in a CMS collection."),
+              })
+              .optional()
+              .describe(
+                "List items in a CMS collection with optional filtering and sorting."
+              ),
+            // POST https://api.webflow.com/v2/collections/:collection_id/items/bulk
+            create_collection_items: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: z
+                  .object({
+                    cmsLocaleIds: z
+                      .array(z.string())
+                      .optional()
+                      .describe(
+                        "Unique identifier for the locale of the CMS Item."
+                      ),
+                    isArchived: z
+                      .boolean()
+                      .optional()
+                      .describe("Indicates if the item is archived."),
+                    isDraft: z
+                      .boolean()
+                      .optional()
+                      .describe("Indicates if the item is a draft."),
+                    fieldData: z
+                      .array(
+                        z.record(z.any()).and(
+                          z.object({
+                            name: z.string().describe("Name of the field."),
+                            slug: z
+                              .string()
+                              .describe(
+                                "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+                              ),
+                          })
+                        )
+                      )
+                      .describe("Data of the item."),
+                  })
+                  .describe("Array of items to be created."),
+              })
+              .optional()
+              .describe("Create new items in a CMS collection as drafts."),
+            //PATCH https://api.webflow.com/v2/collections/:collection_id/items
+            update_collection_items: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request:
+                  WebflowCollectionsItemsUpdateItemsRequestSchema.describe(
+                    "Array of items to be updated."
+                  ),
+              })
+              .optional()
+              .describe("Update existing items in a CMS collection as drafts."),
+            // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
+            publish_collection_items: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: z
+                  .object({
+                    itemIds: z
+                      .array(z.string())
+                      .describe("Array of item IDs to be published."),
+                  })
+                  .describe("Array of items to be published."),
+              })
+              .optional()
+              .describe(
+                "Publish existing items in a CMS collection as drafts."
+              ),
+            // DEL https://api.webflow.com/v2/collections/:collection_id/items
+            delete_collection_items: z
+              .object({
+                collection_id: z
+                  .string()
+                  .describe("Unique identifier for the Collection."),
+                request: z
+                  .object({
+                    items: z
+                      .array(
                         z.object({
-                          name: z.string().describe("Name of the field."),
-                          slug: z
-                            .string()
+                          id: z.string().describe("Item ID to be deleted."),
+                          cmsLocaleIds: z
+                            .array(z.string())
+                            .optional()
                             .describe(
-                              "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+                              "Unique identifier for the locale of the CMS Item."
                             ),
                         })
                       )
-                    )
-                    .describe("Data of the item."),
-                })
-                .describe("Array of items to be created."),
-            })
-            .optional()
-            .describe("Create new items in a CMS collection as drafts."),
-          //PATCH https://api.webflow.com/v2/collections/:collection_id/items
-          update_collection_items: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: WebflowCollectionsItemsUpdateItemsRequestSchema.describe(
-                "Array of items to be updated."
-              ),
-            })
-            .optional()
-            .describe("Update existing items in a CMS collection as drafts."),
-          // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
-          publish_collection_items: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: z
-                .object({
-                  itemIds: z
-                    .array(z.string())
-                    .describe("Array of item IDs to be published."),
-                })
-                .describe("Array of items to be published."),
-            })
-            .optional()
-            .describe("Publish existing items in a CMS collection as drafts."),
-          // DEL https://api.webflow.com/v2/collections/:collection_id/items
-          delete_collection_items: z
-            .object({
-              collection_id: z
-                .string()
-                .describe("Unique identifier for the Collection."),
-              request: z
-                .object({
-                  items: z
-                    .array(
-                      z.object({
-                        id: z.string().describe("Item ID to be deleted."),
-                        cmsLocaleIds: z
-                          .array(z.string())
-                          .optional()
-                          .describe(
-                            "Unique identifier for the locale of the CMS Item."
-                          ),
-                      })
-                    )
-                    .describe("Array of items to be deleted."),
-                })
-                .describe("Array of items to be deleted."),
-            })
-            .optional()
-            .describe("Delete existing items in a CMS collection as drafts."),
-        })
-      ),
+                      .describe("Array of items to be deleted."),
+                  })
+                  .describe("Array of items to be deleted."),
+              })
+              .optional()
+              .describe("Delete existing items in a CMS collection as drafts."),
+          })
+        ),
+      },
     },
     async ({ actions }) => {
       const result: Content[] = [];

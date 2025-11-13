@@ -6,10 +6,18 @@ const BASE_URL = "https://developers.webflow.com/";
 const X_FERN_HOST = "developers.webflow.com";
 
 export function registerAiChatTools(server: McpServer) {
-  server.tool(
+  server.registerTool(
     "ask_webflow_ai",
-    "Ask Webflow AI about anything related to Webflow API.",
-    { message: z.string() },
+    {
+      description: "Ask Webflow AI about anything related to Webflow API.",
+      title: "Ask Webflow AI",
+      annotations: {
+        openWorldHint: true,
+      },
+      inputSchema: {
+        message: z.string().describe("The message to ask Webflow AI about."),
+      },
+    },
     async ({ message }) => {
       const result = await postChat(message);
       return {

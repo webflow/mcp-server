@@ -99,116 +99,123 @@ export function registerPagesTools(
     return response;
   };
 
-  server.tool(
+  server.registerTool(
     "data_pages_tool",
-    "Data tool - Pages tool to perform actions like list pages, get page metadata, update page settings, get page content, and update static content",
     {
-      actions: z.array(
-        z.object({
-          // GET https://api.webflow.com/v2/sites/:site_id/pages
-          list_pages: z
-            .object({
-              site_id: z
-                .string()
-                .describe("The site's unique ID, used to list its pages."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              limit: z
-                .number()
-                .optional()
-                .describe(
-                  "Maximum number of records to be returned (max limit: 100)"
-                ),
-              offset: z
-                .number()
-                .optional()
-                .describe(
-                  "Offset used for pagination if the results have more than limit records."
-                ),
-            })
-            .optional()
-            .describe(
-              "List all pages within a site. Returns page metadata including IDs, titles, and slugs."
-            ),
-          // GET https://api.webflow.com/v2/pages/:page_id
-          get_page_metadata: z
-            .object({
-              page_id: z.string().describe("Unique identifier for the page."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-            })
-            .optional()
-            .describe(
-              "Get metadata for a specific page including SEO settings, Open Graph data, and page status (draft/published)."
-            ),
-          // PUT https://api.webflow.com/v2/pages/:page_id
-          update_page_settings: z
-            .object({
-              page_id: z.string().describe("Unique identifier for the page."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              body: WebflowPageSchema,
-            })
-            .optional()
-            .describe(
-              "Update page settings including SEO metadata, Open Graph data, slug, and publishing status."
-            ),
-          // GET https://api.webflow.com/v2/pages/:page_id/dom
-          get_page_content: z
-            .object({
-              page_id: z.string().describe("Unique identifier for the page."),
-              localeId: z
-                .string()
-                .optional()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              limit: z
-                .number()
-                .optional()
-                .describe(
-                  "Maximum number of records to be returned (max limit: 100)"
-                ),
-              offset: z
-                .number()
-                .optional()
-                .describe(
-                  "Offset used for pagination if the results have more than limit records."
-                ),
-            })
-            .optional()
-            .describe(
-              "Get the content structure and data for a specific page including all elements and their properties for localization."
-            ),
-          // POST https://api.webflow.com/v2/pages/:page_id/dom
-          update_static_content: z
-            .object({
-              page_id: z.string().describe("Unique identifier for the page."),
-              localeId: z
-                .string()
-                .describe(
-                  "Unique identifier for a specific locale. Applicable when using localization."
-                ),
-              nodes: WebflowPageDomWriteNodesItemSchema,
-            })
-            .optional()
-            .describe(
-              "Update content on a static page in secondary locales by modifying text nodes and property overrides."
-            ),
-        })
-      ),
+      title: "Data Pages Tool",
+      annotations: {
+        readOnlyHint: false,
+      },
+      description:
+        "Data tool - Pages tool to perform actions like list pages, get page metadata, update page settings, get page content, and update static content",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites/:site_id/pages
+            list_pages: z
+              .object({
+                site_id: z
+                  .string()
+                  .describe("The site's unique ID, used to list its pages."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                limit: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Maximum number of records to be returned (max limit: 100)"
+                  ),
+                offset: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Offset used for pagination if the results have more than limit records."
+                  ),
+              })
+              .optional()
+              .describe(
+                "List all pages within a site. Returns page metadata including IDs, titles, and slugs."
+              ),
+            // GET https://api.webflow.com/v2/pages/:page_id
+            get_page_metadata: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+              })
+              .optional()
+              .describe(
+                "Get metadata for a specific page including SEO settings, Open Graph data, and page status (draft/published)."
+              ),
+            // PUT https://api.webflow.com/v2/pages/:page_id
+            update_page_settings: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                body: WebflowPageSchema,
+              })
+              .optional()
+              .describe(
+                "Update page settings including SEO metadata, Open Graph data, slug, and publishing status."
+              ),
+            // GET https://api.webflow.com/v2/pages/:page_id/dom
+            get_page_content: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                localeId: z
+                  .string()
+                  .optional()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                limit: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Maximum number of records to be returned (max limit: 100)"
+                  ),
+                offset: z
+                  .number()
+                  .optional()
+                  .describe(
+                    "Offset used for pagination if the results have more than limit records."
+                  ),
+              })
+              .optional()
+              .describe(
+                "Get the content structure and data for a specific page including all elements and their properties for localization."
+              ),
+            // POST https://api.webflow.com/v2/pages/:page_id/dom
+            update_static_content: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                localeId: z
+                  .string()
+                  .describe(
+                    "Unique identifier for a specific locale. Applicable when using localization."
+                  ),
+                nodes: WebflowPageDomWriteNodesItemSchema,
+              })
+              .optional()
+              .describe(
+                "Update content on a static page in secondary locales by modifying text nodes and property overrides."
+              ),
+          })
+        ),
+      },
     },
     async ({ actions }) => {
       const result: Content[] = [];

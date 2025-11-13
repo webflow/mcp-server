@@ -24,7 +24,7 @@ export const StaticFieldSchema = z.object({
       z.literal("PlainText"),
       z.literal("RichText"),
       z.literal("Switch"),
-      z.literal("Video"),
+      z.literal("VideoLink"),
     ])
     .describe("Type of the field. Choose of these appropriate field types."),
   displayName: z.string().describe("Name of the field."),
