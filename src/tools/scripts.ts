@@ -11,6 +11,7 @@ import {
   toolResponse,
   isApiError,
 } from "../utils";
+import { ScriptApplyList } from "webflow-api/api";
 
 export function registerScriptsTools(
   server: McpServer,
@@ -104,6 +105,43 @@ export function registerScriptsTools(
     }
   };
 
+  const getPageScript = async (arg: { page_id: string }) => {
+    const response = await getClient().pages.scripts.getCustomCode(
+      arg.page_id,
+      requestOptions
+    );
+    return response;
+  };
+
+  const upsertPageScript = async (arg: {
+    page_id: string;
+    scripts: {
+      id: string;
+      location: "header" | "footer";
+      version: string;
+      attributes?: Record<string, any>;
+    }[];
+  }) => {
+    const data: ScriptApplyList = {
+      scripts: arg.scripts,
+    };
+
+    const response = await getClient().pages.scripts.upsertCustomCode(
+      arg.page_id,
+      data,
+      requestOptions
+    );
+    return response;
+  };
+
+  const deleteAllPageScripts = async (arg: { page_id: string }) => {
+    const response = await getClient().pages.scripts.deleteCustomCode(
+      arg.page_id,
+      requestOptions
+    );
+    return response;
+  };
+
   server.registerTool(
     "data_scripts_tool",
     {
@@ -153,6 +191,58 @@ export function registerScriptsTools(
               .describe(
                 "Delete all custom scripts applied to a site by the App."
               ),
+            // GET https://api.webflow.com/v2/pages/:page_id/custom_code
+            get_page_script: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+              })
+              .optional()
+              .describe(
+                "Get all custom scripts applied to a specific page by the App."
+              ),
+            // PUT https://api.webflow.com/v2/pages/:page_id/custom_code
+            upsert_page_script: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                scripts: z
+                  .array(
+                    z.object({
+                      id: z
+                        .string()
+                        .describe(
+                          "The unique identifier of the registered script."
+                        ),
+                      location: z
+                        .enum(["header", "footer"])
+                        .describe(
+                          "The location where the script should be applied (header or footer)."
+                        ),
+                      version: z
+                        .string()
+                        .describe("The version of the script to apply."),
+                      attributes: z
+                        .record(z.any())
+                        .optional()
+                        .describe(
+                          "Optional attributes to apply to the script element."
+                        ),
+                    })
+                  )
+                  .describe("Array of scripts to apply to the page."),
+              })
+              .optional()
+              .describe(
+                "Add or update custom scripts on a specific page. This will replace all existing scripts on the page with the provided scripts."
+              ),
+            // DELETE https://api.webflow.com/v2/pages/:page_id/custom_code
+            delete_all_page_scripts: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+              })
+              .optional()
+              .describe(
+                "Delete all custom scripts applied to a specific page by the App."
+              ),
           })
         ),
       },
@@ -182,6 +272,20 @@ export function registerScriptsTools(
           if (action.delete_all_site_scripts) {
             const content = await deleteAllSiteScripts(
               action.delete_all_site_scripts
+            );
+            result.push(textContent(content));
+          }
+          if (action.get_page_script) {
+            const content = await getPageScript(action.get_page_script);
+            result.push(textContent(content));
+          }
+          if (action.upsert_page_script) {
+            const content = await upsertPageScript(action.upsert_page_script);
+            result.push(textContent(content));
+          }
+          if (action.delete_all_page_scripts) {
+            const content = await deleteAllPageScripts(
+              action.delete_all_page_scripts
             );
             result.push(textContent(content));
           }

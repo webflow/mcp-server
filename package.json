@@ -13,7 +13,7 @@
     "build:watch": "tsup src/index.ts --dts --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.21.1",
+    "@modelcontextprotocol/sdk": "1.23.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "socket.io": "^4.8.1",

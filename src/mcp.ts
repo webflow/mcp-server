@@ -15,6 +15,8 @@ import {
   registerDEVariableTools,
   registerRulesTools,
   registerLocalDeMCPConnectionTools,
+  registerCommentsTools,
+  registerEnterpriseTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -51,6 +53,8 @@ export function registerTools(
   registerPagesTools(server, getClient);
   registerScriptsTools(server, getClient);
   registerSiteTools(server, getClient);
+  registerCommentsTools(server, getClient);
+  registerEnterpriseTools(server, getClient);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {
