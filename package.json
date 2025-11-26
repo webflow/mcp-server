@@ -9,8 +9,8 @@
     "start": "concurrently \"npm run dev:local\" \"npm run inspector:local\"",
     "dev:local": "npm run build:watch",
     "inspector:local": "npx @modelcontextprotocol/inspector -- nodemon --env-file=.env -q --watch dist dist/index.js",
-    "build": "tsup src/index.ts --dts --clean",
-    "build:watch": "tsup src/index.ts --dts --watch"
+    "build": "tsup src/index.ts",
+    "build:watch": "tsup src/index.ts --watch"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.23.0",
