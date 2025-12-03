@@ -29,6 +29,7 @@ export function registerRulesTools(server: McpServer) {
             `-- After updating or creating an element, the updated/created element is not automatically selected. If you need more information about that element, use element_tool > select_element with the appropriate element ID to select and inspect it.\n` +
             `-- Do not use CSS shorthand properties when updating or creating styles. Always use longhand property names like "margin-top", "padding-left", "border-width", etc.\n` +
             `-- When creating or updating elements, most users prefer using existing styles. You should reuse styles if they exist, unless the user explicitly wants new ones.\n` +
+            `-- To learn or find about localizations and locale id you get use site too and get site details to learn how many locales are supported and their details.\n` +
             `\n` +
             `Element Tool Usage:\n` +
             `-- To get detailed information about the currently selected element, use element_tool > get_selected_element.\n` +
