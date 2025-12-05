@@ -9,16 +9,11 @@
     "start": "concurrently \"npm run dev:local\" \"npm run inspector:local\"",
     "dev:local": "npm run build:watch",
     "inspector:local": "npx @modelcontextprotocol/inspector -- nodemon --env-file=.env -q --watch dist dist/index.js",
-    "dev:cf": "wrangler dev src/index.worker.ts",
-    "inspector:cf": "npx @modelcontextprotocol/inspector",
-    "deploy:cf": "npm run build && wrangler deploy",
-    "types:cf": "wrangler types",
-    "build": "tsup src/index.ts src/index.worker.ts --external=cloudflare:workers --dts --clean",
-    "build:watch": "tsup src/index.ts src/index.worker.ts --external=cloudflare:workers --dts --watch"
+    "build": "tsup src/index.ts",
+    "build:watch": "tsup src/index.ts --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
-    "agents": "^0.0.59",
+    "@modelcontextprotocol/sdk": "1.24.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "socket.io": "^4.8.1",

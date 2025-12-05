@@ -1,15 +1,18 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { randomUUID } from "crypto";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 const BASE_URL = "https://developers.webflow.com/";
 const X_FERN_HOST = "developers.webflow.com";
 
 export function registerAiChatTools(server: McpServer) {
-  server.tool(
+  server.registerTool(
     "ask_webflow_ai",
-    "Ask Webflow AI about anything related to Webflow API.",
-    { message: z.string() },
+    {
+      title: "Ask Webflow AI",
+      description: "Ask Webflow AI about anything related to Webflow API.",
+      inputSchema: z.object({ message: z.string() }),
+    },
     async ({ message }) => {
       const result = await postChat(message);
       return {

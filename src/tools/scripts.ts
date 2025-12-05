@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
 import { formatErrorResponse, formatResponse, isApiError } from "../utils";
@@ -11,11 +11,15 @@ export function registerScriptsTools(
   getClient: () => WebflowClient
 ) {
   // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
-  server.tool(
+  server.registerTool(
     "site_registered_scripts_list",
-    "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
     {
-      site_id: z.string().describe("Unique identifier for the site."),
+      title: "List Registered Scripts",
+      description:
+        "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the site."),
+      }),
     },
     async ({ site_id }) => {
       try {
@@ -31,11 +35,15 @@ export function registerScriptsTools(
   );
 
   // GET https://api.webflow.com/v2/sites/:site_id/custom_code
-  server.tool(
+  server.registerTool(
     "site_applied_scripts_list",
-    "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
     {
-      site_id: z.string().describe("Unique identifier for the site."),
+      title: "List Applied Scripts",
+      description:
+        "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the site."),
+      }),
     },
     async ({ site_id }) => {
       try {
@@ -51,12 +59,16 @@ export function registerScriptsTools(
   );
 
   // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
-  server.tool(
+  server.registerTool(
     "add_inline_site_script",
-    "Register an inline script for a site. Inline scripts are limited to 2000 characters. ",
     {
-      site_id: z.string().describe("Unique identifier for the site."),
-      request: RegisterInlineSiteScriptSchema,
+      title: "Add Inline Site Script",
+      description:
+        "Register an inline script for a site. Inline scripts are limited to 2000 characters. ",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the site."),
+        request: RegisterInlineSiteScriptSchema,
+      }),
     },
     async ({ site_id, request }) => {
       const registerScriptResponse = await getClient().scripts.registerInline(
@@ -108,10 +120,14 @@ export function registerScriptsTools(
     }
   );
 
-  server.tool(
+  server.registerTool(
     "delete_all_site_scripts",
     {
-      site_id: z.string(),
+      title: "Delete All Site Scripts",
+      description: "Delete all custom scripts from a site.",
+      inputSchema: z.object({
+        site_id: z.string(),
+      }),
     },
     async ({ site_id }) => {
       try {

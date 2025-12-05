@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const WebflowPageSchema = z.object({
   id: z.string().describe("Unique identifier for a Page."),

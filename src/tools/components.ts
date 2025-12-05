@@ -1,10 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import {
   ComponentDomWriteNodesItemSchema,
-  ComponentPropertyUpdateSchema
+  ComponentPropertyUpdateSchema,
 } from "../schemas";
 import { formatErrorResponse, formatResponse } from "../utils";
 
@@ -13,21 +13,27 @@ export function registerComponentsTools(
   getClient: () => WebflowClient
 ) {
   // GET https://api.webflow.com/v2/sites/:site_id/components
-  server.tool(
+  server.registerTool(
     "components_list",
-    "List all components in a site. Returns component metadata including IDs, names, and versions.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      limit: z
-        .number()
-        .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
-      offset: z
-        .number()
-        .optional()
-        .describe(
-          "Offset used for pagination if the results have more than limit records."
-        ),
+      title: "List Components",
+      description:
+        "List all components in a site. Returns component metadata including IDs, names, and versions.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        limit: z
+          .number()
+          .optional()
+          .describe(
+            "Maximum number of records to be returned (max limit: 100)"
+          ),
+        offset: z
+          .number()
+          .optional()
+          .describe(
+            "Offset used for pagination if the results have more than limit records."
+          ),
+      }),
     },
     async ({ site_id, limit, offset }) => {
       try {
@@ -47,28 +53,36 @@ export function registerComponentsTools(
   );
 
   // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
-  server.tool(
+  server.registerTool(
     "components_get_content",
-    "Get the content structure and data for a specific component including text, images, and nested components.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
-      localeId: z
-        .string()
-        .optional()
-        .describe(
-          "Unique identifier for a specific locale. Applicable when using localization."
-        ),
-      limit: z
-        .number()
-        .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
-      offset: z
-        .number()
-        .optional()
-        .describe(
-          "Offset used for pagination if the results have more than limit records."
-        ),
+      title: "Get Component Content",
+      description:
+        "Get the content structure and data for a specific component including text, images, and nested components.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        component_id: z
+          .string()
+          .describe("Unique identifier for the Component."),
+        localeId: z
+          .string()
+          .optional()
+          .describe(
+            "Unique identifier for a specific locale. Applicable when using localization."
+          ),
+        limit: z
+          .number()
+          .optional()
+          .describe(
+            "Maximum number of records to be returned (max limit: 100)"
+          ),
+        offset: z
+          .number()
+          .optional()
+          .describe(
+            "Offset used for pagination if the results have more than limit records."
+          ),
+      }),
     },
     async ({ site_id, component_id, localeId, limit, offset }) => {
       try {
@@ -90,18 +104,24 @@ export function registerComponentsTools(
   );
 
   // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/dom
-  server.tool(
+  server.registerTool(
     "components_update_content",
-    "Update content on a component in secondary locales by modifying text nodes and property overrides.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
-      localeId: z
-        .string()
-        .describe(
-          "Unique identifier for a specific locale. Applicable when using localization."
-        ),
-      nodes: ComponentDomWriteNodesItemSchema,
+      title: "Update Component Content",
+      description:
+        "Update content on a component in secondary locales by modifying text nodes and property overrides.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        component_id: z
+          .string()
+          .describe("Unique identifier for the Component."),
+        localeId: z
+          .string()
+          .describe(
+            "Unique identifier for a specific locale. Applicable when using localization."
+          ),
+        nodes: ComponentDomWriteNodesItemSchema,
+      }),
     },
     async ({ site_id, component_id, localeId, nodes }) => {
       try {
@@ -122,28 +142,36 @@ export function registerComponentsTools(
   );
 
   // GET https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
-  server.tool(
+  server.registerTool(
     "components_get_properties",
-    "Get component properties including default values and configuration for a specific component.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
-      localeId: z
-        .string()
-        .optional()
-        .describe(
-          "Unique identifier for a specific locale. Applicable when using localization."
-        ),
-      limit: z
-        .number()
-        .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
-      offset: z
-        .number()
-        .optional()
-        .describe(
-          "Offset used for pagination if the results have more than limit records."
-        ),
+      title: "Get Component Properties",
+      description:
+        "Get component properties including default values and configuration for a specific component.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        component_id: z
+          .string()
+          .describe("Unique identifier for the Component."),
+        localeId: z
+          .string()
+          .optional()
+          .describe(
+            "Unique identifier for a specific locale. Applicable when using localization."
+          ),
+        limit: z
+          .number()
+          .optional()
+          .describe(
+            "Maximum number of records to be returned (max limit: 100)"
+          ),
+        offset: z
+          .number()
+          .optional()
+          .describe(
+            "Offset used for pagination if the results have more than limit records."
+          ),
+      }),
     },
     async ({ site_id, component_id, localeId, limit, offset }) => {
       try {
@@ -165,18 +193,24 @@ export function registerComponentsTools(
   );
 
   // POST https://api.webflow.com/v2/sites/:site_id/components/:component_id/properties
-  server.tool(
+  server.registerTool(
     "components_update_properties",
-    "Update component properties for localization to customize behavior in different languages.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      component_id: z.string().describe("Unique identifier for the Component."),
-      localeId: z
-        .string()
-        .describe(
-          "Unique identifier for a specific locale. Applicable when using localization."
-        ),
-      properties: ComponentPropertyUpdateSchema,
+      title: "Update Component Properties",
+      description:
+        "Update component properties for localization to customize behavior in different languages.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        component_id: z
+          .string()
+          .describe("Unique identifier for the Component."),
+        localeId: z
+          .string()
+          .describe(
+            "Unique identifier for a specific locale. Applicable when using localization."
+          ),
+        properties: ComponentPropertyUpdateSchema,
+      }),
     },
     async ({ site_id, component_id, localeId, properties }) => {
       try {

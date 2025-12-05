@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import { formatErrorResponse, formatResponse } from "../utils";
 
@@ -9,9 +9,14 @@ export function registerSiteTools(
   getClient: () => WebflowClient
 ) {
   // GET https://api.webflow.com/v2/sites
-  server.tool(
+  server.registerTool(
     "sites_list",
-    "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
+    {
+      title: "List Sites",
+      description:
+        "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
+      inputSchema: z.object({}),
+    },
     async () => {
       try {
         const response = await getClient().sites.list(requestOptions);
@@ -23,11 +28,15 @@ export function registerSiteTools(
   );
 
   // GET https://api.webflow.com/v2/sites/:site_id
-  server.tool(
+  server.registerTool(
     "sites_get",
-    "Get detailed information about a specific site including its settings, domains, and publishing status.",
     {
-      site_id: z.string().describe("Unique identifier for the site."),
+      title: "Get Site",
+      description:
+        "Get detailed information about a specific site including its settings, domains, and publishing status.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the site."),
+      }),
     },
     async ({ site_id }) => {
       try {
@@ -40,21 +49,25 @@ export function registerSiteTools(
   );
 
   // POST https://api.webflow.com/v2/sites/:site_id/publish
-  server.tool(
+  server.registerTool(
     "sites_publish",
-    "Publish a site to specified domains. This will make the latest changes live on the specified domains.",
     {
-      site_id: z.string().describe("Unique identifier for the site."),
-      customDomains: z
-        .string()
-        .array()
-        .optional()
-        .describe("Array of custom domains to publish the site to."),
-      publishToWebflowSubdomain: z
-        .boolean()
-        .optional()
-        .default(false)
-        .describe("Whether to publish to the Webflow subdomain."),
+      title: "Publish Site",
+      description:
+        "Publish a site to specified domains. This will make the latest changes live on the specified domains.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the site."),
+        customDomains: z
+          .string()
+          .array()
+          .optional()
+          .describe("Array of custom domains to publish the site to."),
+        publishToWebflowSubdomain: z
+          .boolean()
+          .optional()
+          .default(false)
+          .describe("Whether to publish to the Webflow subdomain."),
+      }),
     },
     async ({ site_id, customDomains, publishToWebflowSubdomain }) => {
       try {

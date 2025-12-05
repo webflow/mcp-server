@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import {
   OptionFieldSchema,
@@ -22,11 +22,15 @@ export function registerCmsTools(
   getClient: () => WebflowClient
 ) {
   // GET https://api.webflow.com/v2/sites/:site_id/collections
-  server.tool(
+  server.registerTool(
     "collections_list",
-    "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
+      title: "List Collections",
+      description:
+        "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+      }),
     },
     async ({ site_id }) => {
       try {
@@ -42,13 +46,17 @@ export function registerCmsTools(
   );
 
   // GET https://api.webflow.com/v2/collections/:collection_id
-  server.tool(
+  server.registerTool(
     "collections_get",
-    "Get detailed information about a specific CMS collection including its schema and field definitions.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
+      title: "Get Collection",
+      description:
+        "Get detailed information about a specific CMS collection including its schema and field definitions.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+      }),
     },
     async ({ collection_id }) => {
       try {
@@ -64,12 +72,16 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/sites/:site_id/collections
-  server.tool(
+  server.registerTool(
     "collections_create",
-    "Create a new CMS collection in a site with specified name and schema.",
     {
-      site_id: z.string().describe("Unique identifier for the Site."),
-      request: WebflowCollectionsCreateRequestSchema,
+      title: "Create Collection",
+      description:
+        "Create a new CMS collection in a site with specified name and schema.",
+      inputSchema: z.object({
+        site_id: z.string().describe("Unique identifier for the Site."),
+        request: WebflowCollectionsCreateRequestSchema,
+      }),
     },
     async ({ site_id, request }) => {
       try {
@@ -86,14 +98,18 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
-  server.tool(
+  server.registerTool(
     "collection_fields_create_static",
-    "Create a new static field in a CMS collection (e.g., text, number, date, etc.).",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: StaticFieldSchema,
+      title: "Create Static Field",
+      description:
+        "Create a new static field in a CMS collection (e.g., text, number, date, etc.).",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: StaticFieldSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -110,14 +126,18 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
-  server.tool(
+  server.registerTool(
     "collection_fields_create_option",
-    "Create a new option field in a CMS collection with predefined choices.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: OptionFieldSchema,
+      title: "Create Option Field",
+      description:
+        "Create a new option field in a CMS collection with predefined choices.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: OptionFieldSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -134,14 +154,18 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/collections/:collection_id/fields
-  server.tool(
+  server.registerTool(
     "collection_fields_create_reference",
-    "Create a new reference field in a CMS collection that links to items in another collection.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: ReferenceFieldSchema,
+      title: "Create Reference Field",
+      description:
+        "Create a new reference field in a CMS collection that links to items in another collection.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: ReferenceFieldSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -158,15 +182,19 @@ export function registerCmsTools(
   );
 
   // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
-  server.tool(
+  server.registerTool(
     "collection_fields_update",
-    "Update properties of an existing field in a CMS collection.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      field_id: z.string().describe("Unique identifier for the Field."),
-      request: WebflowCollectionsFieldUpdateSchema,
+      title: "Update Collection Field",
+      description:
+        "Update properties of an existing field in a CMS collection.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        field_id: z.string().describe("Unique identifier for the Field."),
+        request: WebflowCollectionsFieldUpdateSchema,
+      }),
     },
     async ({ collection_id, field_id, request }) => {
       try {
@@ -185,14 +213,18 @@ export function registerCmsTools(
 
   // POST https://api.webflow.com/v2/collections/:collection_id/items/live
   // NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
-  server.tool(
+  server.registerTool(
     "collections_items_create_item_live",
-    "Create and publish new items in a CMS collection directly to the live site.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
+      title: "Create Item Live",
+      description:
+        "Create and publish new items in a CMS collection directly to the live site.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: WebflowCollectionsItemsCreateItemLiveRequestSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -209,14 +241,18 @@ export function registerCmsTools(
   );
 
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items/live
-  server.tool(
+  server.registerTool(
     "collections_items_update_items_live",
-    "Update and publish existing items in a CMS collection directly to the live site.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
+      title: "Update Items Live",
+      description:
+        "Update and publish existing items in a CMS collection directly to the live site.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: WebflowCollectionsItemsUpdateItemsLiveRequestSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -233,36 +269,42 @@ export function registerCmsTools(
   );
 
   // GET https://api.webflow.com/v2/collections/:collection_id/items
-  server.tool(
+  server.registerTool(
     "collections_items_list_items",
-    "List items in a CMS collection with optional filtering and sorting.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      cmsLocaleId: z
-        .string()
-        .optional()
-        .describe("Unique identifier for the locale of the CMS Item."),
-      limit: z
-        .number()
-        .optional()
-        .describe("Maximum number of records to be returned (max limit: 100)"),
-      offset: z
-        .number()
-        .optional()
-        .describe(
-          "Offset used for pagination if the results have more than limit records."
-        ),
-      name: z.string().optional().describe("Name of the field."),
-      slug: z
-        .string()
-        .optional()
-        .describe(
-          "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
-        ),
-      sortBy: WebflowCollectionsItemsListItemsRequestSortBySchema,
-      sortOrder: WebflowCollectionsItemsListItemsRequestSortOrderSchema,
+      title: "List Collection Items",
+      description:
+        "List items in a CMS collection with optional filtering and sorting.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        cmsLocaleId: z
+          .string()
+          .optional()
+          .describe("Unique identifier for the locale of the CMS Item."),
+        limit: z
+          .number()
+          .optional()
+          .describe(
+            "Maximum number of records to be returned (max limit: 100)"
+          ),
+        offset: z
+          .number()
+          .optional()
+          .describe(
+            "Offset used for pagination if the results have more than limit records."
+          ),
+        name: z.string().optional().describe("Name of the field."),
+        slug: z
+          .string()
+          .optional()
+          .describe(
+            "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+          ),
+        sortBy: WebflowCollectionsItemsListItemsRequestSortBySchema,
+        sortOrder: WebflowCollectionsItemsListItemsRequestSortOrderSchema,
+      }),
     },
     async ({
       collection_id,
@@ -296,12 +338,15 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/collections/:collection_id/items
-  server.tool(
+  server.registerTool(
     "collections_items_create_item",
-    "Create new items in a CMS collection as drafts.",
     {
-      collection_id: z.string(),
-      request: WebflowCollectionsItemsCreateItemRequestSchema,
+      title: "Create Collection Item",
+      description: "Create new items in a CMS collection as drafts.",
+      inputSchema: z.object({
+        collection_id: z.string(),
+        request: WebflowCollectionsItemsCreateItemRequestSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -318,14 +363,17 @@ export function registerCmsTools(
   );
 
   // PATCH https://api.webflow.com/v2/collections/:collection_id/items
-  server.tool(
+  server.registerTool(
     "collections_items_update_items",
-    "Update existing items in a CMS collection as drafts.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      request: WebflowCollectionsItemsUpdateItemsRequestSchema,
+      title: "Update Collection Items",
+      description: "Update existing items in a CMS collection as drafts.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        request: WebflowCollectionsItemsUpdateItemsRequestSchema,
+      }),
     },
     async ({ collection_id, request }) => {
       try {
@@ -342,16 +390,19 @@ export function registerCmsTools(
   );
 
   // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
-  server.tool(
+  server.registerTool(
     "collections_items_publish_items",
-    "Publish draft items in a CMS collection to make them live.",
     {
-      collection_id: z
-        .string()
-        .describe("Unique identifier for the Collection."),
-      itemIds: z
-        .array(z.string())
-        .describe("Array of item IDs to be published."),
+      title: "Publish Collection Items",
+      description: "Publish draft items in a CMS collection to make them live.",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        itemIds: z
+          .array(z.string())
+          .describe("Array of item IDs to be published."),
+      }),
     },
     async ({ collection_id, itemIds }) => {
       try {
@@ -369,28 +420,36 @@ export function registerCmsTools(
     }
   );
 
-
-   // DEL https://api.webflow.com/v2/collections/:collection_id/items/
-   server.tool(
+  // DEL https://api.webflow.com/v2/collections/:collection_id/items/
+  server.registerTool(
     "collections_items_delete_item",
-    "Delete an item in a CMS collection. Items will only be deleted in the primary locale unless a cmsLocaleId is included in the request. ",
     {
-      collection_id: z.string().describe("Unique identifier for the Collection."),
-      itemId: z.string().describe("Item ID to be deleted."),
-      cmsLocaleIds: z.string().optional().describe("Unique identifier for the locale of the CMS Item."),
+      title: "Delete Collection Item",
+      description:
+        "Delete an item in a CMS collection. Items will only be deleted in the primary locale unless a cmsLocaleId is included in the request. ",
+      inputSchema: z.object({
+        collection_id: z
+          .string()
+          .describe("Unique identifier for the Collection."),
+        itemId: z.string().describe("Item ID to be deleted."),
+        cmsLocaleIds: z
+          .string()
+          .optional()
+          .describe("Unique identifier for the locale of the CMS Item."),
+      }),
     },
     async ({ collection_id, itemId, cmsLocaleIds }) => {
       try {
-      const response = await getClient().collections.items.deleteItem(
-        collection_id,
-        itemId,
-        { cmsLocaleId: cmsLocaleIds},
-        requestOptions
-      );
-      return formatResponse(JSON.stringify("Item deleted"));
-    } catch (error) {
-      return formatErrorResponse(error);
-    }
+        const response = await getClient().collections.items.deleteItem(
+          collection_id,
+          itemId,
+          { cmsLocaleId: cmsLocaleIds },
+          requestOptions
+        );
+        return formatResponse(JSON.stringify("Item deleted"));
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
     }
   );
 }

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 import { CollectionItemWithIdInputSchema } from "./CollectionItemWithIdInputSchema";
 
 export const WebflowCollectionsItemsUpdateItemsRequestSchema = z.object({
