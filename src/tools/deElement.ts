@@ -278,7 +278,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
             content: [
               {
                 type: "image",
-                data,
+                data: data.replace("data:image/png;base64,", ""),
                 mimeType: "image/png",
               },
             ],
