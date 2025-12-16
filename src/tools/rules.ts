@@ -46,6 +46,13 @@ export function registerRulesTools(server: McpServer) {
             `Element Builder Tool:\n` +
             `-- To create a new element, use element_builder. Pass the type of element you want to create. After creation, use element_tool > select_element to select the element and gather additional details if needed.\n` +
             `\n` +
+            `Element Snapshot Tool Usage:\n` +
+            `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +
+            `-- Use this tool to verify visual changes after creating or updating elements. It provides immediate visual feedback without requiring manual inspection.\n` +
+            `-- This tool is helpful for debugging layout issues, verifying styling changes, or confirming that elements render as expected.\n` +
+            `-- The snapshot returns a PNG image of the specified element. Use it to validate your work before proceeding with additional changes.\n` +
+            `-- When the user asks to see or preview an element, use this tool to provide visual confirmation.\n` +
+            `\n` +
             `Asset Tool Usage:\n` +
             `-- To create an asset folder, use asset_tool > create_folder. Pass the name of the folder. To create a nested folder, pass parent_folder_id. Otherwise, the folder will be created in the root directory.\n` +
             `-- To retrieve assets and folders, use asset_tool > get_all_assets_and_folders. You can use query as "all", "folders", or "assets". To limit data, use filter_assets_by_ids or search query. Fetch only what you need to avoid context overload.\n` +

@@ -19,6 +19,27 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     });
   };
 
+  const elementSnapshotToolRPCCall = async (
+    siteId: string,
+    action: any
+  ): Promise<
+    | {
+        status: string;
+        message: string;
+        data: null;
+      }
+    | {
+        status: string;
+        message: string;
+        data: string;
+      }
+  > => {
+    return rpc.callTool("element_snapshot_tool", {
+      siteId,
+      action: action || {},
+    });
+  };
+
   server.registerTool(
     "element_builder",
     {
@@ -224,6 +245,46 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     async ({ actions, siteId }) => {
       try {
         return formatResponse(await elementToolRPCCall(siteId, actions));
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
+    }
+  );
+
+  server.registerTool(
+    "element_snapshot_tool",
+    {
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
+      description:
+        "Designer Tool - Element snapshot tool to perform actions like get element snapshot. helpful to get element snapshot for debugging and more and visual feedback.",
+      inputSchema: {
+        ...SiteIdSchema,
+        action: z.object({
+          id: DEElementIDSchema.id,
+        }),
+      },
+    },
+    async ({ action, siteId }) => {
+      try {
+        const { status, message, data } = await elementSnapshotToolRPCCall(
+          siteId,
+          action
+        );
+        if (status === "success" && data) {
+          return {
+            content: [
+              {
+                type: "image",
+                data,
+                mimeType: "image/png",
+              },
+            ],
+          };
+        }
+        return formatErrorResponse(new Error(message));
       } catch (error) {
         return formatErrorResponse(error);
       }
