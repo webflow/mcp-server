@@ -2,6 +2,7 @@
   "name": "webflow-mcp-server",
   "version": "1.0.1",
   "bin": "dist/index.js",
+  "license": "MIT",
   "files": [
     "dist"
   ],
