@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
 import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
 import {
@@ -148,6 +148,7 @@ export function registerScriptsTools(
       title: "Data Scripts Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Data tool - Scripts tool to perform actions like list registered scripts, list applied scripts, add inline site script, and delete all site scripts",

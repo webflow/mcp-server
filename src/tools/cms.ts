@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import {
   OptionFieldSchema,
@@ -211,6 +211,7 @@ export function registerCmsTools(
       title: "Data CMS Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Data tool - CMS tool to perform actions like get collection list, get collection details, create collection, create collection fields (static/option/reference), update collection field, list collection items, create collection items, update collection items, publish collection items, and delete collection items",

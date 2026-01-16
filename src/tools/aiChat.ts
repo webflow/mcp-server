@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { randomUUID } from "crypto";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 const BASE_URL = "https://developers.webflow.com/";
 const X_FERN_HOST = "developers.webflow.com";
@@ -13,6 +13,7 @@ export function registerAiChatTools(server: McpServer) {
       title: "Ask Webflow AI",
       annotations: {
         openWorldHint: true,
+        readOnlyHint: true,
       },
       inputSchema: {
         message: z.string().describe("The message to ask Webflow AI about."),

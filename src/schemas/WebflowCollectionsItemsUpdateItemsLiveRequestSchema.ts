@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 // request: Webflow.collections.ItemsUpdateItemsLiveRequest
 export const WebflowCollectionsItemsUpdateItemsLiveRequestSchema = z.object({

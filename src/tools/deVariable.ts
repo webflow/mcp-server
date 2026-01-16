@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
-import z from "zod";
+import z from "zod/v3";
 import { SiteIdSchema } from "../schemas";
 import { formatErrorResponse, formatResponse } from "../utils";
 
@@ -18,6 +18,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
       title: "Designer Variable Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Designer Tool - Variable tool to perform actions like create variable, get all variables, update variable",

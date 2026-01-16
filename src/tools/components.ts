@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import {
   ComponentDomWriteNodesItemSchema,
@@ -115,6 +115,7 @@ export function registerComponentsTools(
       title: "Data Components Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Data tool - Components tool to perform actions like list components, get component content, update component content, get component properties, and update component properties",

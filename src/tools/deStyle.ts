@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
-import z from "zod";
+import z from "zod/v3";
 import { SiteIdSchema } from "../schemas";
 import { formatErrorResponse, formatResponse, supportDEStyles } from "../utils";
 
@@ -18,6 +18,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
       title: "Designer Style Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Designer Tool - Style tool to perform actions like create style, get all styles, update styles",
@@ -164,6 +165,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
       title: "Designer Learn More About Webflow Styles",
       annotations: {
         readOnlyHint: true,
+        openWorldHint: true,
       },
       description:
         "Designer tool - Learn more about styles supported by Webflow Designer." +

@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import {
   type Content,
@@ -42,6 +42,11 @@ export function registerSiteTools(
   server.registerTool(
     "data_sites_tool",
     {
+      title: "Data Sites Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Data tool - Sites tool to perform actions like list sites, get site details, and publish sites",
       inputSchema: {

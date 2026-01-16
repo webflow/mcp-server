@@ -1,4 +1,4 @@
-import z from "zod";
+import z from "zod/v3";
 
 export const OptionFieldSchema = z.object({
   id: z.string().optional().describe("Unique identifier for the Field."),

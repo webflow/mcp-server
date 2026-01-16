@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 export const DEElementSchema = z.object({
   type: z
@@ -30,9 +30,7 @@ export const DEElementSchema = z.object({
     ),
   set_text: z
     .object({
-      text: z
-        .string()
-        .describe("The text to set on the element."),
+      text: z.string().describe("The text to set on the element."),
     })
     .optional()
     .describe(
@@ -41,20 +39,9 @@ export const DEElementSchema = z.object({
   set_link: z
     .object({
       link_type: z
-        .enum([
-          "url",
-          "file",
-          "page",
-          "element",
-          "email",
-          "phone",
-        ])
-        .describe(
-          "The type of link to set on the element."
-        ),
-      link: z
-        .string()
-        .describe("The link to set on the element."),
+        .enum(["url", "file", "page", "element", "email", "phone"])
+        .describe("The type of link to set on the element."),
+      link: z.string().describe("The link to set on the element."),
     })
     .optional()
     .describe(
@@ -66,21 +53,15 @@ export const DEElementSchema = z.object({
         .number()
         .min(1)
         .max(6)
-        .describe(
-          "The heading level to set on the element."
-        ),
+        .describe("The heading level to set on the element."),
     })
     .optional()
-    .describe(
-      "Set heading level on the element. only valid for heading."
-    ),
+    .describe("Set heading level on the element. only valid for heading."),
   set_image_asset: z
     .object({
       image_asset_id: z
         .string()
-        .describe(
-          "The image asset id to set on the element."
-        ),
+        .describe("The image asset id to set on the element."),
       alt_text: z
         .string()
         .optional()
@@ -89,9 +70,7 @@ export const DEElementSchema = z.object({
         ),
     })
     .optional()
-    .describe(
-      "Set image asset on the element. only valid for image."
-    ),
+    .describe("Set image asset on the element. only valid for image."),
   set_dom_config: z
     .object({
       dom_tag: z
@@ -101,24 +80,14 @@ export const DEElementSchema = z.object({
         ),
     })
     .optional()
-    .describe(
-      "Set DOM config on the element. only valid for DOM element."
-    ),
+    .describe("Set DOM config on the element. only valid for DOM element."),
   set_attributes: z
     .object({
       attributes: z
         .array(
           z.object({
-            name: z
-              .string()
-              .describe(
-                "The name of the attribute to set."
-              ),
-            value: z
-              .string()
-              .describe(
-                "The value of the attribute to set."
-              ),
+            name: z.string().describe("The name of the attribute to set."),
+            value: z.string().describe("The value of the attribute to set."),
           })
         )
         .describe("The attributes to set on the element."),

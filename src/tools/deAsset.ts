@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
-import z from "zod";
+import z from "zod/v3";
 import { SiteIdSchema } from "../schemas";
 import { formatErrorResponse, formatResponse } from "../utils";
 
@@ -32,6 +32,7 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
       title: "Designer Asset Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Designer Tool - Asset tool to perform actions like create folder, get all assets and folders, update assets and folders",
@@ -103,6 +104,7 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
       title: "Get Webflow Image Preview",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Designer Tool - Get image preview from url. this is helpful to get image preview from url. Only supports JPG, PNG, GIF, WEBP, WEBP and AVIF formats.",

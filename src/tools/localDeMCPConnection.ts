@@ -16,6 +16,7 @@ export function registerLocalDeMCPConnectionTools(
       title: "Get Webflow MCP App Connection Info",
       annotations: {
         readOnlyHint: true,
+        openWorldHint: true,
       },
       description:
         "Get Webflow MCP App Connection Info. if user ask to get Webflow MCP app connection info, use this tool",

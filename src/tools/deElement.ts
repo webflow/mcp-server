@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
-import z from "zod";
+import z from "zod/v3";
 import { SiteIdSchema, DEElementIDSchema, DEElementSchema } from "../schemas";
 import { formatErrorResponse, formatResponse } from "../utils";
 
@@ -43,6 +43,10 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
   server.registerTool(
     "element_builder",
     {
+      annotations: {
+        openWorldHint: true,
+        readOnlyHint: false,
+      },
       description:
         "Designer Tool - Element builder to create element on current active page. only create elements upto max 3 levels deep. divide your elements into smaller elements to create complex structures. recall this tool to create more elements. but max level is upto 3 levels. you can have as many children as you want. but max level is 3 levels.",
       inputSchema: {
@@ -113,6 +117,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       title: "Designer Element Tool",
       annotations: {
         readOnlyHint: false,
+        openWorldHint: true,
       },
       description:
         "Designer Tool - Element tool to perform actions like get all elements, get selected element, select element on current active page. and more",
