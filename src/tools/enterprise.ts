@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebflowClient } from "webflow-api";
-import z from "zod";
+import z from "zod/v3";
 import { requestOptions } from "../mcp";
 import { Robots } from "webflow-api/api";
 import {

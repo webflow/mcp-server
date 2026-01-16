@@ -125,6 +125,7 @@ export function registerCommentsTools(
       description: `Data tool - A comment in Webflow is user feedback attached to a specific element or page inside the Designer, stored as a top-level thread with optional replies. Each comment includes author info, timestamps, content, resolved state, and design-context metadata like page location and breakpoint. Use this tool to inspect feedback discussions across the site and understand where and why they were left.`,
       annotations: {
         readOnlyHint: true,
+        openWorldHint: true,
       },
       inputSchema: {
         actions: z
