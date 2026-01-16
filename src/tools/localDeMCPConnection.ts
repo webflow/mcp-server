@@ -1,6 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
-import { z } from "zod/v3";
 
 import { formatErrorResponse, formatResponse } from "../utils/formatResponse";
 export function registerLocalDeMCPConnectionTools(
@@ -14,10 +13,14 @@ export function registerLocalDeMCPConnectionTools(
   server.registerTool(
     "get_designer_app_connection_info",
     {
-      title: "Get Designer App Connection Info",
+      title: "Get Webflow MCP App Connection Info",
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
       description:
         "Get Webflow MCP App Connection Info. if user ask to get Webflow MCP app connection info, use this tool",
-      inputSchema: z.object({}),
+      inputSchema: {},
     },
     async () => {
       try {

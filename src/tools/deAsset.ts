@@ -30,9 +30,13 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
     "asset_tool",
     {
       title: "Designer Asset Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer Tool - Asset tool to perform actions like create folder, get all assets and folders, update assets and folders",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -82,7 +86,7 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
               .describe("Update an asset on the site"),
           })
         ),
-      }),
+      },
     },
     async ({ siteId, actions }) => {
       try {
@@ -95,16 +99,21 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
 
   server.registerTool(
     "get_image_preview",
+
     {
-      title: "Get Image Preview",
+      title: "Get Webflow Image Preview",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
-        "Designer Tool - Get image preview from url. this is helpful to get image preview from url.",
-      inputSchema: z.object({
+        "Designer Tool - Get image preview from url. this is helpful to get image preview from url. Only supports JPG, PNG, GIF, WEBP, WEBP and AVIF formats.",
+      inputSchema: {
         url: z
           .string()
           .describe("The URL of the image to get the preview from"),
         ...SiteIdSchema,
-      }),
+      },
     },
     async ({ url, siteId }) => {
       try {

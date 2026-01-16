@@ -9,9 +9,15 @@ export function registerAiChatTools(server: McpServer) {
   server.registerTool(
     "ask_webflow_ai",
     {
-      title: "Ask Webflow AI",
       description: "Ask Webflow AI about anything related to Webflow API.",
-      inputSchema: z.object({ message: z.string() }),
+      title: "Ask Webflow AI",
+      annotations: {
+        openWorldHint: true,
+        readOnlyHint: true,
+      },
+      inputSchema: {
+        message: z.string().describe("The message to ask Webflow AI about."),
+      },
     },
     async ({ message }) => {
       const result = await postChat(message);

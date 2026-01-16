@@ -16,9 +16,13 @@ export function registerDEPagesTools(server: McpServer, rpc: RPCType) {
     "de_page_tool",
     {
       title: "Designer Page Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer Tool - Page tool to perform actions like create page, create page folder, get current page, switch page",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -70,7 +74,7 @@ export function registerDEPagesTools(server: McpServer, rpc: RPCType) {
               .describe("Switch to a page on webflow designer"),
           })
         ),
-      }),
+      },
     },
     async ({ siteId, actions }) => {
       try {

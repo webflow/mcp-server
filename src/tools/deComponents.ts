@@ -16,9 +16,13 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
     "de_component_tool",
     {
       title: "Designer Component Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer tool - Component tool to perform actions like create component instances, get all components and more.",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -80,7 +84,7 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
               .describe("Rename a component."),
           })
         ),
-      }),
+      },
     },
     async ({ siteId, actions }) => {
       try {

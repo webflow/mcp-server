@@ -19,13 +19,37 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     });
   };
 
+  const elementSnapshotToolRPCCall = async (
+    siteId: string,
+    action: any
+  ): Promise<
+    | {
+        status: string;
+        message: string;
+        data: null;
+      }
+    | {
+        status: string;
+        message: string;
+        data: string;
+      }
+  > => {
+    return rpc.callTool("element_snapshot_tool", {
+      siteId,
+      action: action || {},
+    });
+  };
+
   server.registerTool(
     "element_builder",
     {
-      title: "Designer Element Builder",
+      annotations: {
+        openWorldHint: true,
+        readOnlyHint: false,
+      },
       description:
         "Designer Tool - Element builder to create element on current active page. only create elements upto max 3 levels deep. divide your elements into smaller elements to create complex structures. recall this tool to create more elements. but max level is upto 3 levels. you can have as many children as you want. but max level is 3 levels.",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -76,7 +100,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
             }).describe("element schema of element to create."),
           })
         ),
-      }),
+      },
     },
     async ({ actions, siteId }) => {
       try {
@@ -91,9 +115,13 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     "element_tool",
     {
       title: "Designer Element Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer Tool - Element tool to perform actions like get all elements, get selected element, select element on current active page. and more",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -217,11 +245,51 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
               .describe("Set image asset on the image element"),
           })
         ),
-      }),
+      },
     },
     async ({ actions, siteId }) => {
       try {
         return formatResponse(await elementToolRPCCall(siteId, actions));
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
+    }
+  );
+
+  server.registerTool(
+    "element_snapshot_tool",
+    {
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
+      description:
+        "Designer Tool - Element snapshot tool to perform actions like get element snapshot. helpful to get element snapshot for debugging and more and visual feedback.",
+      inputSchema: {
+        ...SiteIdSchema,
+        action: z.object({
+          id: DEElementIDSchema.id,
+        }),
+      },
+    },
+    async ({ action, siteId }) => {
+      try {
+        const { status, message, data } = await elementSnapshotToolRPCCall(
+          siteId,
+          action
+        );
+        if (status === "success" && data) {
+          return {
+            content: [
+              {
+                type: "image",
+                data: data.replace("data:image/png;base64,", ""),
+                mimeType: "image/png",
+              },
+            ],
+          };
+        }
+        return formatErrorResponse(new Error(message));
       } catch (error) {
         return formatErrorResponse(error);
       }

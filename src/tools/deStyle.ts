@@ -16,9 +16,13 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
     "style_tool",
     {
       title: "Designer Style Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer Tool - Style tool to perform actions like create style, get all styles, update styles",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -144,7 +148,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
               .describe("Update a style"),
           })
         ),
-      }),
+      },
     },
     async ({ siteId, actions }) => {
       try {
@@ -158,12 +162,16 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
   server.registerTool(
     "de_learn_more_about_styles",
     {
-      title: "Learn More About Styles",
+      title: "Designer Learn More About Webflow Styles",
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
       description:
         "Designer tool - Learn more about styles supported by Webflow Designer." +
         "Please do not use any other styles which is not supported by Webflow Designer." +
         "Please use the long-form alias of a CSS property when managing styles. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc.",
-      inputSchema: z.object({}),
+      inputSchema: {},
     },
     async ({}) => formatResponse(supportDEStyles)
   );

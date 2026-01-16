@@ -5,6 +5,8 @@ export { registerComponentsTools } from "./components";
 export { registerPagesTools } from "./pages";
 export { registerScriptsTools } from "./scripts";
 export { registerSiteTools } from "./sites";
+export { registerCommentsTools } from "./comments";
+export { registerEnterpriseTools } from "./enterprise";
 // Designer API Tools
 export { registerDEAssetTools } from "./deAsset";
 export { registerDEComponentsTools } from "./deComponents";

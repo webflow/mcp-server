@@ -16,9 +16,13 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
     "variable_tool",
     {
       title: "Designer Variable Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
       description:
         "Designer Tool - Variable tool to perform actions like create variable, get all variables, update variable",
-      inputSchema: z.object({
+      inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
@@ -202,7 +206,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
               .describe("Update a font family variable"),
           })
         ),
-      }),
+      },
     },
     async ({ siteId, actions }) => {
       try {

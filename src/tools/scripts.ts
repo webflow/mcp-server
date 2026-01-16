@@ -4,144 +4,296 @@ import { ScriptApplyLocation } from "webflow-api/api/types/ScriptApplyLocation";
 import { z } from "zod/v3";
 import { requestOptions } from "../mcp";
 import { RegisterInlineSiteScriptSchema } from "../schemas";
-import { formatErrorResponse, formatResponse, isApiError } from "../utils";
+import {
+  type Content,
+  formatErrorResponse,
+  textContent,
+  toolResponse,
+  isApiError,
+} from "../utils";
+import { ScriptApplyList } from "webflow-api/api";
 
 export function registerScriptsTools(
   server: McpServer,
   getClient: () => WebflowClient
 ) {
-  // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
-  server.registerTool(
-    "site_registered_scripts_list",
-    {
-      title: "List Registered Scripts",
-      description:
-        "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
-      inputSchema: z.object({
-        site_id: z.string().describe("Unique identifier for the site."),
-      }),
-    },
-    async ({ site_id }) => {
-      try {
-        const response = await getClient().scripts.list(
-          site_id,
-          requestOptions
-        );
-        return formatResponse(response);
-      } catch (error) {
-        return formatErrorResponse(error);
-      }
-    }
-  );
+  const listRegisteredScripts = async (arg: { site_id: string }) => {
+    const response = await getClient().scripts.list(
+      arg.site_id,
+      requestOptions
+    );
+    return response;
+  };
 
-  // GET https://api.webflow.com/v2/sites/:site_id/custom_code
-  server.registerTool(
-    "site_applied_scripts_list",
-    {
-      title: "List Applied Scripts",
-      description:
-        "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints.",
-      inputSchema: z.object({
-        site_id: z.string().describe("Unique identifier for the site."),
-      }),
-    },
-    async ({ site_id }) => {
-      try {
-        const response = await getClient().sites.scripts.getCustomCode(
-          site_id,
-          requestOptions
-        );
-        return formatResponse(response);
-      } catch (error) {
-        return formatErrorResponse(error);
-      }
-    }
-  );
+  const listAppliedScripts = async (arg: { site_id: string }) => {
+    const response = await getClient().sites.scripts.getCustomCode(
+      arg.site_id,
+      requestOptions
+    );
+    return response;
+  };
 
-  // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
-  server.registerTool(
-    "add_inline_site_script",
-    {
-      title: "Add Inline Site Script",
-      description:
-        "Register an inline script for a site. Inline scripts are limited to 2000 characters. ",
-      inputSchema: z.object({
-        site_id: z.string().describe("Unique identifier for the site."),
-        request: RegisterInlineSiteScriptSchema,
-      }),
-    },
-    async ({ site_id, request }) => {
-      const registerScriptResponse = await getClient().scripts.registerInline(
-        site_id,
-        {
-          sourceCode: request.sourceCode,
-          version: request.version,
-          displayName: request.displayName,
-          canCopy: request.canCopy !== undefined ? request.canCopy : true,
-        },
+  const addInlineSiteScript = async (arg: {
+    site_id: string;
+    request: {
+      sourceCode: string;
+      version: string;
+      displayName: string;
+      location?: string;
+      canCopy?: boolean;
+      attributes?: Record<string, any>;
+    };
+  }) => {
+    const registerScriptResponse = await getClient().scripts.registerInline(
+      arg.site_id,
+      {
+        sourceCode: arg.request.sourceCode,
+        version: arg.request.version,
+        displayName: arg.request.displayName,
+        canCopy: arg.request.canCopy !== undefined ? arg.request.canCopy : true,
+      },
+      requestOptions
+    );
+
+    let existingScripts: any[] = [];
+    try {
+      const allScriptsResponse = await getClient().sites.scripts.getCustomCode(
+        arg.site_id,
         requestOptions
       );
-
-      let existingScripts: any[] = [];
-      try {
-        const allScriptsResponse =
-          await getClient().sites.scripts.getCustomCode(
-            site_id,
-            requestOptions
-          );
-        existingScripts = allScriptsResponse.scripts || [];
-      } catch (error) {
-        formatErrorResponse(error);
-        existingScripts = [];
-      }
-
-      const newScript = {
-        id: registerScriptResponse.id ?? " ",
-        location:
-          request.location === "footer"
-            ? ScriptApplyLocation.Footer
-            : ScriptApplyLocation.Header,
-        version: registerScriptResponse.version ?? " ",
-        attributes: request.attributes,
-      };
-
-      existingScripts.push(newScript);
-
-      const addedSiteCustomCoderesponse =
-        await getClient().sites.scripts.upsertCustomCode(
-          site_id,
-          {
-            scripts: existingScripts,
-          },
-          requestOptions
-        );
-
-      return formatResponse(registerScriptResponse);
+      existingScripts = allScriptsResponse.scripts || [];
+    } catch (error) {
+      existingScripts = [];
     }
-  );
+
+    const newScript = {
+      id: registerScriptResponse.id ?? " ",
+      location:
+        arg.request.location === "footer"
+          ? ScriptApplyLocation.Footer
+          : ScriptApplyLocation.Header,
+      version: registerScriptResponse.version ?? " ",
+      attributes: arg.request.attributes,
+    };
+
+    existingScripts.push(newScript);
+
+    await getClient().sites.scripts.upsertCustomCode(
+      arg.site_id,
+      {
+        scripts: existingScripts,
+      },
+      requestOptions
+    );
+
+    return registerScriptResponse;
+  };
+
+  const deleteAllSiteScripts = async (arg: { site_id: string }) => {
+    try {
+      await getClient().sites.scripts.deleteCustomCode(
+        arg.site_id,
+        requestOptions
+      );
+      return "Custom Code Deleted";
+    } catch (error) {
+      // If it's a 404, we'll try to clear the scripts another way
+      if (isApiError(error) && error.status === 404) {
+        return error.message ?? "No custom code found";
+      }
+      throw error;
+    }
+  };
+
+  const getPageScript = async (arg: { page_id: string }) => {
+    const response = await getClient().pages.scripts.getCustomCode(
+      arg.page_id,
+      requestOptions
+    );
+    return response;
+  };
+
+  const upsertPageScript = async (arg: {
+    page_id: string;
+    scripts: {
+      id: string;
+      location: "header" | "footer";
+      version: string;
+      attributes?: Record<string, any>;
+    }[];
+  }) => {
+    const data: ScriptApplyList = {
+      scripts: arg.scripts,
+    };
+
+    const response = await getClient().pages.scripts.upsertCustomCode(
+      arg.page_id,
+      data,
+      requestOptions
+    );
+    return response;
+  };
+
+  const deleteAllPageScripts = async (arg: { page_id: string }) => {
+    const response = await getClient().pages.scripts.deleteCustomCode(
+      arg.page_id,
+      requestOptions
+    );
+    return response;
+  };
 
   server.registerTool(
-    "delete_all_site_scripts",
+    "data_scripts_tool",
     {
-      title: "Delete All Site Scripts",
-      description: "Delete all custom scripts from a site.",
-      inputSchema: z.object({
-        site_id: z.string(),
-      }),
+      title: "Data Scripts Tool",
+      annotations: {
+        readOnlyHint: false,
+        openWorldHint: true,
+      },
+      description:
+        "Data tool - Scripts tool to perform actions like list registered scripts, list applied scripts, add inline site script, and delete all site scripts",
+      inputSchema: {
+        actions: z.array(
+          z.object({
+            // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
+            list_registered_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+              ),
+            // GET https://api.webflow.com/v2/sites/:site_id/custom_code
+            list_applied_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+              ),
+            // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
+            add_inline_site_script: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+                request: RegisterInlineSiteScriptSchema,
+              })
+              .optional()
+              .describe(
+                "Register an inline script for a site. Inline scripts are limited to 2000 characters."
+              ),
+            // DELETE https://api.webflow.com/v2/sites/:site_id/custom_code
+            delete_all_site_scripts: z
+              .object({
+                site_id: z.string().describe("Unique identifier for the site."),
+              })
+              .optional()
+              .describe(
+                "Delete all custom scripts applied to a site by the App."
+              ),
+            // GET https://api.webflow.com/v2/pages/:page_id/custom_code
+            get_page_script: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+              })
+              .optional()
+              .describe(
+                "Get all custom scripts applied to a specific page by the App."
+              ),
+            // PUT https://api.webflow.com/v2/pages/:page_id/custom_code
+            upsert_page_script: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+                scripts: z
+                  .array(
+                    z.object({
+                      id: z
+                        .string()
+                        .describe(
+                          "The unique identifier of the registered script."
+                        ),
+                      location: z
+                        .enum(["header", "footer"])
+                        .describe(
+                          "The location where the script should be applied (header or footer)."
+                        ),
+                      version: z
+                        .string()
+                        .describe("The version of the script to apply."),
+                      attributes: z
+                        .record(z.any())
+                        .optional()
+                        .describe(
+                          "Optional attributes to apply to the script element."
+                        ),
+                    })
+                  )
+                  .describe("Array of scripts to apply to the page."),
+              })
+              .optional()
+              .describe(
+                "Add or update custom scripts on a specific page. This will replace all existing scripts on the page with the provided scripts."
+              ),
+            // DELETE https://api.webflow.com/v2/pages/:page_id/custom_code
+            delete_all_page_scripts: z
+              .object({
+                page_id: z.string().describe("Unique identifier for the page."),
+              })
+              .optional()
+              .describe(
+                "Delete all custom scripts applied to a specific page by the App."
+              ),
+          })
+        ),
+      },
     },
-    async ({ site_id }) => {
+    async ({ actions }) => {
+      const result: Content[] = [];
       try {
-        const response = await getClient().sites.scripts.deleteCustomCode(
-          site_id,
-          requestOptions
-        );
-        return formatResponse("Custom Code Deleted");
-      } catch (error) {
-        // If it's a 404, we'll try to clear the scripts another way
-        if (isApiError(error) && error.status === 404) {
-          return formatResponse(error.message ?? "No custom code found");
+        for (const action of actions) {
+          if (action.list_registered_scripts) {
+            const content = await listRegisteredScripts(
+              action.list_registered_scripts
+            );
+            result.push(textContent(content));
+          }
+          if (action.list_applied_scripts) {
+            const content = await listAppliedScripts(
+              action.list_applied_scripts
+            );
+            result.push(textContent(content));
+          }
+          if (action.add_inline_site_script) {
+            const content = await addInlineSiteScript(
+              action.add_inline_site_script
+            );
+            result.push(textContent(content));
+          }
+          if (action.delete_all_site_scripts) {
+            const content = await deleteAllSiteScripts(
+              action.delete_all_site_scripts
+            );
+            result.push(textContent(content));
+          }
+          if (action.get_page_script) {
+            const content = await getPageScript(action.get_page_script);
+            result.push(textContent(content));
+          }
+          if (action.upsert_page_script) {
+            const content = await upsertPageScript(action.upsert_page_script);
+            result.push(textContent(content));
+          }
+          if (action.delete_all_page_scripts) {
+            const content = await deleteAllPageScripts(
+              action.delete_all_page_scripts
+            );
+            result.push(textContent(content));
+          }
         }
-        throw error;
+        return toolResponse(result);
+      } catch (error) {
+        return formatErrorResponse(error);
       }
     }
   );

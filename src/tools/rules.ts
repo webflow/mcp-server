@@ -1,14 +1,17 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod/v3";
 
 export function registerRulesTools(server: McpServer) {
   server.registerTool(
     "webflow_guide_tool",
     {
       title: "Webflow Guide Tool",
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: false,
+      },
       description:
         "Provides essential guidelines and best practices for effectively using the Webflow tools. Call this tool to understand recommended workflows and important considerations before performing actions. ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS.  ALWAYS CALL THIS TOOL FIRST BEFORE CALLING ANY OTHER TOOLS. ",
-      inputSchema: z.object({}),
+      inputSchema: {},
     },
     async ({}) => ({
       content: [
@@ -26,6 +29,7 @@ export function registerRulesTools(server: McpServer) {
             `-- After updating or creating an element, the updated/created element is not automatically selected. If you need more information about that element, use element_tool > select_element with the appropriate element ID to select and inspect it.\n` +
             `-- Do not use CSS shorthand properties when updating or creating styles. Always use longhand property names like "margin-top", "padding-left", "border-width", etc.\n` +
             `-- When creating or updating elements, most users prefer using existing styles. You should reuse styles if they exist, unless the user explicitly wants new ones.\n` +
+            `-- To learn or find about localizations and locale id you get use site too and get site details to learn how many locales are supported and their details.\n` +
             `\n` +
             `Element Tool Usage:\n` +
             `-- To get detailed information about the currently selected element, use element_tool > get_selected_element.\n` +
@@ -41,6 +45,13 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `Element Builder Tool:\n` +
             `-- To create a new element, use element_builder. Pass the type of element you want to create. After creation, use element_tool > select_element to select the element and gather additional details if needed.\n` +
+            `\n` +
+            `Element Snapshot Tool Usage:\n` +
+            `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +
+            `-- Use this tool to verify visual changes after creating or updating elements. It provides immediate visual feedback without requiring manual inspection.\n` +
+            `-- This tool is helpful for debugging layout issues, verifying styling changes, or confirming that elements render as expected.\n` +
+            `-- The snapshot returns a PNG image of the specified element. Use it to validate your work before proceeding with additional changes.\n` +
+            `-- When the user asks to see or preview an element, use this tool to provide visual confirmation.\n` +
             `\n` +
             `Asset Tool Usage:\n` +
             `-- To create an asset folder, use asset_tool > create_folder. Pass the name of the folder. To create a nested folder, pass parent_folder_id. Otherwise, the folder will be created in the root directory.\n` +
