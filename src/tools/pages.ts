@@ -52,13 +52,21 @@ export function registerPagesTools(
   const updatePageSettings = async (arg: {
     page_id: string;
     localeId?: string;
-    body: any;
+    body: z.infer<typeof WebflowPageSchema>;
   }) => {
+    const { seo, openGraph, slug, title, ...rest } = arg.body;
+    const pageSettings = {
+      ...(seo && { seo }),
+      ...(openGraph && { openGraph }),
+      ...(slug && { slug }),
+      ...(title && { title }),
+    };
     const response = await getClient().pages.updatePageSettings(
       arg.page_id,
       {
         localeId: arg.localeId,
-        body: arg.body,
+        ...pageSettings,
+        body: { ...rest, ...pageSettings },
       },
       requestOptions
     );
