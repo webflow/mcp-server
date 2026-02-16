@@ -97,10 +97,10 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
                   d.create_folder,
                   d.get_all_assets_and_folders,
                   d.update_asset,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of create_folder, get_all_assets_and_folders, update_asset.",
+                  "Provide at least one of create_folder, get_all_assets_and_folders, update_asset.",
               }
             )
         ),

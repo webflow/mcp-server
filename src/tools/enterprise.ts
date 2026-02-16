@@ -436,10 +436,10 @@ export function registerEnterpriseTools(
                     d.delete_robots_txt,
                     d.add_well_known_file,
                     d.remove_well_known_files,
-                  ].filter(Boolean).length === 1,
+                  ].filter(Boolean).length >= 1,
                 {
                   message:
-                    "Provide exactly one of list_301_redirects, create_301_redirect, update_301_redirect, delete_301_redirect, get_robots_txt, update_robots_txt, replace_robots_txt, delete_robots_txt, add_well_known_file, remove_well_known_files.",
+                    "Provide at least one of list_301_redirects, create_301_redirect, update_301_redirect, delete_301_redirect, get_robots_txt, update_robots_txt, replace_robots_txt, delete_robots_txt, add_well_known_file, remove_well_known_files.",
                 }
               )
           )

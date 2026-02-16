@@ -84,10 +84,10 @@ export function registerDEPagesTools(server: McpServer, rpc: RPCType) {
                   d.create_page_folder,
                   d.get_current_page,
                   d.switch_page,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of create_page, create_page_folder, get_current_page, switch_page.",
+                  "Provide at least one of create_page, create_page_folder, get_current_page, switch_page.",
               }
             )
         ),

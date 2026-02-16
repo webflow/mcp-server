@@ -95,10 +95,10 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                   d.close_component_view,
                   d.get_all_components,
                   d.rename_component,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
               }
             )
         ),

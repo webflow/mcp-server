@@ -271,10 +271,10 @@ export function registerScriptsTools(
                   d.get_page_script,
                   d.upsert_page_script,
                   d.delete_all_page_scripts,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of list_registered_scripts, list_applied_scripts, add_inline_site_script, delete_all_site_scripts, get_page_script, upsert_page_script, delete_all_page_scripts.",
+                  "Provide at least one of list_registered_scripts, list_applied_scripts, add_inline_site_script, delete_all_site_scripts, get_page_script, upsert_page_script, delete_all_page_scripts.",
               }
             )
         ),

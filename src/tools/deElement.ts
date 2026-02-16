@@ -262,10 +262,10 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   d.set_link,
                   d.set_heading_level,
                   d.set_image_asset,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset.",
+                  "Provide at least one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset.",
               }
             )
         ),

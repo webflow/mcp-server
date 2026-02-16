@@ -260,10 +260,10 @@ export function registerCommentsTools(
                     d.list_comment_threads,
                     d.get_comment_thread,
                     d.list_comment_replies,
-                  ].filter(Boolean).length === 1,
+                  ].filter(Boolean).length >= 1,
                 {
                   message:
-                    "Provide exactly one of list_comment_threads, get_comment_thread, list_comment_replies.",
+                    "Provide at least one of list_comment_threads, get_comment_thread, list_comment_replies.",
                 }
               )
           )

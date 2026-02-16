@@ -260,10 +260,10 @@ export function registerComponentsTools(
                   d.update_component_content,
                   d.get_component_properties,
                   d.update_component_properties,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of list_components, get_component_content, update_component_content, get_component_properties, update_component_properties.",
+                  "Provide at least one of list_components, get_component_content, update_component_content, get_component_properties, update_component_properties.",
               }
             )
         ),

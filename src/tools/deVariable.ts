@@ -228,10 +228,10 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   d.update_number_variable,
                   d.update_percentage_variable,
                   d.update_font_family_variable,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of create_variable_collection, create_variable_mode, get_variable_collections, get_variables, create_color_variable, create_size_variable, create_number_variable, create_percentage_variable, create_font_family_variable, update_color_variable, update_size_variable, update_number_variable, update_percentage_variable, update_font_family_variable.",
+                  "Provide at least one of create_variable_collection, create_variable_mode, get_variable_collections, get_variables, create_color_variable, create_size_variable, create_number_variable, create_percentage_variable, create_font_family_variable, update_color_variable, update_size_variable, update_number_variable, update_percentage_variable, update_font_family_variable.",
               }
             )
         ),

@@ -154,10 +154,10 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
             .refine(
               (d) =>
                 [d.create_style, d.get_styles, d.update_style].filter(Boolean)
-                  .length === 1,
+                  .length >= 1,
               {
                 message:
-                  "Provide exactly one of create_style, get_styles, update_style.",
+                  "Provide at least one of create_style, get_styles, update_style.",
               }
             )
         ),

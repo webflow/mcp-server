@@ -97,10 +97,10 @@ export function registerSiteTools(
             .refine(
               (d) =>
                 [d.list_sites, d.get_site, d.publish_site].filter(Boolean)
-                  .length === 1,
+                  .length >= 1,
               {
                 message:
-                  "Provide exactly one of list_sites, get_site, publish_site.",
+                  "Provide at least one of list_sites, get_site, publish_site.",
               }
             )
         ),

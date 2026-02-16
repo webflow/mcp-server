@@ -478,10 +478,10 @@ export function registerCmsTools(
                   d.update_collection_items,
                   d.publish_collection_items,
                   d.delete_collection_items,
-                ].filter(Boolean).length === 1,
+                ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide exactly one of get_collection_list, get_collection_details, create_collection, create_collection_static_field, create_collection_option_field, create_collection_reference_field, update_collection_field, list_collection_items, create_collection_items, update_collection_items, publish_collection_items, delete_collection_items.",
+                  "Provide at least one of get_collection_list, get_collection_details, create_collection, create_collection_static_field, create_collection_option_field, create_collection_reference_field, update_collection_field, list_collection_items, create_collection_items, update_collection_items, publish_collection_items, delete_collection_items.",
               }
             )
         ),
