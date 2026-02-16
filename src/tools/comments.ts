@@ -130,128 +130,142 @@ export function registerCommentsTools(
       inputSchema: {
         actions: z
           .array(
-            z.object({
-              list_comment_threads: z
-                .object({
-                  site_id: z
-                    .string()
-                    .describe(
-                      "The site's unique ID, used to list its comment threads."
-                    ),
-                  localeId: z
-                    .string()
-                    .optional()
-                    .describe(
-                      "Unique identifier for a specific locale. Applicable when using localization."
-                    ),
-                  offset: z
-                    .number()
-                    .optional()
-                    .describe(
-                      "Offset used for pagination if the results have more than limit records."
-                    ),
-                  limit: z
-                    .number()
-                    .max(100)
-                    .min(1)
-                    .optional()
-                    .describe(
-                      "Maximum number of records to be returned (max limit: 100)"
-                    ),
-                  sortBy: z
-                    .enum(["createdOn", "lastUpdated"])
-                    .optional()
-                    .describe("Sort the results by the given field."),
-                  sortOrder: z
-                    .enum(["asc", "desc"])
-                    .optional()
-                    .describe("Sort the results by the given order."),
-                })
-                .optional()
-                .describe(
-                  "List all comment threads for a specific element or page."
-                ),
-              get_comment_thread: z
-                .object({
-                  site_id: z
-                    .string()
-                    .describe(
-                      "The site's unique ID, used to get its comment thread."
-                    ),
-                  comment_thread_id: z
-                    .string()
-                    .describe(
-                      "The comment thread's unique ID, used to get its details."
-                    ),
-                  localeId: z
-                    .string()
-                    .optional()
-                    .describe(
-                      "Unique identifier for a specific locale. Applicable when using localization."
-                    ),
-                  offset: z
-                    .number()
-                    .optional()
-                    .describe(
-                      "Offset used for pagination if the results have more than limit records."
-                    ),
-                  limit: z
-                    .number()
-                    .max(100)
-                    .min(1)
-                    .optional()
-                    .describe(
-                      "Maximum number of records to be returned (max limit: 100)"
-                    ),
-                  sortBy: z
-                    .enum(["createdOn", "lastUpdated"])
-                    .optional()
-                    .describe("Sort the results by the given field."),
-                  sortOrder: z
-                    .enum(["asc", "desc"])
-                    .optional()
-                    .describe("Sort the results by the given order."),
-                })
-                .optional()
-                .describe("Get the details of a specific comment thread."),
-              list_comment_replies: z
-                .object({
-                  site_id: z
-                    .string()
-                    .describe(
-                      "The site's unique ID, used to list its comment replies."
-                    ),
-                  comment_thread_id: z
-                    .string()
-                    .describe(
-                      "The comment thread's unique ID, used to list its replies."
-                    ),
-                  offset: z
-                    .number()
-                    .optional()
-                    .describe(
-                      "Offset used for pagination if the results have more than limit records."
-                    ),
-                  limit: z
-                    .number()
-                    .max(100)
-                    .min(1)
-                    .optional()
-                    .describe(
-                      "Maximum number of records to be returned (max limit: 100)"
-                    ),
-                  sortBy: z
-                    .enum(["createdOn", "lastUpdated"])
-                    .optional()
-                    .describe("Sort the results by the given field."),
-                  sortOrder: z
-                    .enum(["asc", "desc"])
-                    .optional()
-                    .describe("Sort the results by the given order."),
-                })
-                .optional()
-                .describe("List all replies for a specific comment thread."),
-            })
+            z
+              .object({
+                list_comment_threads: z
+                  .object({
+                    site_id: z
+                      .string()
+                      .describe(
+                        "The site's unique ID, used to list its comment threads."
+                      ),
+                    localeId: z
+                      .string()
+                      .optional()
+                      .describe(
+                        "Unique identifier for a specific locale. Applicable when using localization."
+                      ),
+                    offset: z
+                      .number()
+                      .optional()
+                      .describe(
+                        "Offset used for pagination if the results have more than limit records."
+                      ),
+                    limit: z
+                      .number()
+                      .max(100)
+                      .min(1)
+                      .optional()
+                      .describe(
+                        "Maximum number of records to be returned (max limit: 100)"
+                      ),
+                    sortBy: z
+                      .enum(["createdOn", "lastUpdated"])
+                      .optional()
+                      .describe("Sort the results by the given field."),
+                    sortOrder: z
+                      .enum(["asc", "desc"])
+                      .optional()
+                      .describe("Sort the results by the given order."),
+                  })
+                  .optional()
+                  .describe(
+                    "List all comment threads for a specific element or page."
+                  ),
+                get_comment_thread: z
+                  .object({
+                    site_id: z
+                      .string()
+                      .describe(
+                        "The site's unique ID, used to get its comment thread."
+                      ),
+                    comment_thread_id: z
+                      .string()
+                      .describe(
+                        "The comment thread's unique ID, used to get its details."
+                      ),
+                    localeId: z
+                      .string()
+                      .optional()
+                      .describe(
+                        "Unique identifier for a specific locale. Applicable when using localization."
+                      ),
+                    offset: z
+                      .number()
+                      .optional()
+                      .describe(
+                        "Offset used for pagination if the results have more than limit records."
+                      ),
+                    limit: z
+                      .number()
+                      .max(100)
+                      .min(1)
+                      .optional()
+                      .describe(
+                        "Maximum number of records to be returned (max limit: 100)"
+                      ),
+                    sortBy: z
+                      .enum(["createdOn", "lastUpdated"])
+                      .optional()
+                      .describe("Sort the results by the given field."),
+                    sortOrder: z
+                      .enum(["asc", "desc"])
+                      .optional()
+                      .describe("Sort the results by the given order."),
+                  })
+                  .optional()
+                  .describe("Get the details of a specific comment thread."),
+                list_comment_replies: z
+                  .object({
+                    site_id: z
+                      .string()
+                      .describe(
+                        "The site's unique ID, used to list its comment replies."
+                      ),
+                    comment_thread_id: z
+                      .string()
+                      .describe(
+                        "The comment thread's unique ID, used to list its replies."
+                      ),
+                    offset: z
+                      .number()
+                      .optional()
+                      .describe(
+                        "Offset used for pagination if the results have more than limit records."
+                      ),
+                    limit: z
+                      .number()
+                      .max(100)
+                      .min(1)
+                      .optional()
+                      .describe(
+                        "Maximum number of records to be returned (max limit: 100)"
+                      ),
+                    sortBy: z
+                      .enum(["createdOn", "lastUpdated"])
+                      .optional()
+                      .describe("Sort the results by the given field."),
+                    sortOrder: z
+                      .enum(["asc", "desc"])
+                      .optional()
+                      .describe("Sort the results by the given order."),
+                  })
+                  .optional()
+                  .describe("List all replies for a specific comment thread."),
+              })
+              .strict()
+              .refine(
+                (d) =>
+                  [
+                    d.list_comment_threads,
+                    d.get_comment_thread,
+                    d.list_comment_replies,
+                  ].filter(Boolean).length >= 1,
+                {
+                  message:
+                    "Provide at least one of list_comment_threads, get_comment_thread, list_comment_replies.",
+                }
+              )
           )
           .min(1)
           .describe("The actions to perform on the comments."),

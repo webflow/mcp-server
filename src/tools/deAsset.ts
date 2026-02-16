@@ -39,52 +39,70 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
       inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
-          z.object({
-            create_folder: z
-              .object({
-                name: z.string().describe("The name of the folder to create"),
-                parent_folder_id: z
-                  .string()
-                  .optional()
-                  .describe(
-                    "The id of the parent folder to move the folder to."
-                  ),
-              })
-              .optional()
-              .describe("Create a folder on the site"),
-            get_all_assets_and_folders: z
-              .object({
-                query: z
-                  .enum(["all", "folders", "assets"])
-                  .describe("Query to get all assets and folders on the site"),
-                filter_assets_by_ids: z
-                  .array(z.string())
-                  .describe("Filter assets by ids")
-                  .optional(),
-              })
-              .optional()
-              .describe("Get all assets and folders on the site"),
-            update_asset: z
-              .object({
-                asset_id: z.string().describe("The id of the asset to update"),
-                name: z
-                  .string()
-                  .optional()
-                  .describe("The name of the asset to update"),
-                alt_text: z
-                  .string()
-                  .optional()
-                  .describe("The alt text of the asset to update"),
-                parent_folder_id: z
-                  .string()
-                  .optional()
-                  .describe(
-                    "The id of the parent folder to move the asset to."
-                  ),
-              })
-              .optional()
-              .describe("Update an asset on the site"),
-          })
+          z
+            .object({
+              create_folder: z
+                .object({
+                  name: z.string().describe("The name of the folder to create"),
+                  parent_folder_id: z
+                    .string()
+                    .optional()
+                    .describe(
+                      "The id of the parent folder to move the folder to."
+                    ),
+                })
+                .optional()
+                .describe("Create a folder on the site"),
+              get_all_assets_and_folders: z
+                .object({
+                  query: z
+                    .enum(["all", "folders", "assets"])
+                    .describe(
+                      "Query to get all assets and folders on the site"
+                    ),
+                  filter_assets_by_ids: z
+                    .array(z.string())
+                    .describe("Filter assets by ids")
+                    .optional(),
+                })
+                .optional()
+                .describe("Get all assets and folders on the site"),
+              update_asset: z
+                .object({
+                  asset_id: z
+                    .string()
+                    .describe("The id of the asset to update"),
+                  name: z
+                    .string()
+                    .optional()
+                    .describe("The name of the asset to update"),
+                  alt_text: z
+                    .string()
+                    .optional()
+                    .describe("The alt text of the asset to update"),
+                  parent_folder_id: z
+                    .string()
+                    .optional()
+                    .describe(
+                      "The id of the parent folder to move the asset to."
+                    ),
+                })
+                .optional()
+                .describe("Update an asset on the site"),
+            })
+            .strict()
+            .refine(
+              (d) =>
+                [
+                  d.create_folder,
+                  d.get_all_assets_and_folders,
+                  d.update_asset,
+                ].filter(Boolean).length >= 1,
+              {
+                message:
+                  "Provide at least one of create_folder, get_all_assets_and_folders, update_asset.",
+              }
+            )
         ),
       },
     },
