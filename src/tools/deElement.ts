@@ -124,126 +124,150 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
-          z.object({
-            get_all_elements: z
-              .object({
-                query: z.enum(["all"]).describe("Query to get all elements"),
-                include_style_properties: z
-                  .boolean()
-                  .optional()
-                  .describe("Include style properties"),
-                include_all_breakpoint_styles: z
-                  .boolean()
-                  .optional()
-                  .describe("Include all breakpoints styles"),
-              })
-              .optional()
-              .describe("Get all elements on the current active page"),
-            get_selected_element: z
-              .boolean()
-              .optional()
-              .describe("Get selected element on the current active page"),
-            select_element: z
-              .object({
-                ...DEElementIDSchema,
-              })
-              .optional()
-              .describe("Select an element on the current active page"),
-            add_or_update_attribute: z
-              .object({
-                ...DEElementIDSchema,
-                attributes: z
-                  .array(
-                    z.object({
-                      name: z
-                        .string()
-                        .describe(
-                          "The name of the attribute to add or update."
-                        ),
-                      value: z
-                        .string()
-                        .describe(
-                          "The value of the attribute to add or update."
-                        ),
-                    })
-                  )
-                  .describe("The attributes to add or update."),
-              })
-              .optional()
-              .describe("Add or update an attribute on the element"),
-            remove_attribute: z
-              .object({
-                ...DEElementIDSchema,
-                attribute_names: z
-                  .array(z.string())
-                  .describe("The names of the attributes to remove."),
-              })
-              .optional()
-              .describe("Remove an attribute from the element"),
-            update_id_attribute: z
-              .object({
-                ...DEElementIDSchema,
-                new_id: z
-                  .string()
-                  .describe(
-                    "The new #id of the element to update the id attribute to."
-                  ),
-              })
-              .optional()
-              .describe("Update the #id attribute of the element"),
-            set_text: z
-              .object({
-                ...DEElementIDSchema,
-                text: z.string().describe("The text to set on the element."),
-              })
-              .optional()
-              .describe("Set text on the element"),
-            set_style: z
-              .object({
-                ...DEElementIDSchema,
-                style_names: z
-                  .array(z.string())
-                  .describe("The style names to set on the element."),
-              })
-              .optional()
-              .describe(
-                "Set style on the element. it will remove all other styles on the element. and set only the styles passed in style_names."
-              ),
-            set_link: z
-              .object({
-                ...DEElementIDSchema,
-                linkType: z
-                  .enum(["url", "file", "page", "element", "email", "phone"])
-                  .describe("The type of the link to update."),
-                link: z
-                  .string()
-                  .describe(
-                    "The link to set on the element. for page pass page id, for element pass json string of id object. e.g id:{component:123,element:456}. for email pass email address. for phone pass phone number. for file pass asset id. for url pass url."
-                  ),
-              })
-              .optional()
-              .describe("Set link on the element"),
-            set_heading_level: z
-              .object({
-                ...DEElementIDSchema,
-                heading_level: z
-                  .number()
-                  .min(1)
-                  .max(6)
-                  .describe("The heading level to set on the element. 1 to 6."),
-              })
-              .optional()
-              .describe("Set heading level on the heading element."),
-            set_image_asset: z
-              .object({
-                ...DEElementIDSchema,
-                image_asset_id: z
-                  .string()
-                  .describe("The image asset id to set on the element."),
-              })
-              .optional()
-              .describe("Set image asset on the image element"),
-          })
+          z
+            .object({
+              get_all_elements: z
+                .object({
+                  query: z.enum(["all"]).describe("Query to get all elements"),
+                  include_style_properties: z
+                    .boolean()
+                    .optional()
+                    .describe("Include style properties"),
+                  include_all_breakpoint_styles: z
+                    .boolean()
+                    .optional()
+                    .describe("Include all breakpoints styles"),
+                })
+                .optional()
+                .describe("Get all elements on the current active page"),
+              get_selected_element: z
+                .boolean()
+                .optional()
+                .describe("Get selected element on the current active page"),
+              select_element: z
+                .object({
+                  ...DEElementIDSchema,
+                })
+                .optional()
+                .describe("Select an element on the current active page"),
+              add_or_update_attribute: z
+                .object({
+                  ...DEElementIDSchema,
+                  attributes: z
+                    .array(
+                      z.object({
+                        name: z
+                          .string()
+                          .describe(
+                            "The name of the attribute to add or update."
+                          ),
+                        value: z
+                          .string()
+                          .describe(
+                            "The value of the attribute to add or update."
+                          ),
+                      })
+                    )
+                    .describe("The attributes to add or update."),
+                })
+                .optional()
+                .describe("Add or update an attribute on the element"),
+              remove_attribute: z
+                .object({
+                  ...DEElementIDSchema,
+                  attribute_names: z
+                    .array(z.string())
+                    .describe("The names of the attributes to remove."),
+                })
+                .optional()
+                .describe("Remove an attribute from the element"),
+              update_id_attribute: z
+                .object({
+                  ...DEElementIDSchema,
+                  new_id: z
+                    .string()
+                    .describe(
+                      "The new #id of the element to update the id attribute to."
+                    ),
+                })
+                .optional()
+                .describe("Update the #id attribute of the element"),
+              set_text: z
+                .object({
+                  ...DEElementIDSchema,
+                  text: z.string().describe("The text to set on the element."),
+                })
+                .optional()
+                .describe("Set text on the element"),
+              set_style: z
+                .object({
+                  ...DEElementIDSchema,
+                  style_names: z
+                    .array(z.string())
+                    .describe("The style names to set on the element."),
+                })
+                .optional()
+                .describe(
+                  "Set style on the element. it will remove all other styles on the element. and set only the styles passed in style_names."
+                ),
+              set_link: z
+                .object({
+                  ...DEElementIDSchema,
+                  linkType: z
+                    .enum(["url", "file", "page", "element", "email", "phone"])
+                    .describe("The type of the link to update."),
+                  link: z
+                    .string()
+                    .describe(
+                      "The link to set on the element. for page pass page id, for element pass json string of id object. e.g id:{component:123,element:456}. for email pass email address. for phone pass phone number. for file pass asset id. for url pass url."
+                    ),
+                })
+                .optional()
+                .describe("Set link on the element"),
+              set_heading_level: z
+                .object({
+                  ...DEElementIDSchema,
+                  heading_level: z
+                    .number()
+                    .min(1)
+                    .max(6)
+                    .describe(
+                      "The heading level to set on the element. 1 to 6."
+                    ),
+                })
+                .optional()
+                .describe("Set heading level on the heading element."),
+              set_image_asset: z
+                .object({
+                  ...DEElementIDSchema,
+                  image_asset_id: z
+                    .string()
+                    .describe("The image asset id to set on the element."),
+                })
+                .optional()
+                .describe("Set image asset on the image element"),
+            })
+            .strict()
+            .refine(
+              (d) =>
+                [
+                  d.get_all_elements,
+                  d.get_selected_element,
+                  d.select_element,
+                  d.add_or_update_attribute,
+                  d.remove_attribute,
+                  d.update_id_attribute,
+                  d.set_text,
+                  d.set_style,
+                  d.set_link,
+                  d.set_heading_level,
+                  d.set_image_asset,
+                ].filter(Boolean).length === 1,
+              {
+                message:
+                  "Provide exactly one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset.",
+              }
+            )
         ),
       },
     },

@@ -154,97 +154,129 @@ export function registerScriptsTools(
         "Data tool - Scripts tool to perform actions like list registered scripts, list applied scripts, add inline site script, and delete all site scripts",
       inputSchema: {
         actions: z.array(
-          z.object({
-            // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
-            list_registered_scripts: z
-              .object({
-                site_id: z.string().describe("Unique identifier for the site."),
-              })
-              .optional()
-              .describe(
-                "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
-              ),
-            // GET https://api.webflow.com/v2/sites/:site_id/custom_code
-            list_applied_scripts: z
-              .object({
-                site_id: z.string().describe("Unique identifier for the site."),
-              })
-              .optional()
-              .describe(
-                "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
-              ),
-            // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
-            add_inline_site_script: z
-              .object({
-                site_id: z.string().describe("Unique identifier for the site."),
-                request: RegisterInlineSiteScriptSchema,
-              })
-              .optional()
-              .describe(
-                "Register an inline script for a site. Inline scripts are limited to 2000 characters."
-              ),
-            // DELETE https://api.webflow.com/v2/sites/:site_id/custom_code
-            delete_all_site_scripts: z
-              .object({
-                site_id: z.string().describe("Unique identifier for the site."),
-              })
-              .optional()
-              .describe(
-                "Delete all custom scripts applied to a site by the App."
-              ),
-            // GET https://api.webflow.com/v2/pages/:page_id/custom_code
-            get_page_script: z
-              .object({
-                page_id: z.string().describe("Unique identifier for the page."),
-              })
-              .optional()
-              .describe(
-                "Get all custom scripts applied to a specific page by the App."
-              ),
-            // PUT https://api.webflow.com/v2/pages/:page_id/custom_code
-            upsert_page_script: z
-              .object({
-                page_id: z.string().describe("Unique identifier for the page."),
-                scripts: z
-                  .array(
-                    z.object({
-                      id: z
-                        .string()
-                        .describe(
-                          "The unique identifier of the registered script."
-                        ),
-                      location: z
-                        .enum(["header", "footer"])
-                        .describe(
-                          "The location where the script should be applied (header or footer)."
-                        ),
-                      version: z
-                        .string()
-                        .describe("The version of the script to apply."),
-                      attributes: z
-                        .record(z.any())
-                        .optional()
-                        .describe(
-                          "Optional attributes to apply to the script element."
-                        ),
-                    })
-                  )
-                  .describe("Array of scripts to apply to the page."),
-              })
-              .optional()
-              .describe(
-                "Add or update custom scripts on a specific page. This will replace all existing scripts on the page with the provided scripts."
-              ),
-            // DELETE https://api.webflow.com/v2/pages/:page_id/custom_code
-            delete_all_page_scripts: z
-              .object({
-                page_id: z.string().describe("Unique identifier for the page."),
-              })
-              .optional()
-              .describe(
-                "Delete all custom scripts applied to a specific page by the App."
-              ),
-          })
+          z
+            .object({
+              // GET https://api.webflow.com/v2/sites/:site_id/registered_scripts
+              list_registered_scripts: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                })
+                .optional()
+                .describe(
+                  "List all registered scripts for a site. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+                ),
+              // GET https://api.webflow.com/v2/sites/:site_id/custom_code
+              list_applied_scripts: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                })
+                .optional()
+                .describe(
+                  "Get all scripts applied to a site by the App. To apply a script to a site or page, first register it via the Register Script endpoints, then apply it using the relevant Site or Page endpoints."
+                ),
+              // POST https://api.webflow.com/v2/sites/:site_id/registered_scripts/inline
+              add_inline_site_script: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                  request: RegisterInlineSiteScriptSchema,
+                })
+                .optional()
+                .describe(
+                  "Register an inline script for a site. Inline scripts are limited to 2000 characters."
+                ),
+              // DELETE https://api.webflow.com/v2/sites/:site_id/custom_code
+              delete_all_site_scripts: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                })
+                .optional()
+                .describe(
+                  "Delete all custom scripts applied to a site by the App."
+                ),
+              // GET https://api.webflow.com/v2/pages/:page_id/custom_code
+              get_page_script: z
+                .object({
+                  page_id: z
+                    .string()
+                    .describe("Unique identifier for the page."),
+                })
+                .optional()
+                .describe(
+                  "Get all custom scripts applied to a specific page by the App."
+                ),
+              // PUT https://api.webflow.com/v2/pages/:page_id/custom_code
+              upsert_page_script: z
+                .object({
+                  page_id: z
+                    .string()
+                    .describe("Unique identifier for the page."),
+                  scripts: z
+                    .array(
+                      z.object({
+                        id: z
+                          .string()
+                          .describe(
+                            "The unique identifier of the registered script."
+                          ),
+                        location: z
+                          .enum(["header", "footer"])
+                          .describe(
+                            "The location where the script should be applied (header or footer)."
+                          ),
+                        version: z
+                          .string()
+                          .describe("The version of the script to apply."),
+                        attributes: z
+                          .record(z.any())
+                          .optional()
+                          .describe(
+                            "Optional attributes to apply to the script element."
+                          ),
+                      })
+                    )
+                    .describe("Array of scripts to apply to the page."),
+                })
+                .optional()
+                .describe(
+                  "Add or update custom scripts on a specific page. This will replace all existing scripts on the page with the provided scripts."
+                ),
+              // DELETE https://api.webflow.com/v2/pages/:page_id/custom_code
+              delete_all_page_scripts: z
+                .object({
+                  page_id: z
+                    .string()
+                    .describe("Unique identifier for the page."),
+                })
+                .optional()
+                .describe(
+                  "Delete all custom scripts applied to a specific page by the App."
+                ),
+            })
+            .strict()
+            .refine(
+              (d) =>
+                [
+                  d.list_registered_scripts,
+                  d.list_applied_scripts,
+                  d.add_inline_site_script,
+                  d.delete_all_site_scripts,
+                  d.get_page_script,
+                  d.upsert_page_script,
+                  d.delete_all_page_scripts,
+                ].filter(Boolean).length === 1,
+              {
+                message:
+                  "Provide exactly one of list_registered_scripts, list_applied_scripts, add_inline_site_script, delete_all_site_scripts, get_page_script, upsert_page_script, delete_all_page_scripts.",
+              }
+            )
         ),
       },
     },
