@@ -21,7 +21,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
 
   const elementSnapshotToolRPCCall = async (
     siteId: string,
-    action: any
+    action: any,
   ): Promise<
     | {
         status: string;
@@ -58,21 +58,21 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                 component: z
                   .string()
                   .describe(
-                    "The component id of the element to perform action on."
+                    "The component id of the element to perform action on.",
                   ),
                 element: z
                   .string()
                   .describe(
-                    "The element id of the element to perform action on."
+                    "The element id of the element to perform action on.",
                   ),
               })
               .describe(
-                "The id of the parent element to create element on, you can find it from id field on element. e.g id:{component:123,element:456}."
+                "The id of the parent element to create element on, you can find it from id field on element. e.g id:{component:123,element:456}.",
               ),
             creation_position: z
               .enum(["append", "prepend"])
               .describe(
-                "The position to create element on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element."
+                "The position to create element on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element.",
               ),
             element_schema: DEElementSchema.extend({
               children: z
@@ -85,20 +85,20 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                             .array(
                               DEElementSchema.extend({
                                 children: z.array(DEElementSchema).optional(),
-                              })
+                              }),
                             )
                             .optional(),
-                        })
+                        }),
                       )
                       .optional(),
-                  })
+                  }),
                 )
                 .optional()
                 .describe(
-                  "The children of the element. only valid for container, section, div block, valid DOM elements."
+                  "The children of the element. only valid for container, section, div block, valid DOM elements.",
                 ),
             }).describe("element schema of element to create."),
-          })
+          }),
         ),
       },
     },
@@ -108,7 +108,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 
   server.registerTool(
@@ -150,6 +150,14 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                 })
                 .optional()
                 .describe("Select an element on the current active page"),
+              remove_element: z
+                .object({
+                  ...DEElementIDSchema,
+                })
+                .optional()
+                .describe(
+                  "Remove an element from the current active page. DANGEROUS ACTION. USE WITH CAUTION.",
+                ),
               add_or_update_attribute: z
                 .object({
                   ...DEElementIDSchema,
@@ -159,14 +167,14 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                         name: z
                           .string()
                           .describe(
-                            "The name of the attribute to add or update."
+                            "The name of the attribute to add or update.",
                           ),
                         value: z
                           .string()
                           .describe(
-                            "The value of the attribute to add or update."
+                            "The value of the attribute to add or update.",
                           ),
-                      })
+                      }),
                     )
                     .describe("The attributes to add or update."),
                 })
@@ -187,7 +195,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   new_id: z
                     .string()
                     .describe(
-                      "The new #id of the element to update the id attribute to."
+                      "The new #id of the element to update the id attribute to.",
                     ),
                 })
                 .optional()
@@ -208,7 +216,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                 })
                 .optional()
                 .describe(
-                  "Set style on the element. it will remove all other styles on the element. and set only the styles passed in style_names."
+                  "Set style on the element. it will remove all other styles on the element. and set only the styles passed in style_names.",
                 ),
               set_link: z
                 .object({
@@ -219,7 +227,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   link: z
                     .string()
                     .describe(
-                      "The link to set on the element. for page pass page id, for element pass json string of id object. e.g id:{component:123,element:456}. for email pass email address. for phone pass phone number. for file pass asset id. for url pass url."
+                      "The link to set on the element. for page pass page id, for element pass json string of id object. e.g id:{component:123,element:456}. for email pass email address. for phone pass phone number. for file pass asset id. for url pass url.",
                     ),
                 })
                 .optional()
@@ -232,7 +240,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                     .min(1)
                     .max(6)
                     .describe(
-                      "The heading level to set on the element. 1 to 6."
+                      "The heading level to set on the element. 1 to 6.",
                     ),
                 })
                 .optional()
@@ -262,12 +270,13 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   d.set_link,
                   d.set_heading_level,
                   d.set_image_asset,
+                  d.remove_element,
                 ].filter(Boolean).length >= 1,
               {
                 message:
                   "Provide at least one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset.",
-              }
-            )
+              },
+            ),
         ),
       },
     },
@@ -277,7 +286,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 
   server.registerTool(
@@ -300,7 +309,7 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       try {
         const { status, message, data } = await elementSnapshotToolRPCCall(
           siteId,
-          action
+          action,
         );
         if (status === "success" && data) {
           return {
@@ -317,6 +326,6 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 };

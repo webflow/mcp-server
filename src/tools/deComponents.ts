@@ -31,7 +31,7 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                 .boolean()
                 .optional()
                 .describe(
-                  "Check if inside component view. this helpful to make changes to the component"
+                  "Check if inside component view. this helpful to make changes to the component",
                 ),
               transform_element_to_component: z
                 .object({
@@ -49,7 +49,7 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                   creation_position: z
                     .enum(["append", "prepend"])
                     .describe(
-                      "The position to create component instance on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element."
+                      "The position to create component instance on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element.",
                     ),
                 })
                 .optional()
@@ -60,19 +60,19 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                 })
                 .optional()
                 .describe(
-                  "Open a component instance view for changes or reading."
+                  "Open a component instance view for changes or reading.",
                 ),
               close_component_view: z
                 .boolean()
                 .optional()
                 .describe(
-                  "Close a component instance view. it will close and open the page view."
+                  "Close a component instance view. it will close and open the page view.",
                 ),
               get_all_components: z
                 .boolean()
                 .optional()
                 .describe(
-                  "Get all components, only valid if you are connected to Webflow Designer."
+                  "Get all components, only valid if you are connected to Webflow Designer.",
                 ),
               rename_component: z
                 .object({
@@ -83,6 +83,16 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                 })
                 .optional()
                 .describe("Rename a component."),
+              unregister_component: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to unregister"),
+                })
+                .optional()
+                .describe(
+                  "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
+                ),
             })
             .strict()
             .refine(
@@ -95,12 +105,13 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
                   d.close_component_view,
                   d.get_all_components,
                   d.rename_component,
+                  d.unregister_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
                   "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
-              }
-            )
+              },
+            ),
         ),
       },
     },
@@ -110,6 +121,6 @@ export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 }
