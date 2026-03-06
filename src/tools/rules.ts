@@ -23,11 +23,9 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `General Rules:\n` +
             `-- Data Tools are REST API calls, and Designer Tools are UI tools. You must use the correct tool for the action you want to perform.\n` +
-            `-- Webflow does not support shorthand css properties. You must use the longhand property names. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc. to learn more about supported styles, use de_learn_more_about_styles tool.\n` +
             `-- Do not assume site ID. If a tool requires site_id, you must pass it explicitly. If you're not sure about the site ID, ask the user for it.\n` +
             `-- Always plan your actions before calling any tool. Do not invoke tools randomly without understanding the full workflow.\n` +
             `-- After updating or creating an element, the updated/created element is not automatically selected. If you need more information about that element, use element_tool > select_element with the appropriate element ID to select and inspect it.\n` +
-            `-- Do not use CSS shorthand properties when updating or creating styles. Always use longhand property names like "margin-top", "padding-left", "border-width", etc.\n` +
             `-- When creating or updating elements, most users prefer using existing styles. You should reuse styles if they exist, unless the user explicitly wants new ones.\n` +
             `-- To learn or find about localizations and locale id you get use site too and get site details to learn how many locales are supported and their details.\n` +
             `\n` +
@@ -120,6 +118,6 @@ export function registerRulesTools(server: McpServer) {
             `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n`,
         },
       ],
-    })
+    }),
   );
 }

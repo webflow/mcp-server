@@ -44,16 +44,16 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                           .string()
                           .optional()
                           .describe("The variable id to use as the value"),
-                      })
+                      }),
                     )
                     .describe(
-                      "The properties of the style. if you are looking to link a variable as the value, then use the variable_as_value field. but do not use both property_value and variable_as_value"
+                      "The properties of the style. if you are looking to link a variable as the value, then use the variable_as_value field. but do not use both property_value and variable_as_value",
                     ),
                   parent_style_name: z
                     .string()
                     .optional()
                     .describe(
-                      "The name of the parent style to create the new style in. this will use to create combo class"
+                      "The name of the parent style to create the new style in. this will use to create combo class",
                     ),
                 })
                 .optional()
@@ -64,13 +64,13 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .boolean()
                     .optional()
                     .describe(
-                      "Whether to skip the properties of the style. to get minimal data."
+                      "Whether to skip the properties of the style. to get minimal data.",
                     ),
                   include_all_breakpoints: z
                     .boolean()
                     .optional()
                     .describe(
-                      "Whether to include all breakpoints styles or not. very data intensive."
+                      "Whether to include all breakpoints styles or not. very data intensive.",
                     ),
                   query: z
                     .enum(["all", "filtered"])
@@ -79,7 +79,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .array(z.string())
                     .optional()
                     .describe(
-                      "The ids of the styles to filter by. should be used with query filtered"
+                      "The ids of the styles to filter by. should be used with query filtered",
                     ),
                 })
                 .optional()
@@ -136,11 +136,11 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                           .string()
                           .optional()
                           .describe("The variable id to use as the value"),
-                      })
+                      }),
                     )
                     .optional()
                     .describe(
-                      "The properties to update or add to the style for"
+                      "The properties to update or add to the style for",
                     ),
                   remove_properties: z
                     .array(z.string())
@@ -158,8 +158,8 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
               {
                 message:
                   "Provide at least one of create_style, get_styles, update_style.",
-              }
-            )
+              },
+            ),
         ),
       },
     },
@@ -169,23 +169,25 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
-  );
-
-  server.registerTool(
-    "de_learn_more_about_styles",
-    {
-      title: "Designer Learn More About Webflow Styles",
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-      },
-      description:
-        "Designer tool - Learn more about styles supported by Webflow Designer." +
-        "Please do not use any other styles which is not supported by Webflow Designer." +
-        "Please use the long-form alias of a CSS property when managing styles. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc.",
-      inputSchema: {},
     },
-    async ({}) => formatResponse(supportDEStyles)
   );
+  /**
+   * Since now we support 500+ styles, we don't need to learn more about styles.
+   */
+  // server.registerTool(
+  //   "de_learn_more_about_styles",
+  //   {
+  //     title: "Designer Learn More About Webflow Styles",
+  //     annotations: {
+  //       readOnlyHint: true,
+  //       openWorldHint: true,
+  //     },
+  //     description:
+  //       "Designer tool - Learn more about styles supported by Webflow Designer." +
+  //       "Please do not use any other styles which is not supported by Webflow Designer." +
+  //       "Please use the long-form alias of a CSS property when managing styles. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc.",
+  //     inputSchema: {},
+  //   },
+  //   async ({}) => formatResponse(supportDEStyles)
+  // );
 }
