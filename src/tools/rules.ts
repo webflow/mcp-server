@@ -88,7 +88,11 @@ export function registerRulesTools(server: McpServer) {
             `---- variable_tool > create_font_family_variable\n` +
             `-- In all create_*_variable tools, pass name and variable_collection_id.\n` +
             `-- To update any variable, use the corresponding update tool (e.g., update_color_variable) with name and variable_collection_id.\n` +
-            `-- To bind a variable with another, use the existing_variable_id field.\n` +
+            `-- Each variable value can be set using one of three options:\n` +
+            `---- static_value: A typed literal value matching the variable type (e.g., "#ff0000" for color, { value: 16, unit: "px" } for size).\n` +
+            `---- existing_variable_id: An alias to another variable, binding this variable's value to the referenced one.\n` +
+            `---- custom_value: An arbitrary CSS expression string for values that don't fit standard typed formats. Examples: "calc(100vh - 60px)" for a size variable, "color-mix(in srgb, red 50%, blue)" for a color variable. Use custom_value when the user needs CSS functions like calc(), clamp(), min(), max(), color-mix(), or any other valid CSS expression.\n` +
+            `-- Only one of static_value, existing_variable_id, or custom_value should be provided per variable value.\n` +
             `-- In Webflow, variables are linked to styles and function like CSS custom properties.\n` +
             `\n` +
             `CMS Data Tool Usage:\n` +

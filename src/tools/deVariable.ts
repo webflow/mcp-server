@@ -91,6 +91,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'color-mix(in srgb, red 50%, blue)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -107,6 +108,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                       })
                       .optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'calc(100vh - 60px)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -118,6 +120,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -129,6 +132,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -140,6 +144,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -152,6 +157,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'color-mix(in srgb, red 50%, blue)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -169,6 +175,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                       })
                       .optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'calc(100vh - 60px)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -181,6 +188,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -193,6 +201,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -205,6 +214,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
