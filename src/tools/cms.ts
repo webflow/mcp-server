@@ -34,19 +34,19 @@ import {
 
 export function registerCmsTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
 ) {
   const getCollectionList = async (arg: { siteId: string }) => {
     const response = await getClient().collections.list(
       arg.siteId,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
   const getCollectionDetails = async (arg: { collection_id: string }) => {
     const response = await getClient().collections.get(
       arg.collection_id,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -58,7 +58,7 @@ export function registerCmsTools(
     const response = await getClient().collections.create(
       arg.siteId,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -70,7 +70,7 @@ export function registerCmsTools(
     const response = await getClient().collections.fields.create(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -82,7 +82,7 @@ export function registerCmsTools(
     const response = await getClient().collections.fields.create(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -93,7 +93,7 @@ export function registerCmsTools(
     const response = await getClient().collections.fields.create(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -107,7 +107,7 @@ export function registerCmsTools(
       arg.collection_id,
       arg.field_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -136,7 +136,7 @@ export function registerCmsTools(
     const response = await getClient().collections.items.listItems(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -157,12 +157,12 @@ export function registerCmsTools(
     const response = await getClient().collections.items.createItems(
       arg.collection_id,
       {
-        cmsLocaleIds: arg.request.cmsLocaleIds,
-        isArchived: arg.request.isArchived,
-        isDraft: arg.request.isDraft,
+        cmsLocaleIds: arg.request.cmsLocaleIds || [],
+        isArchived: arg.request.isArchived || false,
+        isDraft: arg.request.isDraft || false,
         fieldData: arg.request.fieldData,
       },
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -174,7 +174,7 @@ export function registerCmsTools(
     const response = await getClient().collections.items.updateItems(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -189,7 +189,7 @@ export function registerCmsTools(
       {
         itemIds: arg.request.itemIds,
       },
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -200,7 +200,7 @@ export function registerCmsTools(
     const response = await getClient().collections.items.deleteItems(
       arg.collection_id,
       arg.request,
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -226,7 +226,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas."
+                  "List all CMS collections in a site. Returns collection metadata including IDs, names, and schemas.",
                 ),
               // GET https://api.webflow.com/v2/collections/:collection_id
               get_collection_details: z
@@ -237,7 +237,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Get detailed information about a specific CMS collection including its schema and field definitions."
+                  "Get detailed information about a specific CMS collection including its schema and field definitions.",
                 ),
               // POST https://api.webflow.com/v2/sites/:site_id/collections
               create_collection: z
@@ -247,7 +247,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Create a new CMS collection in a site with specified name and schema."
+                  "Create a new CMS collection in a site with specified name and schema.",
                 ),
               // POST https://api.webflow.com/v2/collections/:collection_id/fields
               create_collection_static_field: z
@@ -259,7 +259,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Create a new static field in a CMS collection (e.g., text, number, date, etc.)."
+                  "Create a new static field in a CMS collection (e.g., text, number, date, etc.).",
                 ),
               // POST https://api.webflow.com/v2/collections/:collection_id/fields
               create_collection_option_field: z
@@ -271,7 +271,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Create a new option field in a CMS collection with predefined choices."
+                  "Create a new option field in a CMS collection with predefined choices.",
                 ),
               // POST https://api.webflow.com/v2/collections/:collection_id/fields
               create_collection_reference_field: z
@@ -283,7 +283,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Create a new reference field in a CMS collection that links to items in another collection."
+                  "Create a new reference field in a CMS collection that links to items in another collection.",
                 ),
               // PATCH https://api.webflow.com/v2/collections/:collection_id/fields/:field_id
               update_collection_field: z
@@ -298,7 +298,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Update properties of an existing field in a CMS collection."
+                  "Update properties of an existing field in a CMS collection.",
                 ),
               // // POST https://api.webflow.com/v2/collections/:collection_id/items/live
               // //NOTE: Cursor agent seems to struggle when provided with z.union(...), so we simplify the type here
@@ -323,19 +323,19 @@ export function registerCmsTools(
                         .string()
                         .optional()
                         .describe(
-                          "Unique identifier for the locale of the CMS Item."
+                          "Unique identifier for the locale of the CMS Item.",
                         ),
                       limit: z
                         .number()
                         .optional()
                         .describe(
-                          "Maximum number of records to be returned (max limit: 100)"
+                          "Maximum number of records to be returned (max limit: 100)",
                         ),
                       offset: z
                         .number()
                         .optional()
                         .describe(
-                          "Offset used for pagination if the results have more than limit records."
+                          "Offset used for pagination if the results have more than limit records.",
                         ),
                       name: z
                         .string()
@@ -345,7 +345,7 @@ export function registerCmsTools(
                         .string()
                         .optional()
                         .describe(
-                          "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+                          "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug.",
                         ),
                       sortBy:
                         WebflowCollectionsItemsListItemsRequestSortBySchema,
@@ -357,7 +357,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "List items in a CMS collection with optional filtering and sorting."
+                  "List items in a CMS collection with optional filtering and sorting.",
                 ),
               // POST https://api.webflow.com/v2/collections/:collection_id/items/bulk
               create_collection_items: z
@@ -370,16 +370,18 @@ export function registerCmsTools(
                       cmsLocaleIds: z
                         .array(z.string())
                         .optional()
+                        .default([])
                         .describe(
-                          "Unique identifier for the locale of the CMS Item."
+                          "Unique identifier for the locale of the CMS Item.",
                         ),
                       isArchived: z
                         .boolean()
                         .optional()
+                        .default(false)
                         .describe("Indicates if the item is archived."),
                       isDraft: z
                         .boolean()
-                        .optional()
+                        .default(false)
                         .describe("Indicates if the item is a draft."),
                       fieldData: z
                         .array(
@@ -389,10 +391,10 @@ export function registerCmsTools(
                               slug: z
                                 .string()
                                 .describe(
-                                  "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug."
+                                  "URL structure of the Item in your site. Note: Updates to an item slug will break all links referencing the old slug.",
                                 ),
-                            })
-                          )
+                            }),
+                          ),
                         )
                         .describe("Data of the item."),
                     })
@@ -408,12 +410,12 @@ export function registerCmsTools(
                     .describe("Unique identifier for the Collection."),
                   request:
                     WebflowCollectionsItemsUpdateItemsRequestSchema.describe(
-                      "Array of items to be updated."
+                      "Array of items to be updated.",
                     ),
                 })
                 .optional()
                 .describe(
-                  "Update existing items in a CMS collection as drafts."
+                  "Update existing items in a CMS collection as drafts.",
                 ),
               // POST https://api.webflow.com/v2/collections/:collection_id/items/publish
               publish_collection_items: z
@@ -431,7 +433,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Publish existing items in a CMS collection as drafts."
+                  "Publish existing items in a CMS collection as drafts.",
                 ),
               // DEL https://api.webflow.com/v2/collections/:collection_id/items
               delete_collection_items: z
@@ -449,9 +451,9 @@ export function registerCmsTools(
                               .array(z.string())
                               .optional()
                               .describe(
-                                "Unique identifier for the locale of the CMS Item."
+                                "Unique identifier for the locale of the CMS Item.",
                               ),
-                          })
+                          }),
                         )
                         .describe("Array of items to be deleted."),
                     })
@@ -459,7 +461,7 @@ export function registerCmsTools(
                 })
                 .optional()
                 .describe(
-                  "Delete existing items in a CMS collection as drafts."
+                  "Delete existing items in a CMS collection as drafts.",
                 ),
             })
             .strict()
@@ -482,8 +484,8 @@ export function registerCmsTools(
               {
                 message:
                   "Provide at least one of get_collection_list, get_collection_details, create_collection, create_collection_static_field, create_collection_option_field, create_collection_reference_field, update_collection_field, list_collection_items, create_collection_items, update_collection_items, publish_collection_items, delete_collection_items.",
-              }
-            )
+              },
+            ),
         ),
       },
     },
@@ -497,7 +499,7 @@ export function registerCmsTools(
           }
           if (action.get_collection_details) {
             const content = await getCollectionDetails(
-              action.get_collection_details
+              action.get_collection_details,
             );
             result.push(textContent(content));
           }
@@ -507,25 +509,25 @@ export function registerCmsTools(
           }
           if (action.create_collection_static_field) {
             const content = await createCollectionStaticField(
-              action.create_collection_static_field
+              action.create_collection_static_field,
             );
             result.push(textContent(content));
           }
           if (action.create_collection_option_field) {
             const content = await createCollectionOptionField(
-              action.create_collection_option_field
+              action.create_collection_option_field,
             );
             result.push(textContent(content));
           }
           if (action.create_collection_reference_field) {
             const content = await createCollectionReferenceField(
-              action.create_collection_reference_field
+              action.create_collection_reference_field,
             );
             result.push(textContent(content));
           }
           if (action.update_collection_field) {
             const content = await updateCollectionField(
-              action.update_collection_field
+              action.update_collection_field,
             );
             result.push(textContent(content));
           }
@@ -578,6 +580,6 @@ export function registerCmsTools(
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 }
