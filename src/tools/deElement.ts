@@ -1,18 +1,53 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
 import z from "zod/v3";
-import { SiteIdSchema, DEElementIDSchema, DEElementSchema } from "../schemas";
-import { formatErrorResponse, formatResponse } from "../utils";
+import {
+  SiteIdSchema,
+  DEElementIDSchema,
+  DEElementSchema,
+} from "../schemas";
+import {
+  formatErrorResponse,
+  formatResponse,
+} from "../utils";
 
-export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
-  const elementBuilderRPCCall = async (siteId: string, actions: any) => {
+export const registerDEElementTools = (
+  server: McpServer,
+  rpc: RPCType,
+) => {
+  const ElementSchemaValidator: z.ZodType = z.lazy(() =>
+    DEElementSchema.extend({
+      children: z.array(ElementSchemaValidator).optional(),
+    }),
+  );
+
+  const elementBuilderRPCCall = async (
+    siteId: string,
+    actions: any,
+  ) => {
+    const actionsArray = actions || [];
+    for (const action of actionsArray) {
+      if (action.element_schema) {
+        const result = ElementSchemaValidator.safeParse(
+          action.element_schema,
+        );
+        if (!result.success) {
+          throw new Error(
+            `Invalid element_schema: ${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
+          );
+        }
+      }
+    }
     return rpc.callTool("element_builder", {
       siteId,
-      actions: actions || [],
+      actions: actionsArray,
     });
   };
 
-  const elementToolRPCCall = async (siteId: string, actions: any) => {
+  const elementToolRPCCall = async (
+    siteId: string,
+    actions: any,
+  ) => {
     return rpc.callTool("element_tool", {
       siteId,
       actions: actions || [],
@@ -48,11 +83,17 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
         readOnlyHint: false,
       },
       description:
-        "Designer Tool - Element builder to create element on current active page. only create elements upto max 3 levels deep. divide your elements into smaller elements to create complex structures. recall this tool to create more elements. but max level is upto 3 levels. you can have as many children as you want. but max level is 3 levels.",
+        "Designer Tool - Element builder to create element on current active page.",
       inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
           z.object({
+            build_label: z
+              .string()
+              .optional()
+              .describe(
+                "A label to identify this build action in the results.",
+              ),
             parent_element_id: z
               .object({
                 component: z
@@ -76,35 +117,29 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
               ),
             element_schema: DEElementSchema.extend({
               children: z
-                .array(
-                  DEElementSchema.extend({
-                    children: z
-                      .array(
-                        DEElementSchema.extend({
-                          children: z
-                            .array(
-                              DEElementSchema.extend({
-                                children: z.array(DEElementSchema).optional(),
-                              }),
-                            )
-                            .optional(),
-                        }),
-                      )
-                      .optional(),
-                  }),
-                )
+                .array(z.any())
                 .optional()
                 .describe(
-                  "The children of the element. only valid for container, section, div block, valid DOM elements.",
+                  "Array of ElementSchema objects (same shape as element_schema with optional children)..",
                 ),
-            }).describe("element schema of element to create."),
+            }).describe(
+              "ElementSchema - element schema of element to create. Children are recursive ElementSchema objects.",
+            ),
+            return_element_info: z
+              .boolean()
+              .optional()
+              .describe(
+                "Whether to return full element info for the created element. Defaults to false.",
+              ),
           }),
         ),
       },
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(await elementBuilderRPCCall(siteId, actions));
+        return formatResponse(
+          await elementBuilderRPCCall(siteId, actions),
+        );
       } catch (error) {
         return formatErrorResponse(error);
       }
@@ -127,29 +162,33 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
           z
             .object({
               get_all_elements: z
-                .object({
-                  query: z.enum(["all"]).describe("Query to get all elements"),
-                  include_style_properties: z
-                    .boolean()
-                    .optional()
-                    .describe("Include style properties"),
-                  include_all_breakpoint_styles: z
-                    .boolean()
-                    .optional()
-                    .describe("Include all breakpoints styles"),
-                })
-                .optional()
-                .describe("Get all elements on the current active page"),
-              get_selected_element: z
                 .boolean()
                 .optional()
-                .describe("Get selected element on the current active page"),
+                .describe(
+                  "Get all elements on the current active page",
+                ),
+
+              get_selected_element: z
+                .object({
+                  children_depth: z
+                    .number()
+                    .min(-1)
+                    .describe(
+                      "The depth of children to include. 0 for no children. -1 for all children. X for X levels deep.",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Get selected element on the current active page",
+                ),
               select_element: z
                 .object({
                   ...DEElementIDSchema,
                 })
                 .optional()
-                .describe("Select an element on the current active page"),
+                .describe(
+                  "Select an element on the current active page",
+                ),
               remove_element: z
                 .object({
                   ...DEElementIDSchema,
@@ -176,19 +215,27 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                           ),
                       }),
                     )
-                    .describe("The attributes to add or update."),
+                    .describe(
+                      "The attributes to add or update.",
+                    ),
                 })
                 .optional()
-                .describe("Add or update an attribute on the element"),
+                .describe(
+                  "Add or update an attribute on the element",
+                ),
               remove_attribute: z
                 .object({
                   ...DEElementIDSchema,
                   attribute_names: z
                     .array(z.string())
-                    .describe("The names of the attributes to remove."),
+                    .describe(
+                      "The names of the attributes to remove.",
+                    ),
                 })
                 .optional()
-                .describe("Remove an attribute from the element"),
+                .describe(
+                  "Remove an attribute from the element",
+                ),
               update_id_attribute: z
                 .object({
                   ...DEElementIDSchema,
@@ -199,11 +246,17 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                     ),
                 })
                 .optional()
-                .describe("Update the #id attribute of the element"),
+                .describe(
+                  "Update the #id attribute of the element",
+                ),
               set_text: z
                 .object({
                   ...DEElementIDSchema,
-                  text: z.string().describe("The text to set on the element."),
+                  text: z
+                    .string()
+                    .describe(
+                      "The text to set on the element.",
+                    ),
                 })
                 .optional()
                 .describe("Set text on the element"),
@@ -212,7 +265,9 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   ...DEElementIDSchema,
                   style_names: z
                     .array(z.string())
-                    .describe("The style names to set on the element."),
+                    .describe(
+                      "The style names to set on the element.",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -222,8 +277,17 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                 .object({
                   ...DEElementIDSchema,
                   linkType: z
-                    .enum(["url", "file", "page", "element", "email", "phone"])
-                    .describe("The type of the link to update."),
+                    .enum([
+                      "url",
+                      "file",
+                      "page",
+                      "element",
+                      "email",
+                      "phone",
+                    ])
+                    .describe(
+                      "The type of the link to update.",
+                    ),
                   link: z
                     .string()
                     .describe(
@@ -244,16 +308,139 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                     ),
                 })
                 .optional()
-                .describe("Set heading level on the heading element."),
+                .describe(
+                  "Set heading level on the heading element.",
+                ),
               set_image_asset: z
                 .object({
                   ...DEElementIDSchema,
                   image_asset_id: z
                     .string()
-                    .describe("The image asset id to set on the element."),
+                    .describe(
+                      "The image asset id to set on the element.",
+                    ),
                 })
                 .optional()
-                .describe("Set image asset on the image element"),
+                .describe(
+                  "Set image asset on the image element",
+                ),
+              query_elements: z
+                .object({
+                  queries: z.array(
+                    z.object({
+                      label: z
+                        .string()
+                        .optional()
+                        .describe(
+                          "A label to identify this query in the results.",
+                        ),
+                      element_id: z
+                        .object({
+                          component: z.string(),
+                          element: z.string(),
+                        })
+                        .optional()
+                        .describe(
+                          "Filter by element ID. Exact match. Bypasses other filters — returns the element directly.",
+                        ),
+                      element_filter: z
+                        .object({
+                          type: z
+                            .string()
+                            .optional()
+                            .describe(
+                              'Filter by element type. Exact match. e.g. "Heading", "Image", "Link", "Block", "DOM", "FormForm".',
+                            ),
+                          text: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by text content. Case-insensitive substring match.",
+                            ),
+                          style: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by style/class name. Case-insensitive substring match against any applied style name.",
+                            ),
+                          tag: z
+                            .string()
+                            .optional()
+                            .describe(
+                              'Filter by HTML tag. For Block/DOM elements. Case-insensitive exact match. e.g. "section", "nav", "div".',
+                            ),
+                          attribute_name: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by attribute name. Case-insensitive exact match on attribute key.",
+                            ),
+                          attribute_value: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by attribute value. Used with attribute_name. Case-insensitive substring match.",
+                            ),
+                        })
+                        .optional()
+                        .describe(
+                          "Filter by element properties. Cannot be combined with component_filter.",
+                        ),
+                      component_filter: z
+                        .object({
+                          component_name: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by component name. Case-insensitive substring match.",
+                            ),
+                          slot_name: z
+                            .string()
+                            .optional()
+                            .describe(
+                              "Filter by slot name. Case-insensitive substring match.",
+                            ),
+                        })
+                        .optional()
+                        .describe(
+                          "Filter by component properties. Cannot be combined with element_filter.",
+                        ),
+                      scope_element_id: z
+                        .object({
+                          component: z.string(),
+                          element: z.string(),
+                        })
+                        .optional()
+                        .describe(
+                          "Scope search to descendants of this element (element itself excluded).",
+                        ),
+                      return_parent: z
+                        .enum(["parent", "ancestor"])
+                        .optional()
+                        .describe(
+                          'Instead of returning matched elements, return their parent. "parent" = immediate parent. "ancestor" = any ancestor whose subtree contains matches.',
+                        ),
+                      children_depth: z
+                        .number()
+                        .optional()
+                        .describe(
+                          "Include N levels of children in each result. 0 = no children (default), -1 = all.",
+                        ),
+                      limit: z
+                        .number()
+                        .min(1)
+                        .max(200)
+                        .optional()
+                        .describe(
+                          "Max results for this query. Default: 50, Max: 200.",
+                        ),
+                    }),
+                  ),
+                })
+                .optional()
+                .describe(
+                  "Query elements on the current active page. Supports filtering by type, text, style, tag, attributes, component name, slot name. Supports scoped search, parent lookup, and multiple queries per call.",
+                ),
             })
             .strict()
             .refine(
@@ -271,10 +458,11 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
                   d.set_heading_level,
                   d.set_image_asset,
                   d.remove_element,
+                  d.query_elements,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset.",
+                  "Provide at least one of get_all_elements, get_selected_element, select_element, add_or_update_attribute, remove_attribute, update_id_attribute, set_text, set_style, set_link, set_heading_level, set_image_asset, query_elements.",
               },
             ),
         ),
@@ -282,7 +470,9 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(await elementToolRPCCall(siteId, actions));
+        return formatResponse(
+          await elementToolRPCCall(siteId, actions),
+        );
       } catch (error) {
         return formatErrorResponse(error);
       }
@@ -307,16 +497,17 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
     },
     async ({ action, siteId }) => {
       try {
-        const { status, message, data } = await elementSnapshotToolRPCCall(
-          siteId,
-          action,
-        );
+        const { status, message, data } =
+          await elementSnapshotToolRPCCall(siteId, action);
         if (status === "success" && data) {
           return {
             content: [
               {
                 type: "image",
-                data: data.replace("data:image/png;base64,", ""),
+                data: data.replace(
+                  "data:image/png;base64,",
+                  "",
+                ),
                 mimeType: "image/png",
               },
             ],

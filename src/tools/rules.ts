@@ -44,6 +44,23 @@ export function registerRulesTools(server: McpServer) {
             `Element Builder Tool:\n` +
             `-- To create a new element, use element_builder. Pass the type of element you want to create. After creation, use element_tool > select_element to select the element and gather additional details if needed.\n` +
             `\n` +
+            `Component Builder Tool:\n` +
+            `-- To insert a component instance, use component_builder. It supports two action types:\n` +
+            `---- insert_in_element: Insert a component instance as a child of a parent element (e.g., Container, DivBlock, Section).\n` +
+            `---- insert_in_slot: Insert a component instance into a specific slot of an existing component instance. You must provide slot_name when using this action type.\n` +
+            `-- Pass the component name in component_schema (not the component ID). You can optionally populate the instance's slots with child components using the slots array in component_schema.\n` +
+            `-- After creation, use element_tool > select_element to select the component instance and gather additional details if needed.\n` +
+            `-- Only component instances (created via component_builder) are allowed inside slots. You cannot place regular elements inside a slot. Always use insert_in_slot to add components to slots.\n` +
+            `\n` +
+            `Component Tool (Designer):\n` +
+            `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
+            `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
+            `-- To transform an existing element into a component, use de_component_tool > transform_element_to_component. Pass the element ID and component name.\n` +
+            `-- To open a component view for editing, use de_component_tool > open_component_view. Pass the component_instance_id.\n` +
+            `-- To close a component view and return to page view, use de_component_tool > close_component_view.\n` +
+            `-- To rename a component, use de_component_tool > rename_component. Pass component_id and new_name.\n` +
+            `-- To check if you are currently inside a component view, use de_component_tool > check_if_inside_component_view.\n` +
+            `\n` +
             `Element Snapshot Tool Usage:\n` +
             `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +
             `-- Use this tool to verify visual changes after creating or updating elements. It provides immediate visual feedback without requiring manual inspection.\n` +
@@ -119,7 +136,8 @@ export function registerRulesTools(server: McpServer) {
             `-- Always create styles first if you plan to apply them while creating the element. This ensures style references are valid at the time of creation.\n` +
             `-- Always plan out your actions before calling element_builder. Know exactly what type of element to create, what styles or attributes to apply, and how you will use it.\n` +
             `-- Once an element is created using element_builder, it is not automatically selected. To inspect or modify it, use element_tool > select_element and pass the element ID returned from the creation response.\n` +
-            `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n`,
+            `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n` +
+            `-- Only component instances are allowed inside slots. Do not attempt to create or insert regular elements into a slot. Use component_builder to create a component instance and place it inside a slot.\n`,
         },
       ],
     }),
