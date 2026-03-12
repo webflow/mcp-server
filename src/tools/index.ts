@@ -7,6 +7,7 @@ export { registerScriptsTools } from "./scripts";
 export { registerSiteTools } from "./sites";
 export { registerCommentsTools } from "./comments";
 export { registerEnterpriseTools } from "./enterprise";
+export { registerWebhookTools } from "./webhooks";
 // Designer API Tools
 export { registerDEAssetTools } from "./deAsset";
 export { registerDEComponentsTools } from "./deComponents";
