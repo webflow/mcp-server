@@ -17,6 +17,7 @@ import {
   registerLocalDeMCPConnectionTools,
   registerCommentsTools,
   registerEnterpriseTools,
+  registerWebhookTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -55,6 +56,7 @@ export function registerTools(
   registerSiteTools(server, getClient);
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
+  registerWebhookTools(server, getClient);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {
