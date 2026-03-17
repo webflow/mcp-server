@@ -18,6 +18,7 @@ import {
   registerCommentsTools,
   registerEnterpriseTools,
   registerWebhookTools,
+  registerWorkflowsTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -58,6 +59,13 @@ export function registerTools(
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
   registerWebhookTools(server, getClient);
+}
+
+export function registerWorkflowTools(
+  server: McpServer,
+  getAccessToken: () => string
+) {
+  registerWorkflowsTools(server, getAccessToken);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {
