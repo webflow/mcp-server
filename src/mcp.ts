@@ -59,6 +59,7 @@ export function registerTools(
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
   registerWebhookTools(server, getClient);
+  registerWorkflowsTools(server, getAccessToken);
 }
 
 export function registerWorkflowTools(
