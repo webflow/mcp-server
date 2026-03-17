@@ -32,7 +32,7 @@ export function createMcpServer() {
     },
     {
       instructions: `These tools give you access to the Webflow's Data API. If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`,
-    }
+    },
   );
 }
 
@@ -46,7 +46,8 @@ export const requestOptions = {
 // Register tools
 export function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
+  getAccessToken: () => string,
 ) {
   registerAiChatTools(server);
   registerCmsTools(server, getClient);

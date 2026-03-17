@@ -26,21 +26,31 @@ function getClient() {
   return webflowClient;
 }
 
+// Return the Webflow access token
+function getAccessToken() {
+  if (!process.env.WEBFLOW_TOKEN) {
+    throw new Error("WEBFLOW_TOKEN is missing");
+  }
+  return process.env.WEBFLOW_TOKEN || "";
+}
+
 // Configure and run local MCP server (stdio transport)
 async function run() {
   const server = createMcpServer();
   const { callTool } = await initDesignerAppBridge();
   registerMiscTools(server);
-  registerTools(server, getClient);
+  registerTools(server, getClient, getAccessToken);
   registerDesignerTools(server, {
     callTool,
     getClient,
+    getAccessToken,
   });
 
   //Only valid for OSS MCP Version.
   registerLocalTools(server, {
     callTool,
     getClient,
+    getAccessToken,
   });
 
   const transport = new StdioServerTransport();
