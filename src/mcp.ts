@@ -18,6 +18,7 @@ import {
   registerCommentsTools,
   registerEnterpriseTools,
   registerWebhookTools,
+  registerWorkflowsTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -46,7 +47,8 @@ export const requestOptions = {
 // Register tools
 export function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
+  getToken: () => string
 ) {
   registerAiChatTools(server);
   registerCmsTools(server, getClient);
@@ -57,6 +59,7 @@ export function registerTools(
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
   registerWebhookTools(server, getClient);
+  registerWorkflowsTools(server, getToken);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {
