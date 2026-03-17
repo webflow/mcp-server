@@ -26,17 +26,12 @@ function getClient() {
   return webflowClient;
 }
 
-// Return the Webflow token for direct API calls
-function getToken() {
-  return process.env.WEBFLOW_TOKEN!;
-}
-
 // Configure and run local MCP server (stdio transport)
 async function run() {
   const server = createMcpServer();
   const { callTool } = await initDesignerAppBridge();
   registerMiscTools(server);
-  registerTools(server, getClient, getToken);
+  registerTools(server, getClient);
   registerDesignerTools(server, {
     callTool,
     getClient,

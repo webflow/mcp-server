@@ -47,8 +47,7 @@ export const requestOptions = {
 // Register tools
 export function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient,
-  getToken: () => string
+  getClient: () => WebflowClient
 ) {
   registerAiChatTools(server);
   registerCmsTools(server, getClient);
@@ -59,7 +58,13 @@ export function registerTools(
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
   registerWebhookTools(server, getClient);
-  registerWorkflowsTools(server, getToken);
+}
+
+export function registerWorkflowTools(
+  server: McpServer,
+  getAccessToken: () => string
+) {
+  registerWorkflowsTools(server, getAccessToken);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {
