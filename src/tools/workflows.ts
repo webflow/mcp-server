@@ -35,6 +35,44 @@ async function apiRequest(
   return response.json();
 }
 
+async function handleWorkflowActions(
+  actions: Array<{
+    list_workflows?: { site_id: string };
+    execute_workflow?: { site_id: string; workflow_id: string };
+    get_workflow_execution_status?: { site_id: string; execution_id: string };
+  }>,
+  getToken: () => string
+): Promise<Content[]> {
+  const result: Content[] = [];
+  for (const action of actions) {
+    if (action.list_workflows) {
+      const content = await apiRequest(
+        "GET",
+        `/v2/sites/${action.list_workflows.site_id}/workflows`,
+        getToken()
+      );
+      result.push(textContent(content));
+    }
+    if (action.execute_workflow) {
+      const content = await apiRequest(
+        "POST",
+        `/v2/sites/${action.execute_workflow.site_id}/workflows/${action.execute_workflow.workflow_id}/execute`,
+        getToken()
+      );
+      result.push(textContent(content));
+    }
+    if (action.get_workflow_execution_status) {
+      const content = await apiRequest(
+        "GET",
+        `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
+        getToken()
+      );
+      result.push(textContent(content));
+    }
+  }
+  return result;
+}
+
 export function registerWorkflowsTools(
   server: McpServer,
   getToken: () => string
@@ -112,34 +150,8 @@ export function registerWorkflowsTools(
       },
     },
     async ({ actions }) => {
-      const result: Content[] = [];
       try {
-        for (const action of actions) {
-          if (action.list_workflows) {
-            const content = await apiRequest(
-              "GET",
-              `/v2/sites/${action.list_workflows.site_id}/workflows`,
-              getToken()
-            );
-            result.push(textContent(content));
-          }
-          if (action.execute_workflow) {
-            const content = await apiRequest(
-              "POST",
-              `/v2/sites/${action.execute_workflow.site_id}/workflows/${action.execute_workflow.workflow_id}/execute`,
-              getToken()
-            );
-            result.push(textContent(content));
-          }
-          if (action.get_workflow_execution_status) {
-            const content = await apiRequest(
-              "GET",
-              `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
-              getToken()
-            );
-            result.push(textContent(content));
-          }
-        }
+        const result = await handleWorkflowActions(actions, getToken);
         return toolResponse(result);
       } catch (error) {
         return formatErrorResponse(error);
