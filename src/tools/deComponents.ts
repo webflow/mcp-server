@@ -42,10 +42,18 @@ export function registerDEComponentsTools(
     siteId: string,
     actions: any,
   ) => {
-    return rpc.callTool("component_tool", {
+    const args = { siteId, actions: actions || [] };
+    console.error("[MCP-DEBUG] de_component_tool: RPC call -> component_tool", {
       siteId,
-      actions: actions || [],
+      actions: args.actions,
     });
+    const result = await rpc.callTool("component_tool", args);
+    console.error("[MCP-DEBUG] de_component_tool: RPC response <- component_tool", {
+      rawResult: result,
+      resultType: typeof result,
+      isArray: Array.isArray(result),
+    });
+    return result;
   };
 
   const ComponentSchemaValidator: z.ZodType = z.lazy(() =>
@@ -182,6 +190,54 @@ export function registerDEComponentsTools(
                 .describe(
                   "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
                 ),
+              get_instance_count: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe(
+                      "The id of the component to get the instance count for",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Get the instance count for a component.",
+                ),
+              get_component: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe(
+                      "The id of the component to retrieve",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Get a single component by its ID.",
+                ),
+              create_blank_component: z
+                .object({
+                  name: z
+                    .string()
+                    .describe(
+                      "The name of the blank component to create",
+                    ),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe(
+                      "The group/folder to place the component in",
+                    ),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe(
+                      "A description for the component",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Create a blank component with no root element.",
+                ),
             })
             .strict()
             .refine(
@@ -195,10 +251,13 @@ export function registerDEComponentsTools(
                   d.get_all_components,
                   d.rename_component,
                   d.unregister_component,
+                  d.get_instance_count,
+                  d.get_component,
+                  d.create_blank_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component, unregister_component, get_instance_count, get_component, create_blank_component.",
               },
             ),
         ),
@@ -206,10 +265,18 @@ export function registerDEComponentsTools(
     },
     async ({ siteId, actions }) => {
       try {
-        return formatResponse(
-          await componentsToolRPCCall(siteId, actions),
-        );
+        console.error("[MCP-DEBUG] de_component_tool: tool invoked", {
+          siteId,
+          actions,
+        });
+        const rpcResult = await componentsToolRPCCall(siteId, actions);
+        const formatted = formatResponse(rpcResult);
+        console.error("[MCP-DEBUG] de_component_tool: formatted response", {
+          contentPreview: JSON.stringify(formatted).slice(0, 500),
+        });
+        return formatted;
       } catch (error) {
+        console.error("[MCP-DEBUG] de_component_tool: error", error);
         return formatErrorResponse(error);
       }
     },
