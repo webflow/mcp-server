@@ -13,8 +13,9 @@ const WEBFLOW_API_BASE = "https://api.webflow.com";
 async function apiRequest(
   method: string,
   path: string,
-  token: string
-): Promise<unknown> {
+  getToken: () => string
+): Promise<Content> {
+  const token = getToken();
   const response = await fetch(`${WEBFLOW_API_BASE}${path}`, {
     method,
     headers: {
@@ -32,7 +33,7 @@ async function apiRequest(
     });
   }
 
-  return response.json();
+  return textContent(await response.json());
 }
 
 async function handleWorkflowActions(
@@ -46,28 +47,31 @@ async function handleWorkflowActions(
   const result: Content[] = [];
   for (const action of actions) {
     if (action.list_workflows) {
-      const content = await apiRequest(
-        "GET",
-        `/v2/sites/${action.list_workflows.site_id}/workflows`,
-        getToken()
+      result.push(
+        await apiRequest(
+          "GET",
+          `/v2/sites/${action.list_workflows.site_id}/workflows`,
+          getToken
+        )
       );
-      result.push(textContent(content));
     }
     if (action.execute_workflow) {
-      const content = await apiRequest(
-        "POST",
-        `/v2/sites/${action.execute_workflow.site_id}/workflows/${action.execute_workflow.workflow_id}/execute`,
-        getToken()
+      result.push(
+        await apiRequest(
+          "POST",
+          `/v2/sites/${action.execute_workflow.site_id}/workflows/${action.execute_workflow.workflow_id}/execute`,
+          getToken
+        )
       );
-      result.push(textContent(content));
     }
     if (action.get_workflow_execution_status) {
-      const content = await apiRequest(
-        "GET",
-        `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
-        getToken()
+      result.push(
+        await apiRequest(
+          "GET",
+          `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
+          getToken
+        )
       );
-      result.push(textContent(content));
     }
   }
   return result;
