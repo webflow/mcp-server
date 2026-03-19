@@ -21,7 +21,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
         openWorldHint: true,
       },
       description:
-        "Designer Tool - Style tool to perform actions like create style, get all styles, update styles",
+        "Designer Tool - Style tool to perform actions like create style, get all styles, update styles, remove styles",
       inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
@@ -149,15 +149,46 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                 })
                 .optional()
                 .describe("Update a style"),
+              remove_style: z
+                .object({
+                  style_name: z.string().describe("The name of the style to remove"),
+                  parent_style_names: z
+                    .array(z.string())
+                    .optional()
+                    .describe("The parent style names (for combo class)"),
+                })
+                .optional()
+                .describe("Remove a style"),
+              query_styles: z
+                .object({
+                  queries: z.array(
+                    z.object({
+                      label: z.string().optional().describe("A label to identify this query in the results."),
+                      style_id: z.string().optional().describe("Filter by style ID. Exact match. Bypasses other filters."),
+                      name_path: z.array(z.string()).optional().describe("Filter by style name path. Supports combo classes (e.g. ['base', 'combo']). Each segment is a case-insensitive substring match."),
+                      properties: z.array(
+                        z.object({
+                          name: z.string().describe("CSS property name. Case-insensitive substring match."),
+                          value: z.string().optional().describe("CSS property value. Case-insensitive substring match."),
+                        })
+                      ).optional().describe("Filter styles that have ALL listed CSS properties matching. Each entry checks name (and optionally value)."),
+                      include_properties: z.boolean().optional().describe("Include style properties in results. Default: false."),
+                      include_all_breakpoints: z.boolean().optional().describe("Include all breakpoint styles in results. Default: false."),
+                      limit: z.number().min(1).max(200).optional().describe("Max results for this query. Default: 50, Max: 200."),
+                    })
+                  ),
+                })
+                .optional()
+                .describe("Query styles by name path, ID, or CSS properties [BETA]"),
             })
             .strict()
             .refine(
               (d) =>
-                [d.create_style, d.get_styles, d.update_style].filter(Boolean)
+                [d.create_style, d.get_styles, d.update_style, d.remove_style, d.query_styles].filter(Boolean)
                   .length >= 1,
               {
                 message:
-                  "Provide at least one of create_style, get_styles, update_style.",
+                  "Provide at least one of create_style, get_styles, update_style, remove_style, query_styles.",
               },
             ),
         ),
