@@ -11,7 +11,7 @@ import {
 
 export function registerSiteTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
 ) {
   const listSites = async () => {
     const response = await getClient().sites.list(requestOptions);
@@ -31,10 +31,10 @@ export function registerSiteTools(
     const response = await getClient().sites.publish(
       arg.site_id,
       {
-        customDomains: arg.customDomains,
+        customDomains: arg.customDomains || [],
         publishToWebflowSubdomain: arg.publishToWebflowSubdomain,
       },
-      requestOptions
+      requestOptions,
     );
     return response;
   };
@@ -58,7 +58,7 @@ export function registerSiteTools(
                 .object({})
                 .optional()
                 .describe(
-                  "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date."
+                  "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
                 ),
               // GET https://api.webflow.com/v2/sites/:site_id
               get_site: z
@@ -69,7 +69,7 @@ export function registerSiteTools(
                 })
                 .optional()
                 .describe(
-                  "Get detailed information about a specific site including its settings, domains, and publishing status."
+                  "Get detailed information about a specific site including its settings, domains, and publishing status.",
                 ),
               // POST https://api.webflow.com/v2/sites/:site_id/publish
               publish_site: z
@@ -79,9 +79,10 @@ export function registerSiteTools(
                     .describe("Unique identifier for the site."),
                   customDomains: z
                     .array(z.string())
+                    .default([])
                     .optional()
                     .describe(
-                      "Array of custom domains to publish the site to."
+                      "Array of custom domains to publish the site to.",
                     ),
                   publishToWebflowSubdomain: z
                     .boolean()
@@ -90,7 +91,7 @@ export function registerSiteTools(
                 })
                 .optional()
                 .describe(
-                  "Publish a site to specified domains. This will make the latest changes live on the specified domains."
+                  "Publish a site to specified domains. This will make the latest changes live on the specified domains.",
                 ),
             })
             .strict()
@@ -101,8 +102,8 @@ export function registerSiteTools(
               {
                 message:
                   "Provide at least one of list_sites, get_site, publish_site.",
-              }
-            )
+              },
+            ),
         ),
       },
     },
@@ -127,6 +128,6 @@ export function registerSiteTools(
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
+    },
   );
 }
