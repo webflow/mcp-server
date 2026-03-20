@@ -113,10 +113,36 @@ export function registerDEComponentsTools(
                   name: z
                     .string()
                     .describe("The name of the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group/category for the component"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("Optional description for the component"),
                 })
                 .optional()
                 .describe(
                   "Transform an element to a component",
+                ),
+              create_blank_component: z
+                .object({
+                  name: z
+                    .string()
+                    .describe("The name of the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group/category for the component"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("Optional description for the component"),
+                })
+                .optional()
+                .describe(
+                  "Create a new blank component (not from an existing element)",
                 ),
               insert_component_instance: z
                 .object({
@@ -157,6 +183,70 @@ export function registerDEComponentsTools(
                 .describe(
                   "Get all components, only valid if you are connected to Webflow Designer.",
                 ),
+              get_component_by_id: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to get"),
+                })
+                .optional()
+                .describe("Get a component by its ID"),
+              get_component_by_name: z
+                .object({
+                  name: z
+                    .string()
+                    .describe("The name of the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group to narrow the search"),
+                })
+                .optional()
+                .describe(
+                  "Get a component by its name, optionally within a specific group",
+                ),
+              open_component_canvas: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to open in canvas"),
+                })
+                .optional()
+                .describe(
+                  "Open the component canvas for editing a component directly",
+                ),
+              get_component_settings: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component"),
+                })
+                .optional()
+                .describe(
+                  "Get the settings (name, group, description) of a component",
+                ),
+              set_component_settings: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component"),
+                  name: z
+                    .string()
+                    .optional()
+                    .describe("New name for the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("New group for the component"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("New description for the component"),
+                })
+                .optional()
+                .describe(
+                  "Update settings (name, group, description) of a component",
+                ),
               rename_component: z
                 .object({
                   component_id: z
@@ -189,16 +279,22 @@ export function registerDEComponentsTools(
                 [
                   d.check_if_inside_component_view,
                   d.transform_element_to_component,
+                  d.create_blank_component,
                   d.insert_component_instance,
                   d.open_component_view,
                   d.close_component_view,
                   d.get_all_components,
+                  d.get_component_by_id,
+                  d.get_component_by_name,
+                  d.open_component_canvas,
+                  d.get_component_settings,
+                  d.set_component_settings,
                   d.rename_component,
                   d.unregister_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, create_blank_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component_by_id, get_component_by_name, open_component_canvas, get_component_settings, set_component_settings, rename_component, unregister_component.",
               },
             ),
         ),
