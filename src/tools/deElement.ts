@@ -479,6 +479,94 @@ export const registerDEElementTools = (
     },
   );
 
+  const whtmlBuilderRPCCall = async (
+    siteId: string,
+    actions: any,
+  ) => {
+    return rpc.callTool("whtml_builder", {
+      siteId,
+      actions: actions || [],
+    });
+  };
+
+  server.registerTool(
+    "whtml_builder",
+    {
+      annotations: {
+        openWorldHint: true,
+        readOnlyHint: false,
+      },
+      description:
+        "Designer Tool - WHTML builder to insert elements from HTML and CSS strings on the current active page. Accepts HTML markup and optional CSS rules, constructs WHTML, and inserts into a parent element.",
+      inputSchema: {
+        ...SiteIdSchema,
+        actions: z.array(
+          z.object({
+            build_label: z
+              .string()
+              .describe(
+                "A label to identify this build action in the results.",
+              ),
+            parent_element_id: z
+              .object({
+                component: z
+                  .string()
+                  .describe(
+                    "The component id of the element to perform action on.",
+                  ),
+                element: z
+                  .string()
+                  .describe(
+                    "The element id of the element to perform action on.",
+                  ),
+              })
+              .describe(
+                "The id of the parent element to insert WHTML into. e.g id:{component:123,element:456}.",
+              ),
+            creation_position: z
+              .enum(["append", "prepend"])
+              .describe(
+                "The position to insert the element. append to the end of the parent element or prepend to the beginning of the parent element.",
+              ),
+            html: z
+              .string()
+              .min(1)
+              .describe(
+                "HTML markup string to insert. Must not contain <style> tags. CSS should be provided via the css parameter instead.",
+              ),
+            css: z
+              .string()
+              .optional()
+              .describe(
+                "Optional CSS rules to apply. Must not contain <style> tags. Provide raw CSS rules only (e.g. '.my-class { color: red; }').",
+              ),
+            get_children_info: z
+              .boolean()
+              .optional()
+              .describe(
+                "Whether to return children info of the inserted element. Defaults to false.",
+              ),
+            children_depth: z
+              .number()
+              .optional()
+              .describe(
+                "Depth of children to include when get_children_info is true. Defaults to 1.",
+              ),
+          }),
+        ).min(1).max(5),
+      },
+    },
+    async ({ actions, siteId }) => {
+      try {
+        return formatResponse(
+          await whtmlBuilderRPCCall(siteId, actions),
+        );
+      } catch (error) {
+        return formatErrorResponse(error);
+      }
+    },
+  );
+
   server.registerTool(
     "element_snapshot_tool",
     {
