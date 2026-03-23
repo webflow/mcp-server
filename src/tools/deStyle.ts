@@ -49,8 +49,8 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .describe(
                       "The properties of the style. if you are looking to link a variable as the value, then use the variable_as_value field. but do not use both property_value and variable_as_value",
                     ),
-                  parent_style_name: z
-                    .string()
+                  parent_style_names: z
+                    .array(z.string())
                     .optional()
                     .describe(
                       "The name of the parent style to create the new style in. this will use to create combo class",
@@ -146,6 +146,12 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .array(z.string())
                     .optional()
                     .describe("The properties to remove from the style"),
+                  parent_style_names: z
+                    .array(z.string())
+                    .optional()
+                    .describe(
+                      "The parent style names to update the style for (for combo class)",
+                    ),
                 })
                 .optional()
                 .describe("Update a style"),
