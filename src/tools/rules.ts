@@ -137,7 +137,22 @@ export function registerRulesTools(server: McpServer) {
             `-- Always plan out your actions before calling element_builder. Know exactly what type of element to create, what styles or attributes to apply, and how you will use it.\n` +
             `-- Once an element is created using element_builder, it is not automatically selected. To inspect or modify it, use element_tool > select_element and pass the element ID returned from the creation response.\n` +
             `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n` +
-            `-- Only component instances are allowed inside slots. Do not attempt to create or insert regular elements into a slot. Use component_builder to create a component instance and place it inside a slot.\n`,
+            `-- Only component instances are allowed inside slots. Do not attempt to create or insert regular elements into a slot. Use component_builder to create a component instance and place it inside a slot.\n` +
+            `\n` +
+            `WHTML Builder Tool:\n` +
+            `-- To insert elements from HTML and CSS strings, use whtml_builder. Pass html and optionally css along with parent_element_id and creation_position.\n` +
+            `-- HTML Rules:\n` +
+            `---- The html field must be a single root element (no fragments). For example, <div><p>Hello</p></div> is valid, but <div>First</div><div>Second</div> is not allowed.\n` +
+            `---- The html field must not contain <style> tags. CSS should be provided via the css parameter.\n` +
+            `-- CSS Rules:\n` +
+            `---- The css field must contain raw CSS rules only. Do not wrap in <style> tags.\n` +
+            `---- @keyframes are not allowed.\n` +
+            `---- Custom media queries are not allowed. Only the following Webflow breakpoint media queries are valid:\n` +
+            `------ Desktop (main): No media query needed (default breakpoint).\n` +
+            `------ Tablet (medium): @media screen and (max-width: 991px)\n` +
+            `------ Mobile Landscape (small): @media screen and (max-width: 767px)\n` +
+            `------ Mobile Portrait (tiny): @media screen and (max-width: 479px)\n` +
+            `-- After insertion, the tool returns element info. Use get_children_info and children_depth to control the depth of children info returned.\n`,
         },
       ],
     }),
