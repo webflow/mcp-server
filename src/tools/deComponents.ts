@@ -113,6 +113,14 @@ export function registerDEComponentsTools(
                   name: z
                     .string()
                     .describe("The name of the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group/category for the component"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("Optional description for the component"),
                 })
                 .optional()
                 .describe(
@@ -157,6 +165,57 @@ export function registerDEComponentsTools(
                 .describe(
                   "Get all components, only valid if you are connected to Webflow Designer.",
                 ),
+              get_component: z
+                .object({
+                  component_id: z
+                    .string()
+                    .optional()
+                    .describe("The id of the component to get. Use this or name."),
+                  name: z
+                    .string()
+                    .optional()
+                    .describe("The name of the component. Use this or component_id."),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group to narrow the search when using name"),
+                })
+                .optional()
+                .describe(
+                  "Get a component by ID or by name. Provide component_id for ID lookup, or name (and optional group) for name lookup.",
+                ),
+              get_component_metadata: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component"),
+                })
+                .optional()
+                .describe(
+                  "Get the metadata (name, group, description) of a component",
+                ),
+              set_component_metadata: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component"),
+                  name: z
+                    .string()
+                    .optional()
+                    .describe("New name for the component"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("New group for the component"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("New description for the component"),
+                })
+                .optional()
+                .describe(
+                  "Update metadata (name, group, description) of a component",
+                ),
               rename_component: z
                 .object({
                   component_id: z
@@ -193,12 +252,15 @@ export function registerDEComponentsTools(
                   d.open_component_view,
                   d.close_component_view,
                   d.get_all_components,
+                  d.get_component,
+                  d.get_component_metadata,
+                  d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, rename_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
               },
             ),
         ),
