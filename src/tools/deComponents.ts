@@ -126,24 +126,6 @@ export function registerDEComponentsTools(
                 .describe(
                   "Transform an element to a component",
                 ),
-              create_blank_component: z
-                .object({
-                  name: z
-                    .string()
-                    .describe("The name of the component"),
-                  group: z
-                    .string()
-                    .optional()
-                    .describe("Optional group/category for the component"),
-                  description: z
-                    .string()
-                    .optional()
-                    .describe("Optional description for the component"),
-                })
-                .optional()
-                .describe(
-                  "Create a new blank component (not from an existing element)",
-                ),
               insert_component_instance: z
                 .object({
                   parent_element_id: DEElementIDSchema.id,
@@ -201,16 +183,6 @@ export function registerDEComponentsTools(
                 .optional()
                 .describe(
                   "Get a component by ID or by name. Provide component_id for ID lookup, or name (and optional group) for name lookup.",
-                ),
-              open_component_canvas: z
-                .object({
-                  component_id: z
-                    .string()
-                    .describe("The id of the component to open in canvas"),
-                })
-                .optional()
-                .describe(
-                  "Open the component canvas for editing a component directly",
                 ),
               get_component_metadata: z
                 .object({
@@ -276,13 +248,11 @@ export function registerDEComponentsTools(
                 [
                   d.check_if_inside_component_view,
                   d.transform_element_to_component,
-                  d.create_blank_component,
                   d.insert_component_instance,
                   d.open_component_view,
                   d.close_component_view,
                   d.get_all_components,
                   d.get_component,
-                  d.open_component_canvas,
                   d.get_component_metadata,
                   d.set_component_metadata,
                   d.rename_component,
@@ -290,7 +260,7 @@ export function registerDEComponentsTools(
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, create_blank_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, open_component_canvas, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
               },
             ),
         ),
