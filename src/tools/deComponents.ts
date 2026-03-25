@@ -183,27 +183,24 @@ export function registerDEComponentsTools(
                 .describe(
                   "Get all components, only valid if you are connected to Webflow Designer.",
                 ),
-              get_component_by_id: z
+              get_component: z
                 .object({
                   component_id: z
                     .string()
-                    .describe("The id of the component to get"),
-                })
-                .optional()
-                .describe("Get a component by its ID"),
-              get_component_by_name: z
-                .object({
+                    .optional()
+                    .describe("The id of the component to get. Use this or name."),
                   name: z
                     .string()
-                    .describe("The name of the component"),
+                    .optional()
+                    .describe("The name of the component. Use this or component_id."),
                   group: z
                     .string()
                     .optional()
-                    .describe("Optional group to narrow the search"),
+                    .describe("Optional group to narrow the search when using name"),
                 })
                 .optional()
                 .describe(
-                  "Get a component by its name, optionally within a specific group",
+                  "Get a component by ID or by name. Provide component_id for ID lookup, or name (and optional group) for name lookup.",
                 ),
               open_component_canvas: z
                 .object({
@@ -215,7 +212,7 @@ export function registerDEComponentsTools(
                 .describe(
                   "Open the component canvas for editing a component directly",
                 ),
-              get_component_settings: z
+              get_component_metadata: z
                 .object({
                   component_id: z
                     .string()
@@ -223,9 +220,9 @@ export function registerDEComponentsTools(
                 })
                 .optional()
                 .describe(
-                  "Get the settings (name, group, description) of a component",
+                  "Get the metadata (name, group, description) of a component",
                 ),
-              set_component_settings: z
+              set_component_metadata: z
                 .object({
                   component_id: z
                     .string()
@@ -245,7 +242,7 @@ export function registerDEComponentsTools(
                 })
                 .optional()
                 .describe(
-                  "Update settings (name, group, description) of a component",
+                  "Update metadata (name, group, description) of a component",
                 ),
               rename_component: z
                 .object({
@@ -284,17 +281,16 @@ export function registerDEComponentsTools(
                   d.open_component_view,
                   d.close_component_view,
                   d.get_all_components,
-                  d.get_component_by_id,
-                  d.get_component_by_name,
+                  d.get_component,
                   d.open_component_canvas,
-                  d.get_component_settings,
-                  d.set_component_settings,
+                  d.get_component_metadata,
+                  d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, create_blank_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component_by_id, get_component_by_name, open_component_canvas, get_component_settings, set_component_settings, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, create_blank_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, open_component_canvas, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
               },
             ),
         ),
