@@ -51,7 +51,7 @@ export function registerWorkflowsTools(
         openWorldHint: false,
       },
       description:
-        "Data tool - Workflows tool to list AI workflows, create a workflow from a template, execute a workflow, and poll execution status.",
+        "Data tool - Workflows tool to list AI workflows, create a workflow from a template, run a workflow, and get a workflow run.",
       inputSchema: {
         actions: z.array(
           z
@@ -67,35 +67,38 @@ export function registerWorkflowsTools(
                 .describe(
                   "List all AI workflows configured for a site. Returns each workflow's ID, name, active status, and template slug."
                 ),
-              // POST https://api.webflow.com/v2/sites/:site_id/workflows/:workflow_id/execute
-              execute_workflow: z
+              // POST https://api.webflow.com/v2/sites/:site_id/workflows/:workflow_id/run
+              run_workflow: z
                 .object({
                   site_id: z
                     .string()
                     .describe("Unique identifier for the site."),
                   workflow_id: z
                     .string()
-                    .describe("Unique identifier for the workflow to execute."),
+                    .describe("Unique identifier for the workflow to run."),
                 })
                 .optional()
                 .describe(
-                  "Execute an AI workflow. The workflow must be active. Returns an execution_id to poll with get_workflow_execution_status."
+                  "Run an AI workflow. The workflow must be active. Returns a run_id to poll with get_workflow_run."
                 ),
-              // GET https://api.webflow.com/v2/sites/:site_id/workflows/executions/:execution_id
-              get_workflow_execution_status: z
+              // GET https://api.webflow.com/v2/sites/:site_id/workflows/:workflow_id/runs/:run_id
+              get_workflow_run: z
                 .object({
                   site_id: z
                     .string()
                     .describe("Unique identifier for the site."),
-                  execution_id: z
+                  workflow_id: z
+                    .string()
+                    .describe("Unique identifier for the workflow."),
+                  run_id: z
                     .string()
                     .describe(
-                      "Execution ID returned by execute_workflow. Poll until isFinished is true."
+                      "Run ID returned by run_workflow. Poll until isFinished is true."
                     ),
                 })
                 .optional()
                 .describe(
-                  "Get the status of a workflow execution. Returns status, start/stop times, and isFinished."
+                  "Get the status of a workflow run. Returns status, start/stop times, and isFinished."
                 ),
               // POST https://api.webflow.com/v2/sites/:site_id/workflows
               create_workflow: z
@@ -119,13 +122,13 @@ export function registerWorkflowsTools(
               (d) =>
                 [
                   d.list_workflows,
-                  d.execute_workflow,
-                  d.get_workflow_execution_status,
+                  d.run_workflow,
+                  d.get_workflow_run,
                   d.create_workflow,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of list_workflows, execute_workflow, get_workflow_execution_status, create_workflow.",
+                  "Provide at least one of list_workflows, run_workflow, get_workflow_run, create_workflow.",
               }
             )
         ),
@@ -143,18 +146,18 @@ export function registerWorkflowsTools(
             );
             result.push(textContent(content));
           }
-          if (action.execute_workflow) {
+          if (action.run_workflow) {
             const content = await apiRequest(
               "POST",
-              `/v2/sites/${action.execute_workflow.site_id}/workflows/${action.execute_workflow.workflow_id}/execute`,
+              `/v2/sites/${action.run_workflow.site_id}/workflows/${action.run_workflow.workflow_id}/run`,
               getToken()
             );
             result.push(textContent(content));
           }
-          if (action.get_workflow_execution_status) {
+          if (action.get_workflow_run) {
             const content = await apiRequest(
               "GET",
-              `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
+              `/v2/sites/${action.get_workflow_run.site_id}/workflows/${action.get_workflow_run.workflow_id}/runs/${action.get_workflow_run.run_id}`,
               getToken()
             );
             result.push(textContent(content));
