@@ -13,14 +13,17 @@ const WEBFLOW_API_BASE = "https://api.webflow.com";
 async function apiRequest(
   method: string,
   path: string,
-  token: string
+  token: string,
+  body?: Record<string, unknown>
 ): Promise<unknown> {
   const response = await fetch(`${WEBFLOW_API_BASE}${path}`, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
       ...requestOptions.headers,
+      ...(body ? { "Content-Type": "application/json" } : {}),
     },
+    ...(body ? { body: JSON.stringify(body) } : {}),
   });
 
   if (!response.ok) {
@@ -48,7 +51,7 @@ export function registerWorkflowsTools(
         openWorldHint: false,
       },
       description:
-        "Data tool - Workflows tool to list AI workflows, execute a workflow, and poll execution status.",
+        "Data tool - Workflows tool to list AI workflows, create a workflow from a template, execute a workflow, and poll execution status.",
       inputSchema: {
         actions: z.array(
           z
@@ -94,6 +97,22 @@ export function registerWorkflowsTools(
                 .describe(
                   "Get the status of a workflow execution. Returns status, start/stop times, and isFinished."
                 ),
+              // POST https://api.webflow.com/v2/sites/:site_id/workflows
+              create_workflow: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                  template_slug: z
+                    .string()
+                    .describe(
+                      "Template slug to create the workflow from (e.g. 'content-brief-generator')."
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Create a new AI workflow for a site from a template. Returns the created workflow's ID, name, active status, and template slug."
+                ),
             })
             .strict()
             .refine(
@@ -102,10 +121,11 @@ export function registerWorkflowsTools(
                   d.list_workflows,
                   d.execute_workflow,
                   d.get_workflow_execution_status,
+                  d.create_workflow,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of list_workflows, execute_workflow, get_workflow_execution_status.",
+                  "Provide at least one of list_workflows, execute_workflow, get_workflow_execution_status, create_workflow.",
               }
             )
         ),
@@ -136,6 +156,15 @@ export function registerWorkflowsTools(
               "GET",
               `/v2/sites/${action.get_workflow_execution_status.site_id}/workflows/executions/${action.get_workflow_execution_status.execution_id}`,
               getToken()
+            );
+            result.push(textContent(content));
+          }
+          if (action.create_workflow) {
+            const content = await apiRequest(
+              "POST",
+              `/v2/sites/${action.create_workflow.site_id}/workflows`,
+              getToken(),
+              { templateSlug: action.create_workflow.template_slug }
             );
             result.push(textContent(content));
           }
