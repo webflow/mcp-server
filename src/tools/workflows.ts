@@ -40,6 +40,7 @@ async function handleWorkflowActions(
   actions: Array<{
     list_workflows?: { site_id: string };
     run_workflow?: { site_id: string; workflow_id: string };
+    list_workflow_runs?: { site_id: string; workflow_id: string };
     get_workflow_run?: { site_id: string; workflow_id: string; run_id: string };
   }>,
   getToken: () => string
@@ -60,6 +61,15 @@ async function handleWorkflowActions(
         await apiRequest(
           "POST",
           `/v2/sites/${action.run_workflow.site_id}/workflows/${action.run_workflow.workflow_id}/run`,
+          getToken
+        )
+      );
+    }
+    if (action.list_workflow_runs) {
+      result.push(
+        await apiRequest(
+          "GET",
+          `/v2/sites/${action.list_workflow_runs.site_id}/workflows/${action.list_workflow_runs.workflow_id}/runs`,
           getToken
         )
       );
@@ -90,7 +100,7 @@ export function registerWorkflowsTools(
         openWorldHint: false,
       },
       description:
-        "Data tool - Workflows tool to list AI workflows, run a workflow, and get a workflow run.",
+        "Data tool - Workflows tool to list AI workflows, run a workflow, list workflow runs, and get a workflow run.",
       inputSchema: {
         actions: z.array(
           z
@@ -120,6 +130,20 @@ export function registerWorkflowsTools(
                 .describe(
                   "Run an AI workflow. The workflow must be active. Returns a run_id to poll with get_workflow_run."
                 ),
+              // GET https://api.webflow.com/v2/sites/:site_id/workflows/:workflow_id/runs
+              list_workflow_runs: z
+                .object({
+                  site_id: z
+                    .string()
+                    .describe("Unique identifier for the site."),
+                  workflow_id: z
+                    .string()
+                    .describe("Unique identifier for the workflow."),
+                })
+                .optional()
+                .describe(
+                  "List the run history for a workflow. Returns all runs with their status, start/stop times, and isFinished."
+                ),
               // GET https://api.webflow.com/v2/sites/:site_id/workflows/:workflow_id/runs/:run_id
               get_workflow_run: z
                 .object({
@@ -146,11 +170,12 @@ export function registerWorkflowsTools(
                 [
                   d.list_workflows,
                   d.run_workflow,
+                  d.list_workflow_runs,
                   d.get_workflow_run,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of list_workflows, run_workflow, get_workflow_run.",
+                  "Provide at least one of list_workflows, run_workflow, list_workflow_runs, get_workflow_run.",
               }
             )
         ),
