@@ -111,9 +111,9 @@ export const registerDEElementTools = (
                 "The id of the parent element to create element on, you can find it from id field on element. e.g id:{component:123,element:456}.",
               ),
             creation_position: z
-              .enum(["append", "prepend"])
+              .enum(["append", "prepend", "before", "after"])
               .describe(
-                "The position to create element on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element.",
+                "The position to create element on. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
               ),
             element_schema: DEElementSchema.extend({
               children: z
@@ -524,9 +524,9 @@ export const registerDEElementTools = (
                 "The id of the parent element to insert WHTML into. e.g id:{component:123,element:456}.",
               ),
             creation_position: z
-              .enum(["append", "prepend"])
+              .enum(["append", "prepend", "before", "after"])
               .describe(
-                "The position to insert the element. append to the end of the parent element or prepend to the beginning of the parent element.",
+                "The position to insert the element. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
               ),
             html: z
               .string()

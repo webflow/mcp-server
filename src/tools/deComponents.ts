@@ -135,9 +135,9 @@ export function registerDEComponentsTools(
                       "The id of the component to insert",
                     ),
                   creation_position: z
-                    .enum(["append", "prepend"])
+                    .enum(["append", "prepend", "before", "after"])
                     .describe(
-                      "The position to create component instance on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element.",
+                      "The position to create component instance on. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
                     ),
                 })
                 .optional()
@@ -317,9 +317,9 @@ export function registerDEComponentsTools(
                 "The id of the parent element (for insert_in_element) or the component instance (for insert_in_slot). e.g id:{component:123,element:456}.",
               ),
             creation_position: z
-              .enum(["append", "prepend"])
+              .enum(["append", "prepend", "before", "after"])
               .describe(
-                "The position to insert the component. append to the end or prepend to the beginning.",
+                "The position to insert the component. append/prepend insert as child. before/after insert as sibling adjacent to the target element.",
               ),
             component_schema: ComponentSchema.describe(
               "The component schema to insert. Use name to specify which component, and optionally slots to populate child components in the instance's slots.",
