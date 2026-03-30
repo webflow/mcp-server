@@ -257,17 +257,29 @@ export function registerDEComponentsTools(
                 })
                 .optional()
                 .describe(
-                  "[BETA] Create a blank component with no root element. Equivalent to 'Create blank' in the Designer's New Component menu.",
+                  "Create a blank component with no root element. Equivalent to 'Create blank' in the Designer's New Component menu.",
                 ),
               open_component_canvas: z
                 .object({
                   component_id: z
                     .string()
-                    .describe("The id of the component to open in the canvas"),
+                    .optional()
+                    .describe("The id of the component to open in the canvas. Use this or component_instance_id."),
+                  component_instance_id: z
+                    .object({
+                      component: z
+                        .string()
+                        .describe("The component id of the instance element."),
+                      element: z
+                        .string()
+                        .describe("The element id of the instance element."),
+                    })
+                    .optional()
+                    .describe("The element ID of a component instance to open in the canvas. Use this or component_id."),
                 })
                 .optional()
                 .describe(
-                  "[BETA] Open a component's canvas directly by component ID, without needing a component instance on the page.",
+                  "Open a component's canvas directly by component ID or component instance element ID.",
                 ),
             })
             .strict()
