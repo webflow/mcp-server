@@ -241,6 +241,34 @@ export function registerDEComponentsTools(
                 .describe(
                   "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
                 ),
+              create_blank_component: z
+                .object({
+                  name: z
+                    .string()
+                    .describe("The name of the blank component to create"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group/folder to place the component in"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("Optional description for the component"),
+                })
+                .optional()
+                .describe(
+                  "[BETA] Create a blank component with no root element. Equivalent to 'Create blank' in the Designer's New Component menu.",
+                ),
+              open_component_canvas: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to open in the canvas"),
+                })
+                .optional()
+                .describe(
+                  "[BETA] Open a component's canvas directly by component ID, without needing a component instance on the page.",
+                ),
             })
             .strict()
             .refine(
@@ -257,10 +285,12 @@ export function registerDEComponentsTools(
                   d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
+                  d.create_blank_component,
+                  d.open_component_canvas,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas.",
               },
             ),
         ),
