@@ -281,6 +281,41 @@ export function registerDEComponentsTools(
                 .describe(
                   "Open a component's canvas directly by component ID or component instance element ID.",
                 ),
+              search_components: z
+                .object({
+                  q: z
+                    .string()
+                    .optional()
+                    .describe("Optional fuzzy search query matching Component panel search behavior. Searches both name and description fields."),
+                })
+                .optional()
+                .describe(
+                  "Search all components in the project. Returns component metadata including name, group, description, instance count, editability, and library info. When called without a query, returns all components.",
+                ),
+              get_instance_count: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to get the instance count for"),
+                })
+                .optional()
+                .describe(
+                  "Get the number of instances of a component across the site. Returns the same count shown in the Components panel.",
+                ),
+              get_current_component: z
+                .boolean()
+                .optional()
+                .describe(
+                  "Get the component currently being edited on the canvas (in-context editing or component canvas). Returns null if on a regular page.",
+                ),
+              get_parent_component: z
+                .object({
+                  ...DEElementIDSchema,
+                })
+                .optional()
+                .describe(
+                  "Get the component that contains the specified element. Returns null if the element is at page level (not inside a component).",
+                ),
             })
             .strict()
             .refine(
@@ -299,10 +334,14 @@ export function registerDEComponentsTools(
                   d.unregister_component,
                   d.create_blank_component,
                   d.open_component_canvas,
+                  d.search_components,
+                  d.get_instance_count,
+                  d.get_current_component,
+                  d.get_parent_component,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas, search_components, get_instance_count, get_current_component, get_parent_component.",
               },
             ),
         ),
