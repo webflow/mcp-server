@@ -316,6 +316,18 @@ export function registerDEComponentsTools(
                 .describe(
                   "Get the component that contains the specified element. Returns null if the element is at page level (not inside a component).",
                 ),
+              insert_slot: z
+                .object({
+                  parent_element_id: DEElementIDSchema.id,
+                  position: z
+                    .enum(["append", "prepend", "before", "after"])
+                    .optional()
+                    .describe("Insertion position relative to the parent element. Defaults to 'append'."),
+                })
+                .optional()
+                .describe(
+                  "Insert a Slot element into the currently-editing component. Must be inside component editing context (use open_component_canvas or open_component_view first). A SlotContent prop is automatically created.",
+                ),
             })
             .strict()
             .refine(
@@ -338,10 +350,11 @@ export function registerDEComponentsTools(
                   d.get_instance_count,
                   d.get_current_component,
                   d.get_parent_component,
+                  d.insert_slot,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas, search_components, get_instance_count, get_current_component, get_parent_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas, search_components, get_instance_count, get_current_component, get_parent_component, insert_slot.",
               },
             ),
         ),
