@@ -54,12 +54,24 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `Component Tool (Designer):\n` +
             `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
+            `-- To search components by name or description, use de_component_tool > search_components. Pass an optional query string. Returns rich metadata including name, group, description, instance count, editability, and library info.\n` +
             `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
             `-- To transform an existing element into a component, use de_component_tool > transform_element_to_component. Pass the element ID and component name.\n` +
-            `-- To open a component view for editing, use de_component_tool > open_component_view. Pass the component_instance_id.\n` +
-            `-- To close a component view and return to page view, use de_component_tool > close_component_view.\n` +
+            `-- To create a new blank component, use de_component_tool > create_blank_component. Pass name, and optionally group and description.\n` +
+            `-- To get the number of instances of a component, use de_component_tool > get_instance_count. Pass the component_id.\n` +
+            `-- To get the component currently being edited, use de_component_tool > get_current_component. Returns null if on a regular page.\n` +
+            `-- To get the component that contains a specific element, use de_component_tool > get_parent_component. Pass the element ID. Returns null if the element is at page level.\n` +
+            `-- To insert a Slot element into a component, use de_component_tool > insert_slot. Pass parent_element_id. You must be in component editing context first (use open_canvas with a component_id).\n` +
             `-- To rename a component, use de_component_tool > rename_component. Pass component_id and new_name.\n` +
             `-- To check if you are currently inside a component view, use de_component_tool > check_if_inside_component_view.\n` +
+            `\n` +
+            `Canvas Navigation (Designer):\n` +
+            `-- To navigate the Designer canvas, use de_component_tool > open_canvas. This is the primary way to switch between component canvas and page canvas.\n` +
+            `---- To open a component canvas: pass component_id.\n` +
+            `---- To exit component canvas and return to a page: pass page_id.\n` +
+            `-- open_canvas is different from open_component_view/close_component_view. open_canvas switches the entire canvas context (like clicking a component in the Components panel). open_component_view/close_component_view enters/exits in-context editing of a component instance on the current page.\n` +
+            `-- To enter in-context editing of a component instance, use de_component_tool > open_component_view. Pass the component_instance_id.\n` +
+            `-- To exit in-context editing and return to page view, use de_component_tool > close_component_view.\n` +
             `\n` +
             `Element Snapshot Tool Usage:\n` +
             `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +

@@ -75,6 +75,16 @@ export function registerDEPagesTools(server: McpServer, rpc: RPCType) {
                 })
                 .optional()
                 .describe("Switch to a page on webflow designer"),
+              open_page_canvas: z
+                .object({
+                  page_id: z
+                    .string()
+                    .describe("The id of the page to open in the canvas"),
+                })
+                .optional()
+                .describe(
+                  "Navigate the Designer canvas to a specific page by page ID.",
+                ),
             })
             .strict()
             .refine(
@@ -84,10 +94,11 @@ export function registerDEPagesTools(server: McpServer, rpc: RPCType) {
                   d.create_page_folder,
                   d.get_current_page,
                   d.switch_page,
+                  d.open_page_canvas,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of create_page, create_page_folder, get_current_page, switch_page.",
+                  "Provide at least one of create_page, create_page_folder, get_current_page, switch_page, open_page_canvas.",
               }
             )
         ),

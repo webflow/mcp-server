@@ -241,6 +241,86 @@ export function registerDEComponentsTools(
                 .describe(
                   "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
                 ),
+              create_blank_component: z
+                .object({
+                  name: z
+                    .string()
+                    .describe("The name of the blank component to create"),
+                  group: z
+                    .string()
+                    .optional()
+                    .describe("Optional group/folder to place the component in"),
+                  description: z
+                    .string()
+                    .optional()
+                    .describe("Optional description for the component"),
+                })
+                .optional()
+                .describe(
+                  "Create a blank component with no root element. Equivalent to 'Create blank' in the Designer's New Component menu.",
+                ),
+              open_canvas: z
+                .object({
+                  component_id: z
+                    .string()
+                    .optional()
+                    .describe("The id of the component to open in the canvas. Use this or page_id."),
+                  page_id: z
+                    .string()
+                    .optional()
+                    .describe("The id of the page to navigate to. Use this to exit the component canvas and return to a page."),
+                })
+                .optional()
+                .describe(
+                  "Navigate the Designer canvas to a component or page. Use component_id to open a component canvas, or page_id to navigate to a page (e.g. to exit component canvas). Provide exactly one of component_id or page_id.",
+                ),
+              search_components: z
+                .object({
+                  q: z
+                    .string()
+                    .optional()
+                    .describe("Optional fuzzy search query matching Component panel search behavior. Searches both name and description fields."),
+                })
+                .optional()
+                .describe(
+                  "Search all components in the project. Returns component metadata including name, group, description, instance count, editability, and library info. When called without a query, returns all components.",
+                ),
+              get_instance_count: z
+                .object({
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to get the instance count for"),
+                })
+                .optional()
+                .describe(
+                  "Get the number of instances of a component across the site. Returns the same count shown in the Components panel.",
+                ),
+              get_current_component: z
+                .boolean()
+                .optional()
+                .describe(
+                  "Get the component currently being edited on the canvas (in-context editing or component canvas). Returns null if on a regular page.",
+                ),
+              get_parent_component: z
+                .object({
+                  ...DEElementIDSchema,
+                })
+                .optional()
+                .describe(
+                  "Get the component that contains the specified element. Returns null if the element is at page level (not inside a component).",
+                ),
+              insert_slot: z
+                .object({
+                  parent_element_id: DEElementIDSchema.id,
+                  position: z
+                    .enum(["append", "prepend", "before", "after"])
+                    .optional()
+                    .describe("Insertion position relative to the parent element. Defaults to 'append'."),
+                })
+                .optional()
+                .describe(
+                  "Insert a Slot element into the currently-editing component. Must be inside component editing context (use open_canvas or open_component_view first). A SlotContent prop is automatically created.",
+                ),
             })
             .strict()
             .refine(
@@ -257,10 +337,17 @@ export function registerDEComponentsTools(
                   d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
+                  d.create_blank_component,
+                  d.open_canvas,
+                  d.search_components,
+                  d.get_instance_count,
+                  d.get_current_component,
+                  d.get_parent_component,
+                  d.insert_slot,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_canvas, search_components, get_instance_count, get_current_component, get_parent_component, insert_slot.",
               },
             ),
         ),
