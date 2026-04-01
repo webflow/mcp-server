@@ -259,27 +259,20 @@ export function registerDEComponentsTools(
                 .describe(
                   "Create a blank component with no root element. Equivalent to 'Create blank' in the Designer's New Component menu.",
                 ),
-              open_component_canvas: z
+              open_canvas: z
                 .object({
                   component_id: z
                     .string()
                     .optional()
-                    .describe("The id of the component to open in the canvas. Use this or component_instance_id."),
-                  component_instance_id: z
-                    .object({
-                      component: z
-                        .string()
-                        .describe("The component id of the instance element."),
-                      element: z
-                        .string()
-                        .describe("The element id of the instance element."),
-                    })
+                    .describe("The id of the component to open in the canvas. Use this or page_id."),
+                  page_id: z
+                    .string()
                     .optional()
-                    .describe("The element ID of a component instance to open in the canvas. Use this or component_id."),
+                    .describe("The id of the page to navigate to. Use this to exit the component canvas and return to a page."),
                 })
                 .optional()
                 .describe(
-                  "Open a component's canvas directly by component ID or component instance element ID.",
+                  "Navigate the Designer canvas to a component or page. Use component_id to open a component canvas, or page_id to navigate to a page (e.g. to exit component canvas). Provide exactly one of component_id or page_id.",
                 ),
               search_components: z
                 .object({
@@ -326,7 +319,7 @@ export function registerDEComponentsTools(
                 })
                 .optional()
                 .describe(
-                  "Insert a Slot element into the currently-editing component. Must be inside component editing context (use open_component_canvas or open_component_view first). A SlotContent prop is automatically created.",
+                  "Insert a Slot element into the currently-editing component. Must be inside component editing context (use open_canvas or open_component_view first). A SlotContent prop is automatically created.",
                 ),
             })
             .strict()
@@ -345,7 +338,7 @@ export function registerDEComponentsTools(
                   d.rename_component,
                   d.unregister_component,
                   d.create_blank_component,
-                  d.open_component_canvas,
+                  d.open_canvas,
                   d.search_components,
                   d.get_instance_count,
                   d.get_current_component,
@@ -354,7 +347,7 @@ export function registerDEComponentsTools(
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_component_canvas, search_components, get_instance_count, get_current_component, get_parent_component, insert_slot.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, create_blank_component, open_canvas, search_components, get_instance_count, get_current_component, get_parent_component, insert_slot.",
               },
             ),
         ),
