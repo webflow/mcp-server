@@ -17,6 +17,8 @@ import {
   registerLocalDeMCPConnectionTools,
   registerCommentsTools,
   registerEnterpriseTools,
+  registerWebhookTools,
+  registerWorkflowsTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -31,7 +33,7 @@ export function createMcpServer() {
     },
     {
       instructions: `These tools give you access to the Webflow's Data API. If you are ever unsure about anything Webflow API-related, use the "ask_webflow_ai" tool.`,
-    }
+    },
   );
 }
 
@@ -45,7 +47,8 @@ export const requestOptions = {
 // Register tools
 export function registerTools(
   server: McpServer,
-  getClient: () => WebflowClient
+  getClient: () => WebflowClient,
+  getAccessToken: () => string,
 ) {
   registerAiChatTools(server);
   registerCmsTools(server, getClient);
@@ -55,6 +58,14 @@ export function registerTools(
   registerSiteTools(server, getClient);
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
+  registerWebhookTools(server, getClient);
+}
+
+export function registerWorkflowTools(
+  server: McpServer,
+  getAccessToken: () => string
+) {
+  registerWorkflowsTools(server, getAccessToken);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {

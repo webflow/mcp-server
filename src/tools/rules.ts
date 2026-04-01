@@ -23,11 +23,9 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `General Rules:\n` +
             `-- Data Tools are REST API calls, and Designer Tools are UI tools. You must use the correct tool for the action you want to perform.\n` +
-            `-- Webflow does not support shorthand css properties. You must use the longhand property names. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc. to learn more about supported styles, use de_learn_more_about_styles tool.\n` +
             `-- Do not assume site ID. If a tool requires site_id, you must pass it explicitly. If you're not sure about the site ID, ask the user for it.\n` +
             `-- Always plan your actions before calling any tool. Do not invoke tools randomly without understanding the full workflow.\n` +
             `-- After updating or creating an element, the updated/created element is not automatically selected. If you need more information about that element, use element_tool > select_element with the appropriate element ID to select and inspect it.\n` +
-            `-- Do not use CSS shorthand properties when updating or creating styles. Always use longhand property names like "margin-top", "padding-left", "border-width", etc.\n` +
             `-- When creating or updating elements, most users prefer using existing styles. You should reuse styles if they exist, unless the user explicitly wants new ones.\n` +
             `-- To learn or find about localizations and locale id you get use site too and get site details to learn how many locales are supported and their details.\n` +
             `\n` +
@@ -45,6 +43,23 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `Element Builder Tool:\n` +
             `-- To create a new element, use element_builder. Pass the type of element you want to create. After creation, use element_tool > select_element to select the element and gather additional details if needed.\n` +
+            `\n` +
+            `Component Builder Tool:\n` +
+            `-- To insert a component instance, use component_builder. It supports two action types:\n` +
+            `---- insert_in_element: Insert a component instance as a child of a parent element (e.g., Container, DivBlock, Section).\n` +
+            `---- insert_in_slot: Insert a component instance into a specific slot of an existing component instance. You must provide slot_name when using this action type.\n` +
+            `-- Pass the component name in component_schema (not the component ID). You can optionally populate the instance's slots with child components using the slots array in component_schema.\n` +
+            `-- After creation, use element_tool > select_element to select the component instance and gather additional details if needed.\n` +
+            `-- Only component instances (created via component_builder) are allowed inside slots. You cannot place regular elements inside a slot. Always use insert_in_slot to add components to slots.\n` +
+            `\n` +
+            `Component Tool (Designer):\n` +
+            `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
+            `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
+            `-- To transform an existing element into a component, use de_component_tool > transform_element_to_component. Pass the element ID and component name.\n` +
+            `-- To open a component view for editing, use de_component_tool > open_component_view. Pass the component_instance_id.\n` +
+            `-- To close a component view and return to page view, use de_component_tool > close_component_view.\n` +
+            `-- To rename a component, use de_component_tool > rename_component. Pass component_id and new_name.\n` +
+            `-- To check if you are currently inside a component view, use de_component_tool > check_if_inside_component_view.\n` +
             `\n` +
             `Element Snapshot Tool Usage:\n` +
             `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +
@@ -90,7 +105,11 @@ export function registerRulesTools(server: McpServer) {
             `---- variable_tool > create_font_family_variable\n` +
             `-- In all create_*_variable tools, pass name and variable_collection_id.\n` +
             `-- To update any variable, use the corresponding update tool (e.g., update_color_variable) with name and variable_collection_id.\n` +
-            `-- To bind a variable with another, use the existing_variable_id field.\n` +
+            `-- Each variable value can be set using one of three options:\n` +
+            `---- static_value: A typed literal value matching the variable type (e.g., "#ff0000" for color, { value: 16, unit: "px" } for size).\n` +
+            `---- existing_variable_id: An alias to another variable, binding this variable's value to the referenced one.\n` +
+            `---- custom_value: An arbitrary CSS expression string for values that don't fit standard typed formats. Examples: "calc(100vh - 60px)" for a size variable, "color-mix(in srgb, red 50%, blue)" for a color variable. Use custom_value when the user needs CSS functions like calc(), clamp(), min(), max(), color-mix(), or any other valid CSS expression.\n` +
+            `-- Only one of static_value, existing_variable_id, or custom_value should be provided per variable value.\n` +
             `-- In Webflow, variables are linked to styles and function like CSS custom properties.\n` +
             `\n` +
             `CMS Data Tool Usage:\n` +
@@ -117,9 +136,25 @@ export function registerRulesTools(server: McpServer) {
             `-- Always create styles first if you plan to apply them while creating the element. This ensures style references are valid at the time of creation.\n` +
             `-- Always plan out your actions before calling element_builder. Know exactly what type of element to create, what styles or attributes to apply, and how you will use it.\n` +
             `-- Once an element is created using element_builder, it is not automatically selected. To inspect or modify it, use element_tool > select_element and pass the element ID returned from the creation response.\n` +
-            `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n`,
+            `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n` +
+            `-- Only component instances are allowed inside slots. Do not attempt to create or insert regular elements into a slot. Use component_builder to create a component instance and place it inside a slot.\n` +
+            `\n` +
+            `WHTML Builder Tool:\n` +
+            `-- To insert elements from HTML and CSS strings, use whtml_builder. Pass html and optionally css along with parent_element_id and creation_position.\n` +
+            `-- HTML Rules:\n` +
+            `---- The html field must be a single root element (no fragments). For example, <div><p>Hello</p></div> is valid, but <div>First</div><div>Second</div> is not allowed.\n` +
+            `---- The html field must not contain <style> tags. CSS should be provided via the css parameter.\n` +
+            `-- CSS Rules:\n` +
+            `---- The css field must contain raw CSS rules only. Do not wrap in <style> tags.\n` +
+            `---- @keyframes are not allowed.\n` +
+            `---- Custom media queries are not allowed. Only the following Webflow breakpoint media queries are valid:\n` +
+            `------ Desktop (main): No media query needed (default breakpoint).\n` +
+            `------ Tablet (medium): @media screen and (max-width: 991px)\n` +
+            `------ Mobile Landscape (small): @media screen and (max-width: 767px)\n` +
+            `------ Mobile Portrait (tiny): @media screen and (max-width: 479px)\n` +
+            `-- After insertion, the tool returns element info. Use get_children_info and children_depth to control the depth of children info returned.\n`,
         },
       ],
-    })
+    }),
   );
 }

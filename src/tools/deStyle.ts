@@ -21,7 +21,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
         openWorldHint: true,
       },
       description:
-        "Designer Tool - Style tool to perform actions like create style, get all styles, update styles",
+        "Designer Tool - Style tool to perform actions like create style, get all styles, update styles, remove styles",
       inputSchema: {
         ...SiteIdSchema,
         actions: z.array(
@@ -44,16 +44,16 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                           .string()
                           .optional()
                           .describe("The variable id to use as the value"),
-                      })
+                      }),
                     )
                     .describe(
-                      "The properties of the style. if you are looking to link a variable as the value, then use the variable_as_value field. but do not use both property_value and variable_as_value"
+                      "The properties of the style. if you are looking to link a variable as the value, then use the variable_as_value field. but do not use both property_value and variable_as_value",
                     ),
-                  parent_style_name: z
-                    .string()
+                  parent_style_names: z
+                    .array(z.string())
                     .optional()
                     .describe(
-                      "The name of the parent style to create the new style in. this will use to create combo class"
+                      "The name of the parent style to create the new style in. this will use to create combo class",
                     ),
                 })
                 .optional()
@@ -64,13 +64,13 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .boolean()
                     .optional()
                     .describe(
-                      "Whether to skip the properties of the style. to get minimal data."
+                      "Whether to skip the properties of the style. to get minimal data.",
                     ),
                   include_all_breakpoints: z
                     .boolean()
                     .optional()
                     .describe(
-                      "Whether to include all breakpoints styles or not. very data intensive."
+                      "Whether to include all breakpoints styles or not. very data intensive.",
                     ),
                   query: z
                     .enum(["all", "filtered"])
@@ -79,7 +79,7 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                     .array(z.string())
                     .optional()
                     .describe(
-                      "The ids of the styles to filter by. should be used with query filtered"
+                      "The ids of the styles to filter by. should be used with query filtered",
                     ),
                 })
                 .optional()
@@ -136,30 +136,67 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                           .string()
                           .optional()
                           .describe("The variable id to use as the value"),
-                      })
+                      }),
                     )
                     .optional()
                     .describe(
-                      "The properties to update or add to the style for"
+                      "The properties to update or add to the style for",
                     ),
                   remove_properties: z
                     .array(z.string())
                     .optional()
                     .describe("The properties to remove from the style"),
+                  parent_style_names: z
+                    .array(z.string())
+                    .optional()
+                    .describe(
+                      "The parent style names to update the style for (for combo class)",
+                    ),
                 })
                 .optional()
                 .describe("Update a style"),
+              remove_style: z
+                .object({
+                  style_name: z.string().describe("The name of the style to remove"),
+                  parent_style_names: z
+                    .array(z.string())
+                    .optional()
+                    .describe("The parent style names (for combo class)"),
+                })
+                .optional()
+                .describe("Remove a style"),
+              query_styles: z
+                .object({
+                  queries: z.array(
+                    z.object({
+                      label: z.string().optional().describe("A label to identify this query in the results."),
+                      style_id: z.string().optional().describe("Filter by style ID. Exact match. Bypasses other filters."),
+                      name_path: z.array(z.string()).optional().describe("Filter by style name path. Supports combo classes (e.g. ['base', 'combo']). Each segment is a case-insensitive substring match."),
+                      properties: z.array(
+                        z.object({
+                          name: z.string().describe("CSS property name. Case-insensitive substring match."),
+                          value: z.string().optional().describe("CSS property value. Case-insensitive substring match."),
+                        })
+                      ).optional().describe("Filter styles that have ALL listed CSS properties matching. Each entry checks name (and optionally value)."),
+                      include_properties: z.boolean().optional().describe("Include style properties in results. Default: false."),
+                      include_all_breakpoints: z.boolean().optional().describe("Include all breakpoint styles in results. Default: false."),
+                      limit: z.number().min(1).max(200).optional().describe("Max results for this query. Default: 50, Max: 200."),
+                    })
+                  ),
+                })
+                .optional()
+                .describe("Query styles by name path, ID, or CSS properties [BETA]"),
             })
             .strict()
             .refine(
               (d) =>
-                [d.create_style, d.get_styles, d.update_style].filter(Boolean)
+                [d.create_style, d.get_styles, d.update_style, d.remove_style, d.query_styles].filter(Boolean)
                   .length >= 1,
               {
                 message:
-                  "Provide at least one of create_style, get_styles, update_style.",
-              }
-            )
+                  "Provide at least one of create_style, get_styles, update_style, remove_style, query_styles.",
+              },
+            ),
         ),
       },
     },
@@ -169,23 +206,25 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
       } catch (error) {
         return formatErrorResponse(error);
       }
-    }
-  );
-
-  server.registerTool(
-    "de_learn_more_about_styles",
-    {
-      title: "Designer Learn More About Webflow Styles",
-      annotations: {
-        readOnlyHint: true,
-        openWorldHint: true,
-      },
-      description:
-        "Designer tool - Learn more about styles supported by Webflow Designer." +
-        "Please do not use any other styles which is not supported by Webflow Designer." +
-        "Please use the long-form alias of a CSS property when managing styles. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc.",
-      inputSchema: {},
     },
-    async ({}) => formatResponse(supportDEStyles)
   );
+  /**
+   * Since now we support 500+ styles, we don't need to learn more about styles.
+   */
+  // server.registerTool(
+  //   "de_learn_more_about_styles",
+  //   {
+  //     title: "Designer Learn More About Webflow Styles",
+  //     annotations: {
+  //       readOnlyHint: true,
+  //       openWorldHint: true,
+  //     },
+  //     description:
+  //       "Designer tool - Learn more about styles supported by Webflow Designer." +
+  //       "Please do not use any other styles which is not supported by Webflow Designer." +
+  //       "Please use the long-form alias of a CSS property when managing styles. For example, the property row-gap has a long-form alias of grid-row-gap, margin has long-form alias of margin-top, margin-right, margin-bottom, margin-left, etc.",
+  //     inputSchema: {},
+  //   },
+  //   async ({}) => formatResponse(supportDEStyles)
+  // );
 }

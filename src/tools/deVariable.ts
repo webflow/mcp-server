@@ -91,6 +91,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'color-mix(in srgb, red 50%, blue)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -107,6 +108,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                       })
                       .optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'calc(100vh - 60px)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -118,6 +120,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -129,6 +132,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -140,6 +144,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -152,6 +157,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'color-mix(in srgb, red 50%, blue)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -169,6 +175,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                       })
                       .optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string (e.g. 'calc(100vh - 60px)'). Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -181,6 +188,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -193,6 +201,7 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.number().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
@@ -205,10 +214,53 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   value: z.object({
                     static_value: z.string().optional(),
                     existing_variable_id: z.string().optional(),
+                    custom_value: z.string().optional().describe("An arbitrary CSS expression string. Use when the value doesn't fit standard typed formats."),
                   }),
                 })
                 .optional()
                 .describe("Update a font family variable"),
+              rename_variable: z
+                .object({
+                  variable_collection_id: z
+                    .string()
+                    .describe("The id of the variable collection containing the variable"),
+                  variable_id: z
+                    .string()
+                    .describe("The id of the variable to rename"),
+                  new_name: z
+                    .string()
+                    .describe("The new name for the variable"),
+                })
+                .optional()
+                .describe("Rename a variable [BETA]"),
+              delete_variable: z
+                .object({
+                  variable_collection_id: z
+                    .string()
+                    .describe("The id of the variable collection containing the variable"),
+                  variable_id: z
+                    .string()
+                    .describe("The id of the variable to delete"),
+                })
+                .optional()
+                .describe("Delete a variable [BETA]"),
+              query_variables: z
+                .object({
+                  queries: z.array(
+                    z.object({
+                      label: z.string().optional().describe("A label to identify this query in the results."),
+                      variable_id: z.string().optional().describe("Filter by variable ID. Exact match. Bypasses other filters."),
+                      name: z.string().optional().describe("Filter by variable name. Case-insensitive substring match."),
+                      css_name: z.string().optional().describe("Filter by CSS variable name (e.g. '--my-color'). Case-insensitive substring match."),
+                      type: z.enum(["Color", "Size", "Number", "Percentage", "FontFamily"]).optional().describe("Filter by variable type. Exact match."),
+                      variable_collection_id: z.string().optional().describe("Scope search to a specific variable collection."),
+                      include_all_modes: z.boolean().optional().describe("Include values for all modes in results."),
+                      limit: z.number().min(1).max(200).optional().describe("Max results for this query. Default: 50, Max: 200."),
+                    })
+                  ),
+                })
+                .optional()
+                .describe("Query variables across collections by name, ID, CSS name, or type [BETA]"),
             })
             .strict()
             .refine(
@@ -228,10 +280,13 @@ export function registerDEVariableTools(server: McpServer, rpc: RPCType) {
                   d.update_number_variable,
                   d.update_percentage_variable,
                   d.update_font_family_variable,
+                  d.rename_variable,
+                  d.delete_variable,
+                  d.query_variables,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of create_variable_collection, create_variable_mode, get_variable_collections, get_variables, create_color_variable, create_size_variable, create_number_variable, create_percentage_variable, create_font_family_variable, update_color_variable, update_size_variable, update_number_variable, update_percentage_variable, update_font_family_variable.",
+                  "Provide at least one of create_variable_collection, create_variable_mode, get_variable_collections, get_variables, create_color_variable, create_size_variable, create_number_variable, create_percentage_variable, create_font_family_variable, update_color_variable, update_size_variable, update_number_variable, update_percentage_variable, update_font_family_variable, rename_variable, delete_variable, query_variables.",
               }
             )
         ),
