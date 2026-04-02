@@ -16,6 +16,7 @@ export { registerDEElementTools } from "./deElement";
 export { registerDEPagesTools } from "./dePages";
 export { registerDEStyleTools } from "./deStyle";
 export { registerDEVariableTools } from "./deVariable";
+export { registerDEInstancePropsTools } from "./deInstanceProps";
 
 // Rules Tools
 export { registerRulesTools } from "./rules";

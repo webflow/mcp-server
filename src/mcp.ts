@@ -13,6 +13,7 @@ import {
   registerSiteTools,
   registerDEStyleTools,
   registerDEVariableTools,
+  registerDEInstancePropsTools,
   registerRulesTools,
   registerLocalDeMCPConnectionTools,
   registerCommentsTools,
@@ -63,7 +64,7 @@ export function registerTools(
 
 export function registerWorkflowTools(
   server: McpServer,
-  getAccessToken: () => string
+  getAccessToken: () => string,
 ) {
   registerWorkflowsTools(server, getAccessToken);
 }
@@ -75,6 +76,7 @@ export function registerDesignerTools(server: McpServer, rpc: RPCType) {
   registerDEPagesTools(server, rpc);
   registerDEStyleTools(server, rpc);
   registerDEVariableTools(server, rpc);
+  registerDEInstancePropsTools(server, rpc);
 }
 
 export function registerMiscTools(server: McpServer) {
