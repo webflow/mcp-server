@@ -1,36 +1,21 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
 import z from "zod/v3";
-import {
-  SiteIdSchema,
-  DEElementIDSchema,
-  DEElementSchema,
-} from "../schemas";
-import {
-  formatErrorResponse,
-  formatResponse,
-} from "../utils";
+import { SiteIdSchema, DEElementIDSchema, DEElementSchema } from "../schemas";
+import { formatErrorResponse, formatResponse } from "../utils";
 
-export const registerDEElementTools = (
-  server: McpServer,
-  rpc: RPCType,
-) => {
+export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
   const ElementSchemaValidator: z.ZodType = z.lazy(() =>
     DEElementSchema.extend({
       children: z.array(ElementSchemaValidator).optional(),
     }),
   );
 
-  const elementBuilderRPCCall = async (
-    siteId: string,
-    actions: any,
-  ) => {
+  const elementBuilderRPCCall = async (siteId: string, actions: any) => {
     const actionsArray = actions || [];
     for (const action of actionsArray) {
       if (action.element_schema) {
-        const result = ElementSchemaValidator.safeParse(
-          action.element_schema,
-        );
+        const result = ElementSchemaValidator.safeParse(action.element_schema);
         if (!result.success) {
           throw new Error(
             `Invalid element_schema: ${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
@@ -44,10 +29,7 @@ export const registerDEElementTools = (
     });
   };
 
-  const elementToolRPCCall = async (
-    siteId: string,
-    actions: any,
-  ) => {
+  const elementToolRPCCall = async (siteId: string, actions: any) => {
     return rpc.callTool("element_tool", {
       siteId,
       actions: actions || [],
@@ -137,9 +119,7 @@ export const registerDEElementTools = (
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(
-          await elementBuilderRPCCall(siteId, actions),
-        );
+        return formatResponse(await elementBuilderRPCCall(siteId, actions));
       } catch (error) {
         return formatErrorResponse(error);
       }
@@ -164,9 +144,7 @@ export const registerDEElementTools = (
               get_all_elements: z
                 .boolean()
                 .optional()
-                .describe(
-                  "Get all elements on the current active page",
-                ),
+                .describe("Get all elements on the current active page"),
 
               get_selected_element: z
                 .object({
@@ -178,17 +156,13 @@ export const registerDEElementTools = (
                     ),
                 })
                 .optional()
-                .describe(
-                  "Get selected element on the current active page",
-                ),
+                .describe("Get selected element on the current active page"),
               select_element: z
                 .object({
                   ...DEElementIDSchema,
                 })
                 .optional()
-                .describe(
-                  "Select an element on the current active page",
-                ),
+                .describe("Select an element on the current active page"),
               remove_element: z
                 .object({
                   ...DEElementIDSchema,
@@ -215,27 +189,19 @@ export const registerDEElementTools = (
                           ),
                       }),
                     )
-                    .describe(
-                      "The attributes to add or update.",
-                    ),
+                    .describe("The attributes to add or update."),
                 })
                 .optional()
-                .describe(
-                  "Add or update an attribute on the element",
-                ),
+                .describe("Add or update an attribute on the element"),
               remove_attribute: z
                 .object({
                   ...DEElementIDSchema,
                   attribute_names: z
                     .array(z.string())
-                    .describe(
-                      "The names of the attributes to remove.",
-                    ),
+                    .describe("The names of the attributes to remove."),
                 })
                 .optional()
-                .describe(
-                  "Remove an attribute from the element",
-                ),
+                .describe("Remove an attribute from the element"),
               update_id_attribute: z
                 .object({
                   ...DEElementIDSchema,
@@ -246,17 +212,11 @@ export const registerDEElementTools = (
                     ),
                 })
                 .optional()
-                .describe(
-                  "Update the #id attribute of the element",
-                ),
+                .describe("Update the #id attribute of the element"),
               set_text: z
                 .object({
                   ...DEElementIDSchema,
-                  text: z
-                    .string()
-                    .describe(
-                      "The text to set on the element.",
-                    ),
+                  text: z.string().describe("The text to set on the element."),
                 })
                 .optional()
                 .describe("Set text on the element"),
@@ -265,9 +225,7 @@ export const registerDEElementTools = (
                   ...DEElementIDSchema,
                   style_names: z
                     .array(z.string())
-                    .describe(
-                      "The style names to set on the element.",
-                    ),
+                    .describe("The style names to set on the element."),
                 })
                 .optional()
                 .describe(
@@ -277,17 +235,8 @@ export const registerDEElementTools = (
                 .object({
                   ...DEElementIDSchema,
                   linkType: z
-                    .enum([
-                      "url",
-                      "file",
-                      "page",
-                      "element",
-                      "email",
-                      "phone",
-                    ])
-                    .describe(
-                      "The type of the link to update.",
-                    ),
+                    .enum(["url", "file", "page", "element", "email", "phone"])
+                    .describe("The type of the link to update."),
                   link: z
                     .string()
                     .describe(
@@ -308,22 +257,16 @@ export const registerDEElementTools = (
                     ),
                 })
                 .optional()
-                .describe(
-                  "Set heading level on the heading element.",
-                ),
+                .describe("Set heading level on the heading element."),
               set_image_asset: z
                 .object({
                   ...DEElementIDSchema,
                   image_asset_id: z
                     .string()
-                    .describe(
-                      "The image asset id to set on the element.",
-                    ),
+                    .describe("The image asset id to set on the element."),
                 })
                 .optional()
-                .describe(
-                  "Set image asset on the image element",
-                ),
+                .describe("Set image asset on the image element"),
               query_elements: z
                 .object({
                   queries: z.array(
@@ -470,19 +413,14 @@ export const registerDEElementTools = (
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(
-          await elementToolRPCCall(siteId, actions),
-        );
+        return formatResponse(await elementToolRPCCall(siteId, actions));
       } catch (error) {
         return formatErrorResponse(error);
       }
     },
   );
 
-  const whtmlBuilderRPCCall = async (
-    siteId: string,
-    actions: any,
-  ) => {
+  const whtmlBuilderRPCCall = async (siteId: string, actions: any) => {
     return rpc.callTool("whtml_builder", {
       siteId,
       actions: actions || [],
@@ -500,67 +438,68 @@ export const registerDEElementTools = (
         "Designer Tool - WHTML builder to insert elements from HTML and CSS strings on the current active page. Accepts HTML markup and optional CSS rules, constructs WHTML, and inserts into a parent element.",
       inputSchema: {
         ...SiteIdSchema,
-        actions: z.array(
-          z.object({
-            build_label: z
-              .string()
-              .describe(
-                "A label to identify this build action in the results.",
-              ),
-            parent_element_id: z
-              .object({
-                component: z
-                  .string()
-                  .describe(
-                    "The component id of the element to perform action on.",
-                  ),
-                element: z
-                  .string()
-                  .describe(
-                    "The element id of the element to perform action on.",
-                  ),
-              })
-              .describe(
-                "The id of the parent element to insert WHTML into. e.g id:{component:123,element:456}.",
-              ),
-            creation_position: z
-              .enum(["append", "prepend", "before", "after"])
-              .describe(
-                "The position to insert the element. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
-              ),
-            html: z
-              .string()
-              .min(1)
-              .describe(
-                "HTML markup string to insert. Must not contain <style> tags. CSS should be provided via the css parameter instead.",
-              ),
-            css: z
-              .string()
-              .optional()
-              .describe(
-                "Optional CSS rules to apply. Must not contain <style> tags. Provide raw CSS rules only (e.g. '.my-class { color: red; }').",
-              ),
-            get_children_info: z
-              .boolean()
-              .optional()
-              .describe(
-                "Whether to return children info of the inserted element. Defaults to false.",
-              ),
-            children_depth: z
-              .number()
-              .optional()
-              .describe(
-                "Depth of children to include when get_children_info is true. Defaults to 1.",
-              ),
-          }),
-        ).min(1).max(5),
+        actions: z
+          .array(
+            z.object({
+              build_label: z
+                .string()
+                .describe(
+                  "A label to identify this build action in the results.",
+                ),
+              parent_element_id: z
+                .object({
+                  component: z
+                    .string()
+                    .describe(
+                      "The component id of the element to perform action on.",
+                    ),
+                  element: z
+                    .string()
+                    .describe(
+                      "The element id of the element to perform action on.",
+                    ),
+                })
+                .describe(
+                  "The id of the parent element to insert WHTML into. e.g id:{component:123,element:456}.",
+                ),
+              creation_position: z
+                .enum(["append", "prepend", "before", "after"])
+                .describe(
+                  "The position to insert the element. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
+                ),
+              html: z
+                .string()
+                .min(1)
+                .describe(
+                  "HTML markup string to insert. Must not contain <style> tags. CSS should be provided via the css parameter instead.",
+                ),
+              css: z
+                .string()
+                .optional()
+                .describe(
+                  "Optional CSS rules to apply. Must not contain <style> tags. Provide raw CSS rules only (e.g. '.my-class { color: red; }').",
+                ),
+              get_children_info: z
+                .boolean()
+                .optional()
+                .describe(
+                  "Whether to return children info of the inserted element. Defaults to false.",
+                ),
+              children_depth: z
+                .number()
+                .optional()
+                .describe(
+                  "Depth of children to include when get_children_info is true. Defaults to 1.",
+                ),
+            }),
+          )
+          .min(1)
+          .max(5),
       },
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(
-          await whtmlBuilderRPCCall(siteId, actions),
-        );
+        return formatResponse(await whtmlBuilderRPCCall(siteId, actions));
       } catch (error) {
         return formatErrorResponse(error);
       }
@@ -585,17 +524,16 @@ export const registerDEElementTools = (
     },
     async ({ action, siteId }) => {
       try {
-        const { status, message, data } =
-          await elementSnapshotToolRPCCall(siteId, action);
+        const { status, message, data } = await elementSnapshotToolRPCCall(
+          siteId,
+          action,
+        );
         if (status === "success" && data) {
           return {
             content: [
               {
                 type: "image",
-                data: data.replace(
-                  "data:image/png;base64,",
-                  "",
-                ),
+                data: data.replace("data:image/png;base64,", ""),
                 mimeType: "image/png",
               },
             ],
