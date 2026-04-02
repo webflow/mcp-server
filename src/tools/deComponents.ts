@@ -1,14 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RPCType } from "../types/RPCType";
 import z from "zod/v3";
-import {
-  DEElementIDSchema,
-  SiteIdSchema,
-} from "../schemas";
-import {
-  formatErrorResponse,
-  formatResponse,
-} from "../utils";
+import { DEElementIDSchema, SiteIdSchema } from "../schemas";
+import { formatErrorResponse, formatResponse } from "../utils";
 
 /**
  * ComponentSchema - Defines a component to insert with optional nested slot children.
@@ -16,9 +10,7 @@ import {
  * Validation of nested children is performed server-side.
  */
 const ComponentSchema = z.object({
-  name: z
-    .string()
-    .describe("The name of the component to insert."),
+  name: z.string().describe("The name of the component to insert."),
   slots: z
     .array(
       z.object({
@@ -34,14 +26,8 @@ const ComponentSchema = z.object({
     .describe("Slots to populate with child components."),
 });
 
-export function registerDEComponentsTools(
-  server: McpServer,
-  rpc: RPCType,
-) {
-  const componentsToolRPCCall = async (
-    siteId: string,
-    actions: any,
-  ) => {
+export function registerDEComponentsTools(server: McpServer, rpc: RPCType) {
+  const componentsToolRPCCall = async (siteId: string, actions: any) => {
     return rpc.callTool("component_tool", {
       siteId,
       actions: actions || [],
@@ -62,17 +48,13 @@ export function registerDEComponentsTools(
     }),
   );
 
-  const componentBuilderRPCCall = async (
-    siteId: string,
-    actions: any,
-  ) => {
+  const componentBuilderRPCCall = async (siteId: string, actions: any) => {
     const actionsArray = actions || [];
     for (const action of actionsArray) {
       if (action.component_schema) {
-        const result =
-          ComponentSchemaValidator.safeParse(
-            action.component_schema,
-          );
+        const result = ComponentSchemaValidator.safeParse(
+          action.component_schema,
+        );
         if (!result.success) {
           throw new Error(
             `Invalid component_schema in action "${action.build_label}": ${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
@@ -110,9 +92,7 @@ export function registerDEComponentsTools(
               transform_element_to_component: z
                 .object({
                   ...DEElementIDSchema,
-                  name: z
-                    .string()
-                    .describe("The name of the component"),
+                  name: z.string().describe("The name of the component"),
                   group: z
                     .string()
                     .optional()
@@ -123,31 +103,24 @@ export function registerDEComponentsTools(
                     .describe("Optional description for the component"),
                 })
                 .optional()
-                .describe(
-                  "Transform an element to a component",
-                ),
+                .describe("Transform an element to a component"),
               insert_component_instance: z
                 .object({
                   parent_element_id: DEElementIDSchema.id,
                   component_id: z
                     .string()
-                    .describe(
-                      "The id of the component to insert",
-                    ),
+                    .describe("The id of the component to insert"),
                   creation_position: z
-                    .enum(["append", "prepend"])
+                    .enum(["append", "prepend", "before", "after"])
                     .describe(
-                      "The position to create component instance on. append to the end of the parent element or prepend to the beginning of the parent element. as child of the parent element.",
+                      "The position to create component instance on. append/prepend insert as child of the parent element. before/after insert as sibling adjacent to the target element.",
                     ),
                 })
                 .optional()
-                .describe(
-                  "Insert a component on current active page.",
-                ),
+                .describe("Insert a component on current active page."),
               open_component_view: z
                 .object({
-                  component_instance_id:
-                    DEElementIDSchema.id,
+                  component_instance_id: DEElementIDSchema.id,
                 })
                 .optional()
                 .describe(
@@ -170,15 +143,21 @@ export function registerDEComponentsTools(
                   component_id: z
                     .string()
                     .optional()
-                    .describe("The id of the component to get. Use this or name."),
+                    .describe(
+                      "The id of the component to get. Use this or name.",
+                    ),
                   name: z
                     .string()
                     .optional()
-                    .describe("The name of the component. Use this or component_id."),
+                    .describe(
+                      "The name of the component. Use this or component_id.",
+                    ),
                   group: z
                     .string()
                     .optional()
-                    .describe("Optional group to narrow the search when using name"),
+                    .describe(
+                      "Optional group to narrow the search when using name",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -186,9 +165,7 @@ export function registerDEComponentsTools(
                 ),
               get_component_metadata: z
                 .object({
-                  component_id: z
-                    .string()
-                    .describe("The id of the component"),
+                  component_id: z.string().describe("The id of the component"),
                 })
                 .optional()
                 .describe(
@@ -196,9 +173,7 @@ export function registerDEComponentsTools(
                 ),
               set_component_metadata: z
                 .object({
-                  component_id: z
-                    .string()
-                    .describe("The id of the component"),
+                  component_id: z.string().describe("The id of the component"),
                   name: z
                     .string()
                     .optional()
@@ -220,12 +195,8 @@ export function registerDEComponentsTools(
                 .object({
                   component_id: z
                     .string()
-                    .describe(
-                      "The id of the component to rename",
-                    ),
-                  new_name: z
-                    .string()
-                    .describe("The name of the component"),
+                    .describe("The id of the component to rename"),
+                  new_name: z.string().describe("The name of the component"),
                 })
                 .optional()
                 .describe("Rename a component."),
@@ -233,9 +204,7 @@ export function registerDEComponentsTools(
                 .object({
                   component_id: z
                     .string()
-                    .describe(
-                      "The id of the component to unregister",
-                    ),
+                    .describe("The id of the component to unregister"),
                 })
                 .optional()
                 .describe(
@@ -249,7 +218,9 @@ export function registerDEComponentsTools(
                   group: z
                     .string()
                     .optional()
-                    .describe("Optional group/folder to place the component in"),
+                    .describe(
+                      "Optional group/folder to place the component in",
+                    ),
                   description: z
                     .string()
                     .optional()
@@ -264,11 +235,15 @@ export function registerDEComponentsTools(
                   component_id: z
                     .string()
                     .optional()
-                    .describe("The id of the component to open in the canvas. Use this or page_id."),
+                    .describe(
+                      "The id of the component to open in the canvas. Use this or page_id.",
+                    ),
                   page_id: z
                     .string()
                     .optional()
-                    .describe("The id of the page to navigate to. Use this to exit the component canvas and return to a page."),
+                    .describe(
+                      "The id of the page to navigate to. Use this to exit the component canvas and return to a page.",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -279,7 +254,9 @@ export function registerDEComponentsTools(
                   q: z
                     .string()
                     .optional()
-                    .describe("Optional fuzzy search query matching Component panel search behavior. Searches both name and description fields."),
+                    .describe(
+                      "Optional fuzzy search query matching Component panel search behavior. Searches both name and description fields.",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -289,7 +266,9 @@ export function registerDEComponentsTools(
                 .object({
                   component_id: z
                     .string()
-                    .describe("The id of the component to get the instance count for"),
+                    .describe(
+                      "The id of the component to get the instance count for",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -315,7 +294,9 @@ export function registerDEComponentsTools(
                   position: z
                     .enum(["append", "prepend", "before", "after"])
                     .optional()
-                    .describe("Insertion position relative to the parent element. Defaults to 'append'."),
+                    .describe(
+                      "Insertion position relative to the parent element. Defaults to 'append'.",
+                    ),
                 })
                 .optional()
                 .describe(
@@ -355,9 +336,7 @@ export function registerDEComponentsTools(
     },
     async ({ siteId, actions }) => {
       try {
-        return formatResponse(
-          await componentsToolRPCCall(siteId, actions),
-        );
+        return formatResponse(await componentsToolRPCCall(siteId, actions));
       } catch (error) {
         return formatErrorResponse(error);
       }
@@ -379,9 +358,7 @@ export function registerDEComponentsTools(
           z.object({
             build_label: z
               .string()
-              .describe(
-                "A label to identify this build action.",
-              ),
+              .describe("A label to identify this build action."),
             action_type: z
               .enum(["insert_in_element", "insert_in_slot"])
               .describe(
@@ -404,9 +381,9 @@ export function registerDEComponentsTools(
                 "The id of the parent element (for insert_in_element) or the component instance (for insert_in_slot). e.g id:{component:123,element:456}.",
               ),
             creation_position: z
-              .enum(["append", "prepend"])
+              .enum(["append", "prepend", "before", "after"])
               .describe(
-                "The position to insert the component. append to the end or prepend to the beginning.",
+                "The position to insert the component. append/prepend insert as child. before/after insert as sibling adjacent to the target element.",
               ),
             component_schema: ComponentSchema.describe(
               "The component schema to insert. Use name to specify which component, and optionally slots to populate child components in the instance's slots.",
@@ -429,9 +406,7 @@ export function registerDEComponentsTools(
     },
     async ({ actions, siteId }) => {
       try {
-        return formatResponse(
-          await componentBuilderRPCCall(siteId, actions),
-        );
+        return formatResponse(await componentBuilderRPCCall(siteId, actions));
       } catch (error) {
         return formatErrorResponse(error);
       }

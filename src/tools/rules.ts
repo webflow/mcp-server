@@ -54,6 +54,13 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `Component Tool (Designer):\n` +
             `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
+            `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
+            `-- To transform an existing element into a component, use de_component_tool > transform_element_to_component. Pass the element ID and component name.\n` +
+            `-- To open a component view for editing, use de_component_tool > open_component_view. Pass the component_instance_id.\n` +
+            `-- To close a component view and return to page view, use de_component_tool > close_component_view.\n` +
+            `-- To rename a component, use de_component_tool > rename_component. Pass component_id and new_name.\n` +
+            `-- To check if you are currently inside a component view, use de_component_tool > check_if_inside_component_view.\n` +
+            `\n` +
             `-- To search components by name or description, use de_component_tool > search_components. Pass an optional query string. Returns rich metadata including name, group, description, instance count, editability, and library info.\n` +
             `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
             `-- To transform an existing element into a component, use de_component_tool > transform_element_to_component. Pass the element ID and component name.\n` +
