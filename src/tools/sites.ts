@@ -79,8 +79,8 @@ export function registerSiteTools(
                     .describe("Unique identifier for the site."),
                   customDomains: z
                     .array(z.string())
-                    .default([])
                     .optional()
+                    .default([])
                     .describe(
                       "Array of custom domains to publish the site to.",
                     ),

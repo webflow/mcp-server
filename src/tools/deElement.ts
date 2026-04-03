@@ -539,7 +539,12 @@ export const registerDEElementTools = (server: McpServer, rpc: RPCType) => {
             ],
           };
         }
-        return formatErrorResponse(new Error(message));
+        return formatErrorResponse(
+          new Error(
+            message ||
+            `Element snapshot failed with status: ${status}. Response: ${JSON.stringify({ status, message, data })}`
+          )
+        );
       } catch (error) {
         return formatErrorResponse(error);
       }
