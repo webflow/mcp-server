@@ -9,6 +9,7 @@ export { registerCommentsTools } from "./comments";
 export { registerEnterpriseTools } from "./enterprise";
 export { registerWebhookTools } from "./webhooks";
 export { registerWorkflowsTools } from "./workflows";
+export { registerSitemapTools } from "./sitemap";
 // Designer API Tools
 export { registerDEAssetTools } from "./deAsset";
 export { registerDEComponentsTools } from "./deComponents";
