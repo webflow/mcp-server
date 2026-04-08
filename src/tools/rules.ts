@@ -48,9 +48,33 @@ export function registerRulesTools(server: McpServer) {
             `-- To insert a component instance, use component_builder. It supports two action types:\n` +
             `---- insert_in_element: Insert a component instance as a child of a parent element (e.g., Container, DivBlock, Section).\n` +
             `---- insert_in_slot: Insert a component instance into a specific slot of an existing component instance. You must provide slot_name when using this action type.\n` +
-            `-- Pass the component name in component_schema (not the component ID). You can optionally populate the instance's slots with child components using the slots array in component_schema.\n` +
             `-- After creation, use element_tool > select_element to select the component instance and gather additional details if needed.\n` +
             `-- Only component instances (created via component_builder) are allowed inside slots. You cannot place regular elements inside a slot. Always use insert_in_slot to add components to slots.\n` +
+            `\n` +
+            `Component Resolution Rules (REQUIRED before every component_builder call):\n` +
+            `-- ALWAYS call data_components_tool > list_components before using component_builder. Never rely on name resolution alone.\n` +
+            `-- Scan the full results for name collisions: a component name that appears in both a shared library entry (readonly: true) and a site-level entry (no readonly flag) is a collision.\n` +
+            `-- Resolution priority order:\n` +
+            `---- 1. Explicit ID — if the user or a prior tool call has already surfaced the component ID, use it directly in component_schema.name is not needed.\n` +
+            `---- 2. Unambiguous readonly match — name resolves to exactly one result and it is readonly: true. Safe to proceed.\n` +
+            `---- 3. Ambiguous match — STOP. Warn the user before proceeding (see warning format below).\n` +
+            `---- 4. No readonly match — warn the user that no shared library version was found and ask whether to proceed with the site-level version.\n` +
+            `-- Ambiguous match warning format:\n` +
+            `---- ⚠️ Ambiguous component name: "<name>"\n` +
+            `---- Found <n> components with this name:\n` +
+            `----   - id: <id1>  [shared library — readonly]\n` +
+            `----   - id: <id2>  [site-level]\n` +
+            `---- I will use the shared library version (<id1>). Confirm to proceed?\n` +
+            `-- Never silently pick one and proceed when a name collision exists.\n` +
+            `-- Always log which resolution path was taken (e.g. "resolved via explicit ID", "resolved via unambiguous readonly match", "user confirmed shared library version after collision warning").\n` +
+            `\n` +
+            `Component Session Audit Rules:\n` +
+            `-- Before starting any insertion session, call list_components and record: total count, number of readonly: true components, number of site-level components, and any name collisions.\n` +
+            `-- After completing all insertions, call list_components again and compare against the baseline.\n` +
+            `---- If total count increased → new site-level components were created. Flag this immediately, identify them by name, and offer to remove them if unintentional.\n` +
+            `---- If new name collisions appeared → flag them by name.\n` +
+            `---- If counts are unchanged → confirm clean session.\n` +
+            `-- Never end a session without surfacing this diff to the user.\n` +
             `\n` +
             `Component Tool (Designer):\n` +
             `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
