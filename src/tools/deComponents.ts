@@ -241,6 +241,42 @@ export function registerDEComponentsTools(
                 .describe(
                   "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
                 ),
+              get_slots: z
+                .object({
+                  component_instance_id: DEElementIDSchema.id,
+                })
+                .optional()
+                .describe(
+                  "Get all slots on a component instance. Returns slot IDs and display names.",
+                ),
+              get_slot_children: z
+                .object({
+                  component_instance_id: DEElementIDSchema.id,
+                  slot_id: z
+                    .string()
+                    .describe("The slot element ID to get children from."),
+                })
+                .optional()
+                .describe(
+                  "Get children elements of a specific slot on a component instance.",
+                ),
+              insert_into_slot: z
+                .object({
+                  component_instance_id: DEElementIDSchema.id,
+                  slot_id: z
+                    .string()
+                    .describe("The slot element ID to insert into."),
+                  component_id: z
+                    .string()
+                    .describe("The id of the component to insert."),
+                  creation_position: z
+                    .enum(["append", "prepend"])
+                    .describe("The position to insert the component."),
+                })
+                .optional()
+                .describe(
+                  "Insert a component instance into a slot on a component instance.",
+                ),
             })
             .strict()
             .refine(
@@ -257,10 +293,13 @@ export function registerDEComponentsTools(
                   d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
+                  d.get_slots,
+                  d.get_slot_children,
+                  d.insert_into_slot,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, get_slots, get_slot_children, insert_into_slot.",
               },
             ),
         ),

@@ -18,6 +18,9 @@ export { registerDEStyleTools } from "./deStyle";
 export { registerDEVariableTools } from "./deVariable";
 export { registerDEInstancePropsTools } from "./deInstanceProps";
 
+// Asset Upload Tools
+export { registerAssetUploadTools } from "./assetUpload";
+
 // Rules Tools
 export { registerRulesTools } from "./rules";
 

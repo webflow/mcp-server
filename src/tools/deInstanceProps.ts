@@ -64,6 +64,7 @@ export function registerDEInstancePropsTools(server: McpServer, rpc: RPCType) {
                       "reference",
                       "referenceSet",
                       "variant",
+                      "variableMode",
                       "filter",
                       "sort",
                       "selectedItems",

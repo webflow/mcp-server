@@ -23,6 +23,18 @@ export function registerSiteTools(
     return response;
   };
 
+  const createSite = async (arg: {
+    workspace_id: string;
+    name: string;
+  }) => {
+    const response = await getClient().sites.create(
+      arg.workspace_id,
+      { name: arg.name },
+      requestOptions,
+    );
+    return response;
+  };
+
   const publishSite = async (arg: {
     site_id: string;
     customDomains?: string[];
@@ -59,6 +71,20 @@ export function registerSiteTools(
                 .optional()
                 .describe(
                   "List all sites accessible to the authenticated user. Returns basic site information including site ID, name, and last published date.",
+                ),
+              // POST https://api.webflow.com/v2/workspaces/:workspace_id/sites
+              create_site: z
+                .object({
+                  workspace_id: z
+                    .string()
+                    .describe("The workspace ID to create the site in."),
+                  name: z
+                    .string()
+                    .describe("The name for the new site."),
+                })
+                .optional()
+                .describe(
+                  "Create a new site in a workspace. Returns the new site details including site ID.",
                 ),
               // GET https://api.webflow.com/v2/sites/:site_id
               get_site: z
@@ -97,11 +123,11 @@ export function registerSiteTools(
             .strict()
             .refine(
               (d) =>
-                [d.list_sites, d.get_site, d.publish_site].filter(Boolean)
+                [d.list_sites, d.create_site, d.get_site, d.publish_site].filter(Boolean)
                   .length >= 1,
               {
                 message:
-                  "Provide at least one of list_sites, get_site, publish_site.",
+                  "Provide at least one of list_sites, create_site, get_site, publish_site.",
               },
             ),
         ),
@@ -113,6 +139,10 @@ export function registerSiteTools(
         for (const action of actions) {
           if (action.list_sites) {
             const content = await listSites();
+            result.push(textContent(content));
+          }
+          if (action.create_site) {
+            const content = await createSite(action.create_site);
             result.push(textContent(content));
           }
           if (action.get_site) {
