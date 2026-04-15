@@ -52,6 +52,12 @@ export function registerRulesTools(server: McpServer) {
             `-- After creation, use element_tool > select_element to select the component instance and gather additional details if needed.\n` +
             `-- Only component instances (created via component_builder) are allowed inside slots. You cannot place regular elements inside a slot. Always use insert_in_slot to add components to slots.\n` +
             `\n` +
+            `Component Resolution Rules:\n` +
+            `-- Before using component_builder, call data_components_tool > list_components to check for name collisions.\n` +
+            `-- If a component name appears multiple times (e.g., both as readonly: true from shared library and as site-level), warn the user and let them choose which to use.\n` +
+            `-- Default to using the shared library version (readonly: true) when collisions exist.\n` +
+            `-- Warning format: "⚠️ Found multiple components named '<name>'. Using shared library version. Confirm to proceed?"\n` +
+            `\n` +
             `Component Tool (Designer):\n` +
             `-- To get all components in the site, use de_component_tool > get_all_components.\n` +
             `-- To insert a component instance by component ID, use de_component_tool > insert_component_instance. Pass parent_element_id, component_id, and creation_position.\n` +
