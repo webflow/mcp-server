@@ -37,7 +37,7 @@ function getAccessToken() {
 // Configure and run local MCP server (stdio transport)
 async function run() {
   const server = createMcpServer();
-  const { callTool } = await initDesignerAppBridge();
+  const { callTool } = await initDesignerAppBridge({ getClient });
   registerMiscTools(server);
   registerTools(server, getClient, getAccessToken);
   registerDesignerTools(server, {
