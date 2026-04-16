@@ -4,23 +4,15 @@ import {
   registerAiChatTools,
   registerCmsTools,
   registerComponentsTools,
-  registerDEAssetTools,
-  registerDEComponentsTools,
-  registerDEElementTools,
-  registerDEPagesTools,
   registerPagesTools,
   registerScriptsTools,
   registerSiteTools,
-  registerDEStyleTools,
-  registerDEVariableTools,
   registerRulesTools,
-  registerLocalDeMCPConnectionTools,
   registerCommentsTools,
   registerEnterpriseTools,
   registerWebhookTools,
   registerWorkflowsTools,
 } from "./tools";
-import { RPCType } from "./types/RPCType";
 
 const packageJson = require("../package.json") as any;
 
@@ -68,22 +60,6 @@ export function registerWorkflowTools(
   registerWorkflowsTools(server, getAccessToken);
 }
 
-export function registerDesignerTools(server: McpServer, rpc: RPCType) {
-  registerDEAssetTools(server, rpc);
-  registerDEComponentsTools(server, rpc);
-  registerDEElementTools(server, rpc);
-  registerDEPagesTools(server, rpc);
-  registerDEStyleTools(server, rpc);
-  registerDEVariableTools(server, rpc);
-}
-
 export function registerMiscTools(server: McpServer) {
   registerRulesTools(server);
-}
-
-/**
- * IMPORTANT: registerLocalTools is only valid for OSS MCP Version
- */
-export function registerLocalTools(server: McpServer, rpc: RPCType) {
-  registerLocalDeMCPConnectionTools(server, rpc);
 }

@@ -17,5 +17,3 @@ export { WebflowCollectionsItemsUpdateItemsRequestSchema } from "./WebflowCollec
 export { WebflowPageDomWriteNodesItemSchema } from "./WebflowPageDomWriteNodesItemSchema";
 export { WebflowPageSchema } from "./WebflowPageSchema";
 export { SiteIdSchema } from "./SiteIdSchema";
-export { DEElementSchema } from "./DEElementSchema";
-export { DEElementIDSchema } from "./DEElementIDSchema";
