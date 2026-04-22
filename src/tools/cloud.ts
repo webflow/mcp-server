@@ -71,7 +71,67 @@ interface ProjectEnvironmentsResponse {
   environments: ProjectEnvironment[];
 }
 
+type SiteKind = "webflow" | "cloudapp" | "template" | "tutorial" | "optimize";
+
+interface WorkspaceSite {
+  id: string;
+  workspaceId: string;
+  displayName: string;
+  shortName: string;
+  kind: SiteKind;
+  createdOn: string;
+  lastUpdated: string;
+  lastPublished: string;
+  previewUrl: string;
+}
+
+interface WorkspaceSitesResponse {
+  sites: WorkspaceSite[];
+}
+
 // Action handlers
+
+async function apiFetch<T>(
+  path: string,
+  getToken: () => string,
+): Promise<T> {
+  const token = getToken();
+  const response = await fetch(`${WEBFLOW_API_BASE}/v2${path}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      ...requestOptions.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    let errorData;
+    try {
+      errorData = JSON.parse(errorText);
+    } catch {
+      errorData = { message: errorText };
+    }
+    throw Object.assign(new Error(`HTTP ${response.status}`), {
+      name: "WebflowApiError",
+      status: response.status,
+      ...errorData,
+    });
+  }
+
+  return response.json() as Promise<T>;
+}
+
+async function listWorkspaceSites(
+  getToken: () => string,
+  args: { workspace_id: string; kind?: SiteKind },
+): Promise<Content> {
+  const kind = args.kind ?? "cloudapp";
+  const path = `/workspaces/${args.workspace_id}/sites?kind=${kind}`;
+  const data = await apiFetch<WorkspaceSitesResponse>(path, getToken);
+  return textContent(data);
+}
 
 async function listProjects(
   getToken: () => string,
@@ -124,6 +184,29 @@ export function registerCloudTools(
         actions: z.array(
           z
             .object({
+              // GET /v2/workspaces/:workspace_id/sites?kind=cloudapp
+              list_workspace_sites: z
+                .object({
+                  workspace_id: z
+                    .string()
+                    .describe(
+                      "Workspace ID. Use list_sites from data_sites_tool to find a site, " +
+                      "then use its workspaceId.",
+                    ),
+                  kind: z
+                    .enum(["webflow", "cloudapp", "template", "tutorial", "optimize"])
+                    .optional()
+                    .describe(
+                      "Filter by site kind. Defaults to 'cloudapp' if omitted. " +
+                      "Use 'webflow' for standard sites, 'cloudapp' for standalone Cloud apps.",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "List sites in a workspace filtered by kind. " +
+                  "Defaults to Cloud apps (standalone apps without a site). " +
+                  "Returns site ID, name, kind, and workspace info.",
+                ),
               // GET /cosmic/:site_id/cli-projects
               list_projects: z
                 .object(CloudProjectSchema)
@@ -145,11 +228,11 @@ export function registerCloudTools(
             .strict()
             .refine(
               (d) =>
-                [d.list_projects, d.list_environments].filter(Boolean).length >=
+                [d.list_workspace_sites, d.list_projects, d.list_environments].filter(Boolean).length >=
                 1,
               {
                 message:
-                  "Provide at least one of list_projects, list_environments.",
+                  "Provide at least one of list_workspace_sites, list_projects, list_environments.",
               },
             ),
         ),
@@ -159,6 +242,11 @@ export function registerCloudTools(
       try {
         const result: Content[] = [];
         for (const action of actions) {
+          if (action.list_workspace_sites) {
+            result.push(
+              await listWorkspaceSites(getToken, action.list_workspace_sites),
+            );
+          }
           if (action.list_projects) {
             result.push(
               await listProjects(getToken, action.list_projects),
