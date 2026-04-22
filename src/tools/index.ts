@@ -17,6 +17,9 @@ export { registerDEPagesTools } from "./dePages";
 export { registerDEStyleTools } from "./deStyle";
 export { registerDEVariableTools } from "./deVariable";
 
+// Cloud Tools
+export { registerCloudTools } from "./cloud";
+
 // Rules Tools
 export { registerRulesTools } from "./rules";
 

@@ -19,6 +19,7 @@ import {
   registerEnterpriseTools,
   registerWebhookTools,
   registerWorkflowsTools,
+  registerCloudTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -59,6 +60,7 @@ export function registerTools(
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
   registerWebhookTools(server, getClient);
+  registerCloudTools(server, getAccessToken);
 }
 
 export function registerWorkflowTools(

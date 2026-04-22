@@ -19,3 +19,5 @@ export { WebflowPageSchema } from "./WebflowPageSchema";
 export { SiteIdSchema } from "./SiteIdSchema";
 export { DEElementSchema } from "./DEElementSchema";
 export { DEElementIDSchema } from "./DEElementIDSchema";
+export { CloudProjectSchema } from "./CloudProjectSchema";
+export { CloudEnvironmentSchema } from "./CloudEnvironmentSchema";
