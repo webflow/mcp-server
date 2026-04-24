@@ -241,6 +241,55 @@ export function registerDEComponentsTools(
                 .describe(
                   "Unregister a component. DANGEROUS ACTION. USE WITH CAUTION.",
                 ),
+              set_component_instance_props: z
+                .object({
+                  ...DEElementIDSchema,
+                  overrides: z
+                    .array(
+                      z.object({
+                        prop_id: z
+                          .string()
+                          .describe(
+                            "The id of the prop on the component definition. Matches Designer SDK propId.",
+                          ),
+                        value: z
+                          .any()
+                          .describe(
+                            "Value to set for this prop on the instance. Static primitive (string/number/boolean) or object for bindings. Pass null to reset this prop to its component default.",
+                          ),
+                      }),
+                    )
+                    .min(1)
+                    .describe(
+                      "Per-instance prop overrides to apply. Wraps Designer SDK ComponentElement.setProps.",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Set per-instance property overrides on a component instance (e.g., a Heading instance's Text prop, a Button instance's label). Only affects the target instance; does not change component defaults or other instances.",
+                ),
+              get_component_instance_props: z
+                .object({
+                  ...DEElementIDSchema,
+                  resolved: z
+                    .boolean()
+                    .optional()
+                    .describe(
+                      "If true, return resolved prop values (bindings converted to final output). Defaults to false, which returns raw prop entries including a hasOverride flag per prop.",
+                    ),
+                })
+                .optional()
+                .describe(
+                  "Get per-instance prop values on a component instance. Wraps Designer SDK ComponentElement.getProps / getResolvedProps.",
+                ),
+              reset_component_instance_props: z
+                .object({
+                  ...DEElementIDSchema,
+                })
+                .optional()
+                .describe(
+                  "Reset all per-instance prop overrides on a component instance back to component defaults. Wraps Designer SDK ComponentElement.resetAllProps.",
+                ),
             })
             .strict()
             .refine(
@@ -257,10 +306,13 @@ export function registerDEComponentsTools(
                   d.set_component_metadata,
                   d.rename_component,
                   d.unregister_component,
+                  d.set_component_instance_props,
+                  d.get_component_instance_props,
+                  d.reset_component_instance_props,
                 ].filter(Boolean).length >= 1,
               {
                 message:
-                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component.",
+                  "Provide at least one of check_if_inside_component_view, transform_element_to_component, insert_component_instance, open_component_view, close_component_view, get_all_components, get_component, get_component_metadata, set_component_metadata, rename_component, unregister_component, set_component_instance_props, get_component_instance_props, reset_component_instance_props.",
               },
             ),
         ),
