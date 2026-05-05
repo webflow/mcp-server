@@ -253,7 +253,13 @@ export function registerDEComponentsTools(
                             "The id of the prop on the component definition. Matches Designer SDK propId.",
                           ),
                         value: z
-                          .any()
+                          .union([
+                            z.string(),
+                            z.number(),
+                            z.boolean(),
+                            z.null(),
+                            z.record(z.unknown()),
+                          ])
                           .describe(
                             "Value to set for this prop on the instance. Static primitive (string/number/boolean) or object for bindings. Pass null to reset this prop to its component default.",
                           ),
