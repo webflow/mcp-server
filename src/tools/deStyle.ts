@@ -86,8 +86,15 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                 .describe("Get all styles"),
               update_style: z
                 .object({
+                  style_id: z
+                    .string()
+                    .optional()
+                    .describe(
+                      "Exact style ID. When set, bypasses name/combo resolution.",
+                    ),
                   style_name: z
                     .string()
+                    .optional()
                     .describe("The name of the style to update"),
                   breakpoint_id: z
                     .enum([
@@ -153,6 +160,15 @@ export function registerDEStyleTools(server: McpServer, rpc: RPCType) {
                       "The parent style names to update the style for (for combo class)",
                     ),
                 })
+                .refine(
+                  (d) =>
+                    Boolean(d.style_id?.trim()) || Boolean(d.style_name?.trim()),
+                  {
+                    message:
+                      "update_style requires style_id or style_name (exactly one targeting strategy).",
+                    path: ["style_id"],
+                  },
+                )
                 .optional()
                 .describe("Update a style"),
               remove_style: z
