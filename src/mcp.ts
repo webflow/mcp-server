@@ -10,6 +10,7 @@ import {
   registerDEPagesTools,
   registerPagesTools,
   registerScriptsTools,
+  registerCustomCodeTools,
   registerSiteTools,
   registerDEStyleTools,
   registerDEVariableTools,
@@ -55,6 +56,7 @@ export function registerTools(
   registerComponentsTools(server, getClient);
   registerPagesTools(server, getClient);
   registerScriptsTools(server, getClient);
+  registerCustomCodeTools(server, getAccessToken);
   registerSiteTools(server, getClient);
   registerCommentsTools(server, getClient);
   registerEnterpriseTools(server, getClient);
