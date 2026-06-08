@@ -5,6 +5,28 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 ![Webflow](https://img.shields.io/badge/webflow-%23146EF5.svg?style=for-the-badge&logo=webflow&logoColor=white)
 
+> ## ⚠️ This repository is archived
+>
+> `webflow-mcp-server` is no longer maintained, and issues are disabled.
+>
+> **We're still investing heavily in the Webflow MCP** — active development has moved
+> to a separate repository, and the MCP is now available as a public **Beta**.
+>
+> ### 🚀 Use the public Beta MCP — actively developed
+>
+> Get started (open to everyone): **https://developers.webflow.com/mcp/installing/beta**
+>
+> ### 📖 Docs & changelog
+>
+> - MCP docs: https://developers.webflow.com/mcp
+> - Changelog: https://developers.webflow.com/home/changelog?filter=MCP
+>
+> ### 💬 Engagement & bug reports
+>
+> We're no longer tracking issues here — please use our community instead:
+> **https://community.webflow.com**
+> <!-- TODO: confirm community.webflow.com is live before merging — it was not loading at time of writing. -->
+
 ## Prerequisites
 
 - [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
