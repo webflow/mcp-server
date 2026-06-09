@@ -5,13 +5,13 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 ![Webflow](https://img.shields.io/badge/webflow-%23146EF5.svg?style=for-the-badge&logo=webflow&logoColor=white)
 
-> ## 📦 This repository — the open-source, self-hosted MCP server — is being archived
+> ## 📦 This repository — Webflow's open-source (OSS) MCP server — is being archived
 >
 > **The Webflow MCP is not going away. We're investing in it more than ever.** The only thing changing is *how it's distributed.*
 >
-> This repository, `webflow-mcp-server`, is the **open-source (OSS), self-hosted** MCP server — the package you download and run **locally** on your own machine. Webflow now provides a **fully hosted, remote MCP server** that you connect to directly over a URL, with **no local install or setup required** — and that hosted server is how customers use the Webflow MCP today.
+> This repository, `webflow/mcp-server`, is **Webflow's open-source (OSS) MCP server**. Webflow also runs a **hosted, remote MCP server** at `https://mcp.webflow.com` that you connect to directly — and that hosted server is how customers use the Webflow MCP today. Ongoing development happens against the hosted service, in a separate repository.
 >
-> Because everyone now connects through the hosted server, we're **consolidating onto it** and archiving this self-hosted OSS repository (it becomes read-only). To be explicit: this is a **distribution change, not a deprecation** of the Webflow MCP — the product is actively developed and growing.
+> Because everyone now connects through the hosted server, we're **consolidating onto it** and archiving this open-source repository (it becomes read-only). To be explicit: this is a **distribution change, not a deprecation** of the Webflow MCP — the product is actively developed and growing.
 >
 > ### 🚀 Use the hosted Webflow MCP (recommended — actively developed)
 >
