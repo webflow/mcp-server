@@ -5,25 +5,27 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 [![npm shield](https://img.shields.io/npm/v/webflow-mcp-server)](https://www.npmjs.com/package/webflow-mcp-server)
 ![Webflow](https://img.shields.io/badge/webflow-%23146EF5.svg?style=for-the-badge&logo=webflow&logoColor=white)
 
-> ## ⚠️ This repository is archived
+> ## 📦 This repository — the open-source, self-hosted MCP server — is being archived
 >
-> `webflow-mcp-server` is no longer maintained, and issues are disabled.
+> **The Webflow MCP is not going away. We're investing in it more than ever.** The only thing changing is *how it's distributed.*
 >
-> **We're still investing heavily in the Webflow MCP** — active development has moved
-> to a separate repository, and the MCP is now available as a public **Beta**.
+> This repository, `webflow-mcp-server`, is the **open-source (OSS), self-hosted** MCP server — the package you download and run **locally** on your own machine. Webflow now provides a **fully hosted, remote MCP server** that you connect to directly over a URL, with **no local install or setup required** — and that hosted server is how customers use the Webflow MCP today.
 >
-> ### 🚀 Use the public Beta MCP — actively developed
+> Because everyone now connects through the hosted server, we're **consolidating onto it** and archiving this self-hosted OSS repository (it becomes read-only). To be explicit: this is a **distribution change, not a deprecation** of the Webflow MCP — the product is actively developed and growing.
 >
-> Get started (open to everyone): **https://developers.webflow.com/mcp/installing/beta**
+> ### 🚀 Use the hosted Webflow MCP (recommended — actively developed)
+>
+> - Get started, no local setup required: **https://developers.webflow.com/mcp**
+> - Try the public Beta: **https://developers.webflow.com/mcp/installing/beta**
 >
 > ### 📖 Docs & changelog
 >
 > - MCP docs: https://developers.webflow.com/mcp
 > - Changelog: https://developers.webflow.com/home/changelog?filter=MCP
 >
-> ### 💬 Engagement & bug reports
+> ### 💬 Bugs, issues & engagement
 >
-> We're no longer tracking issues here — please use our community instead:
+> GitHub issues on this repository are disabled. Please bring bugs, questions, and feedback to our community:
 > **https://community.webflow.com**
 > <!-- TODO: confirm community.webflow.com is live before merging — it was not loading at time of writing. -->
 
