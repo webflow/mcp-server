@@ -6,6 +6,7 @@ export const DEElementSchema = z.object({
       "Container",
       "Section",
       "DivBlock",
+      "Box",
       "Heading",
       "TextBlock",
       "Paragraph",
@@ -16,7 +17,7 @@ export const DEElementSchema = z.object({
       "DOM",
     ])
     .describe(
-      "The type of element to create. with DOM type you can create any element. make sure you pass dom_config if you are creating a DOM element."
+      "The type of element to create. Use Box for generic containers such as a div. Section always creates a Box with the section tag. Box elements are returned with type Block. with DOM type you can create any element. make sure you pass dom_config if you are creating a DOM element."
     ),
   set_style: z
     .object({

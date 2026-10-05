@@ -46,7 +46,7 @@ export function registerRulesTools(server: McpServer) {
             `\n` +
             `Component Builder Tool:\n` +
             `-- To insert a component instance, use component_builder. It supports two action types:\n` +
-            `---- insert_in_element: Insert a component instance as a child of a parent element (e.g., Container, DivBlock, Section).\n` +
+            `---- insert_in_element: Insert a component instance as a child of a parent element (e.g., Box, Container, DivBlock, Section).\n` +
             `---- insert_in_slot: Insert a component instance into a specific slot of an existing component instance. You must provide slot_name when using this action type.\n` +
             `-- Pass the component name in component_schema (not the component ID). You can optionally populate the instance's slots with child components using the slots array in component_schema.\n` +
             `-- After creation, use element_tool > select_element to select the component instance and gather additional details if needed.\n` +
@@ -136,7 +136,7 @@ export function registerRulesTools(server: McpServer) {
             `-- Always create styles first if you plan to apply them while creating the element. This ensures style references are valid at the time of creation.\n` +
             `-- Always plan out your actions before calling element_builder. Know exactly what type of element to create, what styles or attributes to apply, and how you will use it.\n` +
             `-- Once an element is created using element_builder, it is not automatically selected. To inspect or modify it, use element_tool > select_element and pass the element ID returned from the creation response.\n` +
-            `-- Only Container, Section, DivBlock, some valid DOM elements can have children.\n` +
+            `-- Only Box, Container, Section, DivBlock, some valid DOM elements can have children.\n` +
             `-- Only component instances are allowed inside slots. Do not attempt to create or insert regular elements into a slot. Use component_builder to create a component instance and place it inside a slot.\n` +
             `\n` +
             `WHTML Builder Tool:\n` +
