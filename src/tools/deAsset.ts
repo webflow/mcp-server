@@ -125,7 +125,7 @@ export function registerDEAssetTools(server: McpServer, rpc: RPCType) {
         openWorldHint: true,
       },
       description:
-        "Designer Tool - Get image preview from url. this is helpful to get image preview from url. Only supports JPG, PNG, GIF, WEBP, WEBP and AVIF formats.",
+        "Designer Tool - Get image preview from url. this is helpful to get image preview from url. Only supports JPG, PNG, GIF, WEBP and AVIF formats.",
       inputSchema: {
         url: z
           .string()

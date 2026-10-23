@@ -16,7 +16,7 @@ export const WebflowPageSchema = z.object({
     .string()
     .optional()
     .describe(
-      "Unique identifier for the linked collection, NULL id the Page is not part of a collection."
+      "Unique identifier for the linked collection, NULL if the Page is not part of a collection."
     ),
   createdOn: z.date().optional().describe("Date when the page was created."),
   lastUpdated: z
