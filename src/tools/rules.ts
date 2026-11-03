@@ -60,6 +60,9 @@ export function registerRulesTools(server: McpServer) {
             `-- To close a component view and return to page view, use de_component_tool > close_component_view.\n` +
             `-- To rename a component, use de_component_tool > rename_component. Pass component_id and new_name.\n` +
             `-- To check if you are currently inside a component view, use de_component_tool > check_if_inside_component_view.\n` +
+            `-- To set per-instance property overrides on a component instance (e.g., a Heading instance's Text prop, a Button instance's label), use de_component_tool > set_component_instance_props. Pass the instance element id and an overrides array of { prop_id, value } entries. value may be a static primitive (string/number/boolean), a binding object, or null to reset a single prop to its component default. This only affects the targeted instance — it does not change component defaults or other instances. Prefer this over element_tool > set_text for props on component instances.\n` +
+            `-- To read per-instance prop values on a component instance, use de_component_tool > get_component_instance_props. Pass the instance element id. Optionally set resolved=true to get resolved values (bindings converted); default returns raw prop entries including a hasOverride flag per prop.\n` +
+            `-- To clear all per-instance overrides on a component instance back to component defaults, use de_component_tool > reset_component_instance_props. Pass the instance element id.\n` +
             `\n` +
             `Element Snapshot Tool Usage:\n` +
             `-- To get a visual snapshot of an element, section, or component, use element_snapshot_tool. Pass the element ID to capture its current visual state as an image.\n` +
