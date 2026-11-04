@@ -19,6 +19,7 @@ import {
   registerEnterpriseTools,
   registerWebhookTools,
   registerWorkflowsTools,
+  registerSiteBackupsTools,
 } from "./tools";
 import { RPCType } from "./types/RPCType";
 
@@ -63,9 +64,17 @@ export function registerTools(
 
 export function registerWorkflowTools(
   server: McpServer,
-  getAccessToken: () => string
+  getAccessToken: () => string,
 ) {
   registerWorkflowsTools(server, getAccessToken);
+}
+
+// Not part of registerTools while the site backups API is behind a feature flag.
+export function registerSiteBackupTools(
+  server: McpServer,
+  getAccessToken: () => string,
+) {
+  registerSiteBackupsTools(server, getAccessToken);
 }
 
 export function registerDesignerTools(server: McpServer, rpc: RPCType) {

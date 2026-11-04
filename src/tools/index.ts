@@ -5,6 +5,7 @@ export { registerComponentsTools } from "./components";
 export { registerPagesTools } from "./pages";
 export { registerScriptsTools } from "./scripts";
 export { registerSiteTools } from "./sites";
+export { registerSiteBackupsTools } from "./siteBackups";
 export { registerCommentsTools } from "./comments";
 export { registerEnterpriseTools } from "./enterprise";
 export { registerWebhookTools } from "./webhooks";
