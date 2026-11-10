@@ -7,9 +7,8 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 
 ## Prerequisites
 
-- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [A Webflow Account](https://webflow.com/signup)
+- For [local installation](#local-installation), [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## 🚀 Remote installation
 
@@ -17,9 +16,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 
 ### Requirements
 
-- Node.js 22.3.0 or higher
-
-> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see the [Node.js compatibility guidance.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
+Use an MCP client that supports remote HTTP connections and OAuth. The hosted connection does not require a local Node.js process.
 
 ### Cursor
 
@@ -33,7 +30,7 @@ Get started by installing Webflow's remote MCP server. The remote server uses OA
 {
   "mcpServers": {
     "webflow": {
-      "url": "https://mcp.webflow.com/sse"
+      "url": "https://mcp.webflow.com/mcp"
     }
   }
 }
@@ -77,22 +74,11 @@ Create a hero section card on my home page with a CTA button and responsive desi
 
 #### Add MCP server to Claude desktop
 
-1. Enable developer mode: `Help → Troubleshooting → Enable Developer Mode`.
-2. Open developer settings: `File → Settings → Developer`.
-3. Click `Get Started` or edit the configuration to open `claude_desktop_config.json` and add:
+1. Open the [official Webflow connector](https://claude.com/connectors/webflow) and add it to Claude.
+2. Select **Connect** and sign in to Webflow when prompted.
+3. Authorize the sites or Workspaces you want Claude to access.
 
-```json
-{
-  "mcpServers": {
-    "webflow": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.webflow.com/sse"]
-    }
-  }
-}
-```
-
-4. Save and restart Claude Desktop (`Cmd/Ctrl + R`). An OAuth login page will open to authorize sites.
+You can also add a custom connector in **Settings → Connectors**, using `https://mcp.webflow.com/mcp`. See the [Claude Desktop setup guide](https://developers.webflow.com/mcp/installing/claude-desktop) for current availability and setup steps.
 
 #### Open the Webflow Designer
 
@@ -122,22 +108,20 @@ Find older blog posts that mention similar topics and add internal links to my l
 Create a hero section card on my home page with a CTA button and responsive design
 ```
 
-### Reset your OAuth token
+### Reconnect
 
-To reset your OAuth token, run the following command in your terminal.
-
-```bash
-rm -rf ~/.mcp-auth
-```
-
-### Node.js compatibility
-
-Please see the Node.js [compatibility guidance on Webflow's developer docs.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
+Use your MCP client's authentication controls to reconnect or change the sites you authorize. For Claude Desktop, manage the Webflow connection in **Settings → Connectors**. See the [setup guide](https://developers.webflow.com/mcp/installing/claude-desktop) for the current authorization steps.
 
 ---
 
 
 ## Local Installation
+
+### Requirements
+
+- Node.js 22.3.0 or higher
+
+> Note: The MCP server currently supports Node.js 22.3.0 or higher. If you run into version issues, see the [Node.js compatibility guidance.](https://developers.webflow.com/data/v2.0.0/docs/ai-tools#nodejs-compatibility)
 
 You can also configure the MCP server to run locally. This requires:
 
