@@ -27,7 +27,6 @@ A Node.js server implementing Model Context Protocol (MCP) for Webflow using the
 >
 > GitHub issues on this repository are disabled. Please bring bugs, questions, and feedback to our community:
 > **https://community.webflow.com**
-> <!-- TODO: confirm community.webflow.com is live before merging — it was not loading at time of writing. -->
 
 ## Prerequisites
 
